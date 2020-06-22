@@ -19,8 +19,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class KdbConnection implements Connection {
+import org.slf4j.LoggerFactory;
 
+public class KdbConnection implements Connection {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbConnection.class);
     private final Connection conn;
 
     public KdbConnection(Connection conn, String url, Properties info) {
@@ -46,8 +48,16 @@ public class KdbConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        logger.info("prepareStatement:" + String.valueOf(sql));
+        if(sql.startsWith("q)")) {
+            //direct execution mode
+            return conn.prepareStatement(sql);
+        }
+        else {
+            //TODO : here we need parse  a given SQL and convert it into q-script
+            String qscript = sql; //TODO convert to qscript
+            return new KdbPreparedStatement(conn.prepareStatement(qscript));
+        }
     }
 
     @Override
