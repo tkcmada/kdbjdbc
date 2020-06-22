@@ -1,6 +1,7 @@
 package jp.mufg.kdbjdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,20 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 public class DriverTest {
-    // private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DriverTest.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DriverTest.class);
+
+    @Test
+    public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
+        Class.forName("jp.mufg.kdbjdbc.KdbDriver");
+        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","","");
+        DatabaseMetaData meta = h.getMetaData();
+        ResultSet rs = meta.getColumns("catalog1", "schema1", null, null);
+        while(rs.next()) {
+            logger.info("column:{}", rs.getString("COLUM_NAME")); //need to wrap result to offer getString(String)
+        }
+        rs.close();
+        h.close();
+    }
 
     @Test
     public void test_arithmatic() throws ClassNotFoundException, SQLException {

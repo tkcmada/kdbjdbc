@@ -62,56 +62,47 @@ public class KdbConnection implements Connection {
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("not support");
     }
 
     @Override
     public String nativeSQL(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("not support");
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        // TODO Auto-generated method stub
-
+        this.conn.setAutoCommit(autoCommit);
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        return conn.getAutoCommit();
     }
 
     @Override
     public void commit() throws SQLException {
-        // TODO Auto-generated method stub
-
+        conn.commit();
     }
 
     @Override
     public void rollback() throws SQLException {
-        // TODO Auto-generated method stub
-
+        conn.rollback();
     }
 
     @Override
     public void close() throws SQLException {
-        // TODO Auto-generated method stub
-
+        conn.close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
+        return conn.isClosed();
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        return new KdbDatabaseMetaData(conn);
     }
 
     @Override

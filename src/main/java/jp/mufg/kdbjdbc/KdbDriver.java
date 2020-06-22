@@ -52,33 +52,26 @@ public class KdbDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("not support");
     }
 
     @Override
     public int getMajorVersion() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public int getMinorVersion() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 1;
     }
 
     @Override
     public boolean jdbcCompliant() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        // TODO Auto-generated method stub
         return null;
-    }
-
-    
+    }   
 }
