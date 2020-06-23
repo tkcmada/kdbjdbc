@@ -3,5 +3,5 @@
 #mvn dependency:copy-dependencies -DoutputDirectory=lib
 mvn install -DskipTests
 cp -p target/kdbjdbc*.jar lib/
-tar zcvf kdbjdbc.tar.gz lib
-
+#tar zcvf kdbjdbc.tar.gz lib
+zip -r kdbjdbc.zip lib/
