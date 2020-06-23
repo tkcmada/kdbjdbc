@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialect name='kdb_jdbc_v1'
+         class='kdb_jdbc'
+         base='PrestoDialect'
+         version='18.1'>
+   <function-map>
+    <function name='FLOAT' group='cast' return-type='real'>
+      <formula>CAST(((EXTRACT(EPOCH FROM %1) / ( 60 * 60 * 24)) + (365 * 70 + 17)) AS BIGINT)</formula>
+      <argument type='date' />
+    </function>
+   </function-map>
+   <sql-format>
+        <supported-joins>
+          <part name='Inner' />
+          <part name='Left' />
+        </supported-joins>
+   </sql-format>
+</dialect>

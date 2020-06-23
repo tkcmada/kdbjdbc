@@ -57,3 +57,4 @@ How to test ?
 export JAVA_TOOL_OPTIONS="-Xmx2254m -Dlog4j.configurationFile=target/classes/log4j.xml"
 mvn clean test
 ```
+

@@ -1,0 +1,10 @@
+<connection-dialog class='kdb_jdbc'>
+  <connection-config>
+    <authentication-mode value='Basic' />
+    <authentication-options>
+      <option name="UsernameAndPassword" default="true" />
+    </authentication-options>
+    <has-pre-connect-database value="true" />
+    <port-prompt value="Port: " default="5001" />
+  </connection-config>
+</connection-dialog>

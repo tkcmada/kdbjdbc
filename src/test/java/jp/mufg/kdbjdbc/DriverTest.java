@@ -19,7 +19,7 @@ public class DriverTest {
     @Test
     public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","","");
+        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","user_dummy","password_dummy");
         DatabaseMetaData meta = h.getMetaData();
         ResultSet rs = meta.getColumns("catalog1", "schema1", null, null);
         while(rs.next()) {
