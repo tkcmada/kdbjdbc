@@ -1,0 +1,71 @@
+package jp.mufg.logjdbc;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import jp.mufg.slf4j.FileLogger;
+
+public class LogDriver implements java.sql.Driver {
+	private static final org.slf4j.Logger logger = FileLogger.getLogger(LogDriver.class);
+	private static final String URL_PREFIX = "jdbc:log:"; //jdbc:log:jdbc:mysql:.....
+		
+	private String newUrl(String url) {
+		return url.replace("jdbc:log:", "");
+	}
+	
+	@Override
+	public Connection connect(String url, Properties info) throws SQLException {
+		logger.info("connect " + url + " " + info);
+		url = newUrl(url);
+		logger.info("new url:" + url);
+		String logdir = (String) info.get("logdir");
+		if (logdir != null) {
+			FileLogger.setDirectory(new File(logdir));
+			info = (Properties) info.clone();
+			info.remove("logdir");
+		}
+		return DriverManager.getConnection(url, info);
+	}
+
+	@Override
+	public boolean acceptsURL(String url) throws SQLException {
+		logger.info("acceptsURL " + url);
+		return url.startsWith(URL_PREFIX);
+	}
+
+	@Override
+	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+		logger.info("getPropertyInfo " + url + " " + info);
+		throw new UnsupportedOperationException("getPropertyInfo is not supported");
+	}
+
+	@Override
+	public int getMajorVersion() {
+		logger.info("getMajorVersion");
+		return 1;
+	}
+
+	@Override
+	public int getMinorVersion() {
+		logger.info("getMinorVersion");
+		return 0;
+	}
+
+	@Override
+	public boolean jdbcCompliant() {
+		logger.info("jdbcCompliant");
+		return true;
+	}
+
+	@Override
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		logger.info("getParentLogger");
+		throw new SQLFeatureNotSupportedException("getParentLogger is not supported");
+	}
+}

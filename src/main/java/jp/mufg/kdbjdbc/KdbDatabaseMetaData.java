@@ -10,8 +10,10 @@ import javax.sql.rowset.CachedRowSet;
 
 import org.slf4j.LoggerFactory;
 
+import jp.mufg.slf4j.FileLogger;
+
 public class KdbDatabaseMetaData implements DatabaseMetaData {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbDatabaseMetaData.class);
+    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
     private final Connection conn;
     private final String user;
     private final String url;

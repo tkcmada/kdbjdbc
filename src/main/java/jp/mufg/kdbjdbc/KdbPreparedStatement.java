@@ -23,7 +23,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import jp.mufg.slf4j.FileLogger;
+
 public class KdbPreparedStatement implements PreparedStatement {
+    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbPreparedStatement.class);
     private final PreparedStatement nativepstmt;
 
     KdbPreparedStatement(PreparedStatement nativepstmt) {

@@ -11,11 +11,13 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
+import jp.mufg.slf4j.FileLogger;
+
 /**
  * Sample JDBC Connection String jdbc:kdb:127.0.0.1:5001
  */
 public class KdbDriver implements Driver {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbDriver.class);
+    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDriver.class);
     public static final String URI_PREFIX = "jdbc:kdb:";
 
     static {

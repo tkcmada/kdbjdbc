@@ -21,8 +21,10 @@ import java.util.concurrent.Executor;
 
 import org.slf4j.LoggerFactory;
 
+import jp.mufg.slf4j.FileLogger;
+
 public class KdbConnection implements Connection {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbConnection.class);
+    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbConnection.class); //LoggerFactory.getLogger(KdbConnection.class);
     private final Connection conn;
 
     public KdbConnection(Connection conn, String url, Properties info) {
