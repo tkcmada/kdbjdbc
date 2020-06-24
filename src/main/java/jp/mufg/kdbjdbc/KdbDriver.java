@@ -34,6 +34,7 @@ public class KdbDriver implements Driver {
         if (!url.startsWith(URI_PREFIX)) {
             return null;
         }
+        logger.info("KdbDriver connect " + url + " " + info);
         try {
             Class.forName("jdbc");
         }
@@ -42,7 +43,7 @@ public class KdbDriver implements Driver {
         }
         String host_port = url.substring(KdbDriver.URI_PREFIX.length());
         String qconnstr = "jdbc:q:" + host_port;
-        logger.info("connecting to jdbc:q " + qconnstr + " " + String.valueOf(info));
+        logger.info("KdbDriver connecting to " + qconnstr + " " + String.valueOf(info));
         Connection conn = DriverManager.getConnection(qconnstr, info);
         return new KdbConnection(conn, url, info);
     }

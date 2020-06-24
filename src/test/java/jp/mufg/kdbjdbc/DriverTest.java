@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.logging.log4j.Level;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,8 @@ public class DriverTest {
     @Test
     public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","user_dummy","password_dummy");
+        Class.forName("jp.mufg.logjdbc.LogDriver");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
         DatabaseMetaData meta = h.getMetaData();
         ResultSet rs = meta.getColumns("catalog1", "schema1", null, null);
         while(rs.next()) {
@@ -31,9 +31,9 @@ public class DriverTest {
 
     @Test
     public void test_arithmatic() throws ClassNotFoundException, SQLException {
-        System.out.println("debug print test.");
         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","","");
+        Class.forName("jp.mufg.logjdbc.LogDriver");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
         Statement e = h.createStatement();
         ResultSet rs = e.executeQuery("q) flip ( `name`lg ! (`abc`def; 1 2) )");
         Assert.assertTrue(rs.next());
@@ -51,8 +51,10 @@ public class DriverTest {
     }
 
     @Test
-    public void test_Statement_t2() throws SQLException {
-        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","","");
+    public void test_Statement_t2() throws SQLException, ClassNotFoundException {
+        Class.forName("jp.mufg.kdbjdbc.KdbDriver");
+        Class.forName("jp.mufg.logjdbc.LogDriver");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
         Statement e = h.createStatement();
         ResultSet rs = e.executeQuery("q) select lg from t2");
         Assert.assertTrue(rs.next());
@@ -71,8 +73,10 @@ public class DriverTest {
     }
 
     @Test
-    public void test_PreparedStatement_t2() throws SQLException {
-        Connection h = DriverManager.getConnection("jdbc:kdb:localhost:5001","","");
+    public void test_PreparedStatement_t2() throws SQLException, ClassNotFoundException {
+        Class.forName("jp.mufg.kdbjdbc.KdbDriver");
+        Class.forName("jp.mufg.logjdbc.LogDriver");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
         PreparedStatement e = h.prepareStatement("q) select lg from t2");
         ResultSet rs = e.executeQuery();
         Assert.assertTrue(rs.next());

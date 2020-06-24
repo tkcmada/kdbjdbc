@@ -85,5 +85,5 @@ public class FileLogger extends LoggerBase {
 		}
 	}
 	
-	private static final AtomicReference<Writer> writer = new AtomicReference<>(null);
+	private static final AtomicReference<Writer> writer = new AtomicReference<Writer>(null);
 }

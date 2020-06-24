@@ -14,16 +14,27 @@ import jp.mufg.slf4j.FileLogger;
 public class LogDriver implements java.sql.Driver {
 	private static final org.slf4j.Logger logger = FileLogger.getLogger(LogDriver.class);
 	private static final String URL_PREFIX = "jdbc:log:"; //jdbc:log:jdbc:mysql:.....
-		
+
+    static {
+        logger.info("registering LogDriver...");
+        try {
+            java.sql.DriverManager.registerDriver(new LogDriver());
+        } catch (SQLException ex) {
+            throw new RuntimeException("Can't register LogDriver!", ex);
+        }
+    }
+
 	private String newUrl(String url) {
 		return url.replace("jdbc:log:", "");
 	}
 	
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
-		logger.info("connect " + url + " " + info);
+        if (! url.startsWith(URL_PREFIX))
+            return null;
+        logger.info("LogDriver connect " + url + " " + info);
 		url = newUrl(url);
-		logger.info("new url:" + url);
+		logger.info("new url " + url);
 		String logdir = (String) info.get("logdir");
 		if (logdir != null) {
 			FileLogger.setDirectory(new File(logdir));
