@@ -7,6 +7,10 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
+
 import org.slf4j.Logger;
 
 import jp.mufg.slf4j.FileLogger;
@@ -18,7 +22,6 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 	public LogDatabaseMetaData(DatabaseMetaData meta) {
 		super();
         this.meta = meta;
-        logger.info("constructor LogDatabaseMetaData v1.1");
 	}
 
 	public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -528,9 +531,30 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
-			throws SQLException { logger.info("getTables " + catalog + " " + schemaPattern + " " + schemaPattern + " " + tableNamePattern + " " + Arrays.toString(types));
-		return meta.getTables(catalog, schemaPattern, tableNamePattern, types);
-	}
+			throws SQLException {
+        logger.info("getTables " + catalog + " " + schemaPattern + " " + schemaPattern + " " + tableNamePattern + " " + Arrays.toString(types));
+        return dump(meta.getTables(catalog, schemaPattern, tableNamePattern, types));
+    }
+    
+    private static CachedRowSet dump(ResultSet rs) throws SQLException {
+        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+        crs.populate(rs);
+        rs.close();
+        crs.beforeFirst();
+        int n = crs.getMetaData().getColumnCount();
+        for(int i = 1; i <= n; i++) {
+            logger.info(i + ":" + crs.getMetaData().getColumnName(i));
+        }
+        while(crs.next()) {
+            logger.info("-----");
+            for(int i = 1; i <= n; i++) {
+                logger.info(i + ":" + crs.getObject(i));
+            }
+        }
+        logger.info("=====");
+        crs.beforeFirst();
+        return crs;
+    }
 
 	public ResultSet getSchemas() throws SQLException { logger.info("getSchemas");
 		return meta.getSchemas();

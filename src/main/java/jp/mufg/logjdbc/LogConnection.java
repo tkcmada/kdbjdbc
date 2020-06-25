@@ -95,7 +95,7 @@ public class LogConnection implements Connection {
 	}
 
 	public DatabaseMetaData getMetaData() throws SQLException {
-		logger.info("getMetaData v1.1");
+		logger.info("getMetaData");
 		return new LogDatabaseMetaData(conn.getMetaData());
 	}
 
