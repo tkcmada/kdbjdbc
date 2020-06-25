@@ -249,8 +249,9 @@ public class LogConnection implements Connection {
 	}
 
 	public boolean isValid(int timeout) throws SQLException {
-		logger.info("isValid " + timeout);
-		return conn.isValid(timeout);
+        boolean result = conn.isValid(timeout);
+		logger.info("isValid " + timeout + " -> " + result);
+        return result;
 	}
 
 	public void setClientInfo(String name, String value) throws SQLClientInfoException {

@@ -87,7 +87,7 @@ public class LogStatement implements Statement {
 	}
 
 	public final boolean execute(String sql) throws SQLException {
-		logger.info("execute " + sql);
+		logger.info("execute >>>" + sql + "<<<");
 		return stmt.execute(sql);
 	}
 

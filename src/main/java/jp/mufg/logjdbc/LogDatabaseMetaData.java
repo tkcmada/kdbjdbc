@@ -85,18 +85,21 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public String getDatabaseProductVersion() throws SQLException { 
-		logger.info("getDatabaseProductVersion");
-		return meta.getDatabaseProductVersion();
+		String result = meta.getDatabaseProductVersion();
+        logger.info("getDatabaseProductVersion -> " + result);
+        return result;
 	}
 
 	public String getDriverName() throws SQLException { 
-		logger.info("getDriverName");
-		return meta.getDriverName();
+		String result = meta.getDriverName();
+        logger.info("getDriverName -> " + result);
+        return result;
 	}
 
 	public String getDriverVersion() throws SQLException { 
-		logger.info("getDriverVersion");
-		return meta.getDriverVersion();
+		String result = meta.getDriverVersion();
+        logger.info("getDriverVersion -> " + result);
+        return result;
 	}
 
 	public int getDriverMajorVersion() { logger.info("getDriverMajorVersion");
@@ -564,8 +567,9 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 		return meta.getCatalogs();
 	}
 
-	public ResultSet getTableTypes() throws SQLException { logger.info("getTableTypes");
-		return meta.getTableTypes();
+	public ResultSet getTableTypes() throws SQLException {
+        logger.info("getTableTypes");
+		return dump(meta.getTableTypes());
 	}
 
 	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
