@@ -24,12 +24,14 @@ public class FileLogger extends LoggerBase {
 		System.out.println(log);
 		if(writer.get() != null) {
 			try {
-				writer.get().write(log);
+                writer.get().write(log);
+                writer.get().write("\r\n");
+                writer.get().flush();
 			} catch (IOException e) {
 				System.out.println("error writing log. " + e.getMessage());
 				e.printStackTrace();
-			}
-		}
+            }
+        }
 	}
 	
 	@Override
@@ -76,14 +78,22 @@ public class FileLogger extends LoggerBase {
 	 * @param logdir
 	 */
 	public static void setDirectory(File logdir) {
+        if (writer.get() != null)
+            return;
+        System.out.println("setting logdir " + logdir);
 		File logfile = new File(logdir, "log.txt");
 		try {
-			writer.compareAndSet(null, new FileWriter(logfile, true));
+            FileWriter w = new FileWriter(logfile, true);
+            if ( ! writer.compareAndSet(null, w) ) {
+                w.close();
+            }
+            writer.get().append(new Date().toString() + " starting logging\r\n");
+            writer.get().flush();
 		} catch (IOException e) {
 			System.out.println("error opening " + logfile + " " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
-	private static final AtomicReference<Writer> writer = new AtomicReference<Writer>(null);
+    private static final AtomicReference<Writer> writer = new AtomicReference<Writer>(null);
 }

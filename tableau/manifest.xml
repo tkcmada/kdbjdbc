@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
-
 <connector-plugin class='kdb_jdbc' superclass='jdbc' plugin-version='0.0.0' name='KDB JDBC' version='18.1' min-version-tableau='2019.4'>
   <vendor-information>
-      <company name="Company Name"/>
+      <company name="MUFG Bank"/>
       <support-link url="https://example.com"/>
       <driver-download-link url="https://drivers.example.com"/>
   </vendor-information>
@@ -10,15 +9,31 @@
     <vendor name="vendor"/>
     <driver name="driver"/>
     <customizations>
+      <customization name="CAP_CREATE_TEMP_TABLES" value="no"/>
       <customization name="CAP_SELECT_INTO" value="no"/>
       <customization name="CAP_SELECT_TOP_INTO" value="no"/>
-      <customization name="CAP_CREATE_TEMP_TABLES" value="no"/>
+      <customization name="CAP_FAST_METADATA" value="yes"/>
+
+      <customization name="CAP_ODBC_METADATA_SUPPRESS_EXECUTED_QUERY" value="no"/>
+
+      <customization name="CAP_CONNECT_STORED_PROCEDURE" value="no"/>
+
+      <customization name="CAP_ISOLATION_LEVEL_READ_COMMITTED" value="no"/>
+      <customization name="CAP_ISOLATION_LEVEL_READ_UNCOMMITTED" value="no"/>
+      <customization name="CAP_ISOLATION_LEVEL_REPEATABLE_READS" value="no"/>
+      <customization name="CAP_ISOLATION_LEVEL_SERIALIZABLE" value="no"/>
+      <customization name="CAP_MULTIPLE_CONNECTIONS_FROM_SAME_IP" value="no"/>
+      <customization name="CAP_QUERY_HAVING_UNSUPPORTED" value="yes"/>
+
       <customization name="CAP_QUERY_BOOLEXPR_TO_INTEXPR" value="no"/>
       <customization name="CAP_QUERY_GROUP_BY_BOOL" value="yes"/>
       <customization name="CAP_QUERY_GROUP_BY_DEGREE" value="yes"/>
       <customization name="CAP_QUERY_SORT_BY" value="yes"/>
-      <customization name="CAP_QUERY_SUBQUERIES" value="yes"/>
+      <customization name="CAP_QUERY_SUBQUERIES" value="no"/>
       <customization name="CAP_QUERY_TOP_N" value="yes"/>
+      <customization name="CAP_QUERY_TOPSTYLE_LIMIT" value="yes"/>
+      <customization name="CAP_QUERY_TOPSTYLE_ROWNUM" value="no"/>
+      <customization name="CAP_QUERY_TOPSTYLE_TOP" value="no"/>
       <customization name="CAP_QUERY_TOP_SAMPLE" value="yes"/>
       <customization name="CAP_QUERY_TOP_SAMPLE_PERCENT" value="yes"/>
       <customization name="CAP_QUERY_WHERE_FALSE_METADATA" value="yes"/>

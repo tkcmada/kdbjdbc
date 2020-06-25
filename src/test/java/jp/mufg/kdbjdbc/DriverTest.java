@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +20,11 @@ public class DriverTest {
     public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
         Class.forName("jp.mufg.logjdbc.LogDriver");
-        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
+        Properties props = new Properties();
+        props.put("user", "user_dummy");
+        props.put("password", "password_dummy");
+        props.put("logdir", ".");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001", props);
         DatabaseMetaData meta = h.getMetaData();
         ResultSet rs = meta.getColumns("catalog1", "schema1", null, null);
         while(rs.next()) {

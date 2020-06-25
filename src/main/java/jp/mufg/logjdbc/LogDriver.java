@@ -25,7 +25,7 @@ public class LogDriver implements java.sql.Driver {
     }
 
 	private String newUrl(String url) {
-		return url.replace("jdbc:log:", "");
+		return url.replace("jdbc:log:", "").replaceFirst("[\\?\\&]logdir=.+", "");
 	}
 	
 	@Override
