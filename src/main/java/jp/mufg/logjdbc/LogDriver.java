@@ -29,20 +29,19 @@ public class LogDriver implements java.sql.Driver {
 	}
 	
 	@Override
-	public Connection connect(String url, Properties info) throws SQLException {
-        if (! url.startsWith(URL_PREFIX))
+	public Connection connect(String orgurl, Properties info) throws SQLException {
+        if (! orgurl.startsWith(URL_PREFIX))
             return null;
-        if(true) throw new UnsupportedOperationException("error LogDriver connect " + url + " " + info);
-        logger.info("LogDriver connect " + url + " " + info);
-		url = newUrl(url);
-		logger.info("new url " + url);
+		String url = newUrl(orgurl);
 		String logdir = (String) info.get("logdir");
 		if (logdir != null) {
 			FileLogger.setDirectory(new File(logdir));
 			info = (Properties) info.clone();
 			info.remove("logdir");
-		}
-		return DriverManager.getConnection(url, info);
+        }
+        logger.info("original url is " + orgurl);
+        logger.info("connect " + url + " " + String.valueOf(info));
+		return new LogConnection(DriverManager.getConnection(url, info));
 	}
 
 	@Override
