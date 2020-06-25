@@ -96,7 +96,7 @@ public class LogConnection implements Connection {
 
 	public DatabaseMetaData getMetaData() throws SQLException {
 		logger.info("getMetaData");
-		return conn.getMetaData();
+		return new LogDatabaseMetaData(conn.getMetaData());
 	}
 
 	public void setReadOnly(boolean readOnly) throws SQLException {
