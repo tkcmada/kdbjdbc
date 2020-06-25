@@ -11,107 +11,106 @@ import org.slf4j.Logger;
 
 import jp.mufg.slf4j.FileLogger;
 
-public class LogDatabaseMetaData implements DatabaseMetaData { logger.info("xxx");
+public class LogDatabaseMetaData implements DatabaseMetaData {
 	private static final Logger logger = FileLogger.getLogger(LogDatabaseMetaData.class);
 	private final DatabaseMetaData meta;
 
-	public LogDatabaseMetaData(DatabaseMetaData meta) { logger.info("xxx");
+	public LogDatabaseMetaData(DatabaseMetaData meta) {
 		super();
 		this.meta = meta;
 	}
 
-	public <T> T unwrap(Class<T> iface) throws SQLException { logger.info("xxx");
+	public <T> T unwrap(Class<T> iface) throws SQLException {
 		logger.info("unwrap");
 		return meta.unwrap(iface);
 	}
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException { logger.info("xxx");
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		logger.info("isWrapperFor");
 		return meta.isWrapperFor(iface);
 	}
 
-	public boolean allProceduresAreCallable() throws SQLException { logger.info("xxx");
+	public boolean allProceduresAreCallable() throws SQLException { 
 		logger.info("allProceduresAreCallable");
 		return meta.allProceduresAreCallable();
 	}
 
-	public boolean allTablesAreSelectable() throws SQLException { logger.info("xxx");
+	public boolean allTablesAreSelectable() throws SQLException { 
 		logger.info("allTablesAreSelectable");
 		return meta.allTablesAreSelectable();
 	}
 
-	public String getURL() throws SQLException { logger.info("xxx");
+	public String getURL() throws SQLException { 
 		logger.info("getURL");
 		return meta.getURL();
 	}
 
-	public String getUserName() throws SQLException { logger.info("xxx");
+	public String getUserName() throws SQLException { 
 		logger.info("getUserName");
 		return meta.getUserName();
 	}
 
-	public boolean isReadOnly() throws SQLException { logger.info("xxx");
+	public boolean isReadOnly() throws SQLException {
 		logger.info("isReadOnly");
 		return meta.isReadOnly();
 	}
 
-	public boolean nullsAreSortedHigh() throws SQLException { logger.info("xxx");
+	public boolean nullsAreSortedHigh() throws SQLException { 
 		logger.info("nullsAreSortedHigh");
 		return meta.nullsAreSortedHigh();
 	}
 
-	public boolean nullsAreSortedLow() throws SQLException { logger.info("xxx");
+	public boolean nullsAreSortedLow() throws SQLException { 
 		logger.info("xxx");
 		return meta.nullsAreSortedLow();
 	}
 
-	public boolean nullsAreSortedAtStart() throws SQLException { logger.info("xxx");
+	public boolean nullsAreSortedAtStart() throws SQLException { 
 		logger.info("xxx");
 		return meta.nullsAreSortedAtStart();
 	}
 
-	public boolean nullsAreSortedAtEnd() throws SQLException { logger.info("xxx");
+	public boolean nullsAreSortedAtEnd() throws SQLException { 
 		logger.info("xxx");
 		return meta.nullsAreSortedAtEnd();
 	}
 
-	public String getDatabaseProductName() throws SQLException { logger.info("xxx");
+	public String getDatabaseProductName() throws SQLException { 
 		logger.info("getDatabaseProductName");
 		return meta.getDatabaseProductName();
 	}
 
-	public String getDatabaseProductVersion() throws SQLException { logger.info("xxx");
+	public String getDatabaseProductVersion() throws SQLException { 
 		logger.info("getDatabaseProductVersion");
 		return meta.getDatabaseProductVersion();
 	}
 
-	public String getDriverName() throws SQLException { logger.info("xxx");
+	public String getDriverName() throws SQLException { 
 		logger.info("getDriverName");
 		return meta.getDriverName();
 	}
 
-	public String getDriverVersion() throws SQLException { logger.info("xxx");
-		logger.info("getDriverVersion");
+	public String getDriverVersion() throws SQLException { 
 		return meta.getDriverVersion();
 	}
 
-	public int getDriverMajorVersion() { logger.info("xxx");
+	public int getDriverMajorVersion() { logger.info("getDriverMajorVersion");
 		return meta.getDriverMajorVersion();
 	}
 
-	public int getDriverMinorVersion() { logger.info("xxx");
+	public int getDriverMinorVersion() { logger.info("getDriverMinorVersion");
 		return meta.getDriverMinorVersion();
 	}
 
-	public boolean usesLocalFiles() throws SQLException { logger.info("xxx");
+	public boolean usesLocalFiles() throws SQLException { logger.info("usesLocalFiles");
 		return meta.usesLocalFiles();
 	}
 
-	public boolean usesLocalFilePerTable() throws SQLException { logger.info("xxx");
+	public boolean usesLocalFilePerTable() throws SQLException { logger.info("usesLocalFilePerTable");
 		return meta.usesLocalFilePerTable();
 	}
 
-	public boolean supportsMixedCaseIdentifiers() throws SQLException { logger.info("xxx");
+	public boolean supportsMixedCaseIdentifiers() throws SQLException { logger.info("supportsMixedCaseIdentifiers");
 		return meta.supportsMixedCaseIdentifiers();
 	}
 
