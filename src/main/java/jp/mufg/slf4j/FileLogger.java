@@ -20,7 +20,7 @@ public class FileLogger extends LoggerBase {
 		this.name = name;
 	}
 
-	private void writeLog(String log) {
+	private static synchronized void writeLog(String log) {
 		System.out.println(log);
 		if(writer.get() != null) {
 			try {
@@ -87,9 +87,11 @@ public class FileLogger extends LoggerBase {
             if ( ! writer.compareAndSet(null, w) ) {
                 w.close();
             }
-            writer.get().append(new Date().toString() + " starting logging\r\n");
-            writer.get().flush();
-		} catch (IOException e) {
+            else
+            {
+               writeLog(new Date().toString() + " starting logging " + logfile + " v1.1\r\n");
+            }
+ 		} catch (IOException e) {
 			System.out.println("error opening " + logfile + " " + e.getMessage());
 			e.printStackTrace();
 		}
