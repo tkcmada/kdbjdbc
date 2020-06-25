@@ -1,4 +1,5 @@
 *.base
+*.log
 target
 .settings
 .theia
