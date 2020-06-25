@@ -32,6 +32,7 @@ public class LogDriver implements java.sql.Driver {
 	public Connection connect(String url, Properties info) throws SQLException {
         if (! url.startsWith(URL_PREFIX))
             return null;
+        if(true) throw new UnsupportedOperationException("error LogDriver connect " + url + " " + info);
         logger.info("LogDriver connect " + url + " " + info);
 		url = newUrl(url);
 		logger.info("new url " + url);

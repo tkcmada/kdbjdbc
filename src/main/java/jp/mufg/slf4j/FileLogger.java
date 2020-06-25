@@ -89,7 +89,7 @@ public class FileLogger extends LoggerBase {
             }
             else
             {
-               writeLog(new Date().toString() + " starting logging " + logfile + " v1.1\r\n");
+               writeLog(new Date().toString() + " starting logging " + logfile + " v1.2\r\n");
             }
  		} catch (IOException e) {
 			System.out.println("error opening " + logfile + " " + e.getMessage());
