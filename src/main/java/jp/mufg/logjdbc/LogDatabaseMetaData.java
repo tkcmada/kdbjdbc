@@ -17,7 +17,8 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 
 	public LogDatabaseMetaData(DatabaseMetaData meta) {
 		super();
-		this.meta = meta;
+        this.meta = meta;
+        logger.info("constructor LogDatabaseMetaData v1.1");
 	}
 
 	public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -71,7 +72,7 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public boolean nullsAreSortedAtEnd() throws SQLException { 
-		logger.info("xxx");
+		logger.info("nullsAreSortedAtEnd");
 		return meta.nullsAreSortedAtEnd();
 	}
 
@@ -91,6 +92,7 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public String getDriverVersion() throws SQLException { 
+		logger.info("getDriverVersion");
 		return meta.getDriverVersion();
 	}
 
