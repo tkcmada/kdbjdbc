@@ -20,17 +20,19 @@ public class LogStatement implements Statement {
 		this.stmt = stmt;
 	}
 
-	public final <T> T unwrap(Class<T> iface) throws SQLException {
-		return stmt.unwrap(iface);
-	}
-
 	public final ResultSet executeQuery(String sql) throws SQLException {
 		logger.info("executeQuery " + sql);
 		return new LogResultSet(stmt.executeQuery(sql));
 	}
 
 	public final boolean isWrapperFor(Class<?> iface) throws SQLException {
+		logger.info("isWrapperFor");
 		return stmt.isWrapperFor(iface);
+	}
+
+	public final <T> T unwrap(Class<T> iface) throws SQLException {
+		logger.info("unwrap");
+		return stmt.unwrap(iface);
 	}
 
 	public final int executeUpdate(String sql) throws SQLException {
