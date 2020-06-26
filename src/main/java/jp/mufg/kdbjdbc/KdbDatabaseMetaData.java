@@ -47,11 +47,20 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 		List<Object[]> rows = new ArrayList<Object[]>();
 		rows.add(new Object[] {"FOREIGN TABLE"});//1
 		rows.add(new Object[] {"INDEX"});//2
-		rows.add(new Object[] {"MATEALIZED VIEW"});//3
-		rows.add(new Object[] {"PARITIONED TABLE"});//4
+		rows.add(new Object[] {"MATERIALIZED VIEW"});//3
+		rows.add(new Object[] {"PARTITIONED TABLE"});//4
 		rows.add(new Object[] {"SEQUENCE"});//5
-		rows.add(new Object[] {"TABLE"});//6
-		rows.add(new Object[] {"TYPE"});//7
+		rows.add(new Object[] {"SYSTEM INDEX"});//6
+		rows.add(new Object[] {"SYSTEM TABLE"});//7
+		rows.add(new Object[] {"SYSTEM TOAST INDEX"});//8
+		rows.add(new Object[] {"SYSTEM TOAST TABLE"});//8
+		rows.add(new Object[] {"SYSTEM VIEW"});//8
+		rows.add(new Object[] {"TABLE"});//8
+		rows.add(new Object[] {"TEMPORARY INDEX"});//8
+		rows.add(new Object[] {"TEMPORARY SEQUENCE"});//8
+		rows.add(new Object[] {"TEMPORARY TABLE"});//8
+		rows.add(new Object[] {"TEMPORARY VIEW"});//8
+		rows.add(new Object[] {"TYPE"});//8
 		rows.add(new Object[] {"VIEW"});//8
 		return new ResultSetImpl(meta, rows);
 	}
