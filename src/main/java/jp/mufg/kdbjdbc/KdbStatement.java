@@ -10,23 +10,31 @@ import jp.mufg.slf4j.FileLogger;
 
 public class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
-    private final Statement nativestmt;
+    // private final Statement nativestmt;
     private ResultSet rs;
-    KdbStatement(Statement nativestmt) {
-        this.nativestmt = nativestmt;
+    KdbStatement() {
+        // this.nativestmt = nativestmt;
     }
 
     @Override
     public void close() throws SQLException {
-        nativestmt.close();
+        // nativestmt.close();
     }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        // return nativestmt.isClosed();
+        return false;
+    }
+
     
     @Override
     public boolean execute(String sql) throws SQLException {
         logger.info("executeQuery:" + String.valueOf(sql));
         if(sql.startsWith("q)")) {
-            rs = nativestmt.executeQuery(sql);
-            return true;
+            // rs = nativestmt.executeQuery(sql);
+            // return true;
+            throw new UnsupportedOperationException("native q is not support " + sql);
         }
         else {
         	if(sql.contains(" TEMPORARY ")) {
@@ -34,7 +42,7 @@ public class KdbStatement implements Statement {
                 this.rs = null;
         		return false;
         	}
-            throw new UnsupportedOperationException("not support");
+            throw new UnsupportedOperationException("general SQL is not support " + sql);
         }
     }
 
@@ -261,11 +269,6 @@ public class KdbStatement implements Statement {
     public int getResultSetHoldability() throws SQLException {
         // TODO Auto-generated method stub
         return 0;
-    }
-
-    @Override
-    public boolean isClosed() throws SQLException {
-        return nativestmt.isClosed();
     }
 
     @Override

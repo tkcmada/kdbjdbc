@@ -19,70 +19,59 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import org.slf4j.LoggerFactory;
-
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbConnection implements Connection {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbConnection.class); //LoggerFactory.getLogger(KdbConnection.class);
-    private final Connection conn;
+    // private final Connection conn;
 
-    public KdbConnection(Connection conn, String url, Properties info) {
-        this.conn = conn;
+    public KdbConnection() {
+        // this.conn = conn;
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new KdbStatement(conn.createStatement());
+        return new KdbStatement(); //conn.createStatement());
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        logger.info("prepareStatement:" + String.valueOf(sql));
-        if(sql.startsWith("q)")) {
-            //direct execution mode
-            return conn.prepareStatement(sql);
-        }
-        else {
-            //TODO : here we need parse  a given SQL and convert it into q-script
-            String qscript = sql; //TODO convert to qscript
-            return new KdbPreparedStatement(conn.prepareStatement(qscript));
-        }
+        throw new UnsupportedOperationException("prepareStatement " + sql);
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        this.conn.setAutoCommit(autoCommit);
+        throw new UnsupportedOperationException("setAutoCommit");
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return conn.getAutoCommit();
+        throw new UnsupportedOperationException("getAutoCommit");
     }
 
     @Override
     public void commit() throws SQLException {
-        conn.commit();
+        throw new UnsupportedOperationException("commit");
     }
 
     @Override
     public void rollback() throws SQLException {
-        conn.rollback();
+        throw new UnsupportedOperationException("rollback");
     }
 
     @Override
     public void close() throws SQLException {
-        conn.close();
+        // conn.close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return conn.isClosed();
+        throw new UnsupportedOperationException("isClosed");
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return new KdbDatabaseMetaData(conn);
+        return new KdbDatabaseMetaData();
     }
 
 	@Override

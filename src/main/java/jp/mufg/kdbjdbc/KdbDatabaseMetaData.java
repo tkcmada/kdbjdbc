@@ -12,10 +12,10 @@ import jp.mufg.slf4j.FileLogger;
 
 public class KdbDatabaseMetaData implements DatabaseMetaData {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
-    private final Connection conn;
+    // private final Connection conn;
 
-    KdbDatabaseMetaData(Connection conn) {
-    	this.conn = conn;
+    KdbDatabaseMetaData() {
+    	// this.conn = conn;
     }
 
 	@Override
@@ -258,12 +258,14 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 
 	@Override
 	public ResultSet getSchemas() throws SQLException {
-        return conn.createStatement().executeQuery("q) flip ( `TABLE_SCHEM`TABLE_CATALOG ! ( 1#(enlist `schema1); 1#(enlist `catalog1) ) )");
+        throw new UnsupportedOperationException("getSchemas");
+        // return conn.createStatement().executeQuery("q) flip ( `TABLE_SCHEM`TABLE_CATALOG ! ( 1#(enlist `schema1); 1#(enlist `catalog1) ) )");
 	}
 
 	@Override
 	public ResultSet getCatalogs() throws SQLException {
-        return conn.createStatement().executeQuery("q) flip ( `TABLE_CATALOG`dummy ! ( 1#(enlist `catalog1); 1#(enlist `dummy) ) )");
+        // return conn.createStatement().executeQuery("q) flip ( `TABLE_CATALOG`dummy ! ( 1#(enlist `catalog1); 1#(enlist `dummy) ) )");
+        throw new UnsupportedOperationException("getCatalogs");
 	}
 
 	@Override

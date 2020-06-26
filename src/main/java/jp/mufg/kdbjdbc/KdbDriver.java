@@ -44,8 +44,9 @@ public class KdbDriver implements Driver {
         String host_port = url.substring(KdbDriver.URI_PREFIX.length());
         String qconnstr = "jdbc:q:" + host_port;
         logger.info("KdbDriver connecting to " + qconnstr + " " + String.valueOf(info));
-        Connection conn = DriverManager.getConnection(qconnstr, info);
-        return new KdbConnection(conn, url, info);
+        logger.info("no connect! dummy connection !");
+        // Connection conn = DriverManager.getConnection(qconnstr, info);
+        return new KdbConnection();
     }
 
     @Override
