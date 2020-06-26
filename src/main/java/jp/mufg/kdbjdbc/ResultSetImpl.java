@@ -32,7 +32,8 @@ public class ResultSetImpl implements ResultSet {
 	private static final Logger logger = FileLogger.getLogger(ResultSetImpl.class);
 	private final ResultSetMetaData meta;
 	private final List<Object[]> rows;
-	private int cursor = 0;
+    private int cursor = 0;
+    private boolean wasnull = false;
 
 	public ResultSetImpl(ResultSetMetaData meta, List<Object[]> rows) {
 		super();
@@ -76,9 +77,7 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public boolean wasNull() throws SQLException {
-		logger.info("wasNull");
-		throw new UnsupportedOperationException("ResultSetImpl.wasNull is not supported");
-		
+        return wasnull;
 	}
 
 	@Override
@@ -95,37 +94,49 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
-		Object val = getObject(columnIndex);
+        Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).byteValue();		
 	}
 
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
 		Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).shortValue();		
 	}
 
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
-		Object val = getObject(columnIndex);
+        Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).intValue();		
 	}
 
 	@Override
 	public long getLong(int columnIndex) throws SQLException {
 		Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).longValue();		
 	}
 
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
 		Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).floatValue();		
 	}
 
 	@Override
 	public double getDouble(int columnIndex) throws SQLException {
 		Object val = getObject(columnIndex);
+        if(val == null)
+            return 0;
 		return ((Number)val).doubleValue();				
 	}
 
@@ -297,7 +308,9 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public Object getObject(int columnIndex) throws SQLException {
-		return rows.get(cursor)[columnIndex-1];
+        Object val = rows.get(cursor)[columnIndex-1];
+        wasnull = val == null;
+        return val;
 	}
 
 	@Override
