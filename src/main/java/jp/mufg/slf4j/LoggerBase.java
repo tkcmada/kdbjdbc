@@ -5,8 +5,10 @@ import org.slf4j.Marker;
 import org.slf4j.event.Level;
 
 public abstract class LoggerBase implements Logger {
+	protected abstract void log(Level level, String msg);
 	protected abstract void log(Level level, String format, Object...args);
 	protected abstract void log(Level level, String msg, Throwable t);
+	protected abstract void log(Level info, Marker marker, String msg);
 	protected abstract void log(Level info, Marker marker, String format, Object... arguments);
 	protected abstract void log(Level info, Marker marker, String msg, Throwable t);
 

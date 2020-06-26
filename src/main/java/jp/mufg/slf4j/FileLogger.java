@@ -36,7 +36,11 @@ public class FileLogger extends LoggerBase {
 	
 	@Override
 	protected void log(Level level, String format, Object... args) {
-		String msg = String.format(format, args);
+        log(level, format);
+	}
+
+	@Override
+	protected void log(Level level, String msg) {
 		String log = new Date() + " " + name + "[" + level + "] " + msg;
 		writeLog(log);
 	}
@@ -52,7 +56,12 @@ public class FileLogger extends LoggerBase {
 
 	@Override
 	protected void log(Level level, Marker marker, String format, Object... args) {
-		String log = new Date() + " " + name + "[" + level + "] " + marker + " " + String.format(format, args);
+        log(level, marker, format);
+	}
+
+	@Override
+	protected void log(Level level, Marker marker, String msg) {
+		String log = new Date() + " " + name + "[" + level + "] " + marker + " " + msg;
 		writeLog(log);
 	}
 
