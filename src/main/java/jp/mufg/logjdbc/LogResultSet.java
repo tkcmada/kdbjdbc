@@ -53,7 +53,8 @@ public class LogResultSet implements ResultSet {
 			ResultSetMetaData meta = getMetaData();
 			int n = meta.getColumnCount();
 			for(int i = 1; i <= n; i++) {
-				logger.info(i + ":" + meta.getColumnName(i) + ":" + getObject(i));
+                Object value = getObject(i);
+				logger.info(i + ":" + meta.getColumnName(i) + ":" + value + "(" + (value == null ? "null" : value.getClass().getName()) + ")");
 			}
 			logger.info("----");
 		}

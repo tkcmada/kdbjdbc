@@ -95,8 +95,10 @@ private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.c
 		return meta.getCatalogName(column);
 	}
 
-	public int getColumnType(int column) throws SQLException { logger.info("getColumnType");
-		return meta.getColumnType(column);
+	public int getColumnType(int column) throws SQLException {
+        int result = meta.getColumnType(column);
+        logger.info("getColumnType(" + column + ") -> " + result);
+        return result;
 	}
 
 	public String getColumnTypeName(int column) throws SQLException {

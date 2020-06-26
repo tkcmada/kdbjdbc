@@ -572,12 +572,14 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 		return meta.getVersionColumns(catalog, schema, table);
 	}
 
-	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException { logger.info("getPrimaryKeys");
-		return meta.getPrimaryKeys(catalog, schema, table);
+	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+        logger.info("getPrimaryKeys(" + catalog + " , " + schema + " , " + table + ")");
+		return new LogResultSet(meta.getPrimaryKeys(catalog, schema, table));
 	}
 
-	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException { logger.info("getImportedKeys");
-		return meta.getImportedKeys(catalog, schema, table);
+	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+        logger.info("getImportedKeys(" + catalog + " , " + schema + " , " + table + ")");
+		return new LogResultSet(meta.getImportedKeys(catalog, schema, table));
 	}
 
 	public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException { logger.info("getExportedKeys");
