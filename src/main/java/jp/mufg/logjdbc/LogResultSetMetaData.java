@@ -20,7 +20,7 @@ private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.c
 		return meta.unwrap(iface);
 	}
 
-	public int getColumnCount() throws SQLException { logger.info("getColumnCount");
+	public int getColumnCount() throws SQLException { //logger.info("getColumnCount");
 		return meta.getColumnCount();
 	}
 
@@ -44,23 +44,29 @@ private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.c
 		return meta.isCurrency(column);
 	}
 
-	public int isNullable(int column) throws SQLException { logger.info("isNullable");
-		return meta.isNullable(column);
+	public int isNullable(int column) throws SQLException {
+        int result = meta.isNullable(column);
+        logger.info("isNullable(" + column + ") -> " + result);
+		return result;
 	}
 
 	public boolean isSigned(int column) throws SQLException { logger.info("isSigned");
 		return meta.isSigned(column);
 	}
 
-	public int getColumnDisplaySize(int column) throws SQLException { logger.info("getColumnDisplaySize");
-		return meta.getColumnDisplaySize(column);
+	public int getColumnDisplaySize(int column) throws SQLException {
+        int result = meta.getColumnDisplaySize(column);
+        logger.info("getColumnDisplaySize(" + column + ") -> " + result);
+		return result;
+    }
+
+	public String getColumnLabel(int column) throws SQLException {
+        String result = meta.getColumnLabel(column);
+        logger.info("getColumnLabel(" + column + ") -> " + result);
+		return result;
 	}
 
-	public String getColumnLabel(int column) throws SQLException { logger.info("getColumnLabel");
-		return meta.getColumnLabel(column);
-	}
-
-	public String getColumnName(int column) throws SQLException { logger.info("getColumnName");
+	public String getColumnName(int column) throws SQLException { //logger.info("getColumnName");
 		return meta.getColumnName(column);
 	}
 
@@ -68,12 +74,17 @@ private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.c
 		return meta.getSchemaName(column);
 	}
 
-	public int getPrecision(int column) throws SQLException { logger.info("getPrecision");
-		return meta.getPrecision(column);
+	public int getPrecision(int column) throws SQLException {
+        int result = meta.getPrecision(column);
+        logger.info("getPrecision(" + column + ") -> " + result);
+		return result;
 	}
 
-	public int getScale(int column) throws SQLException { logger.info("getScale");
-		return meta.getScale(column);
+	public int getScale(int column) throws SQLException {
+        int result = meta.getScale(column);
+        logger.info("getScale(" + column + ") -> " + result);
+		return result;
+
 	}
 
 	public String getTableName(int column) throws SQLException { logger.info("getTableName");
@@ -88,8 +99,10 @@ private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.c
 		return meta.getColumnType(column);
 	}
 
-	public String getColumnTypeName(int column) throws SQLException { logger.info("getColumnTypeName");
-		return meta.getColumnTypeName(column);
+	public String getColumnTypeName(int column) throws SQLException {
+        String result = meta.getColumnTypeName(column);
+        logger.info("getColumnTypeName(" + column + ") -> " + result);
+		return result;
 	}
 
 	public boolean isReadOnly(int column) throws SQLException { logger.info("isReadOnly");
