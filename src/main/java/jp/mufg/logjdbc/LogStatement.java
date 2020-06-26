@@ -26,7 +26,7 @@ public class LogStatement implements Statement {
 
 	public final ResultSet executeQuery(String sql) throws SQLException {
 		logger.info("executeQuery " + sql);
-		return stmt.executeQuery(sql);
+		return new LogResultSet(stmt.executeQuery(sql));
 	}
 
 	public final boolean isWrapperFor(Class<?> iface) throws SQLException {

@@ -520,42 +520,42 @@ public class LogDatabaseMetaData implements DatabaseMetaData {
 
 	public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
 			throws SQLException { logger.info("getProcedures " + catalog + " " + schemaPattern + " " + procedureNamePattern);
-		return meta.getProcedures(catalog, schemaPattern, procedureNamePattern);
+		return new LogResultSet(meta.getProcedures(catalog, schemaPattern, procedureNamePattern));
 	}
 
 	public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
 			String columnNamePattern) 
 			throws SQLException { logger.info("getProcedureColumns " + catalog + " " + schemaPattern + " " + procedureNamePattern + " " + columnNamePattern);
-		return meta.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+		return new LogResultSet(meta.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern));
 	}
 
 	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
 			throws SQLException {
         logger.info("getTables " + catalog + " " + schemaPattern + " " + schemaPattern + " " + tableNamePattern + " " + Arrays.toString(types));
-        return meta.getTables(catalog, schemaPattern, tableNamePattern, types);
+        return new LogResultSet(meta.getTables(catalog, schemaPattern, tableNamePattern, types));
     }
     
 	public ResultSet getSchemas() throws SQLException { logger.info("getSchemas");
-		return meta.getSchemas();
+		return new LogResultSet(meta.getSchemas());
 	}
 
 	public ResultSet getCatalogs() throws SQLException { logger.info("getCatalogs");
-		return meta.getCatalogs();
+		return new LogResultSet(meta.getCatalogs());
 	}
 
 	public ResultSet getTableTypes() throws SQLException {
         logger.info("getTableTypes");
-		return meta.getTableTypes();
+		return new LogResultSet(meta.getTableTypes());
 	}
 
 	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
 			throws SQLException { logger.info("getColumns " + catalog + " " + schemaPattern + " " + tableNamePattern + " " + columnNamePattern);
-		return meta.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+		return new LogResultSet(meta.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
 	}
 
 	public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
 			throws SQLException { logger.info("getColumnPrivileges " + catalog + " " + schema + " " + table + " " + columnNamePattern);
-		return meta.getColumnPrivileges(catalog, schema, table, columnNamePattern);
+		return new LogResultSet(meta.getColumnPrivileges(catalog, schema, table, columnNamePattern));
 	}
 
 	public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
