@@ -15,27 +15,27 @@ public class LogUtil {
 
     private LogUtil() {}
     
-    public static CachedRowSet dump(ResultSet rs) throws SQLException {
-        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-        crs.populate(rs);
-        rs.close();
-        crs.beforeFirst();
-        int n = crs.getMetaData().getColumnCount();
-        String[] names = new String[n];
-        logger.info("=====");
-        for(int i = 1; i <= n; i++) {
-            names[i-1] = crs.getMetaData().getColumnName(i);
-            logger.info(i + ":" + names[i-1]);
-        }
-        while(crs.next()) {
-            logger.info("-----");
-            for(int i = 1; i <= n; i++) {
-                logger.info(names[i-1] + ":" + crs.getObject(i));
-            }
-        }
-        logger.info("=====");
-        crs.beforeFirst();
-        return crs;
-    }
+    // public static CachedRowSet dump(ResultSet rs) throws SQLException {
+    //     CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+    //     crs.populate(rs);
+    //     rs.close();
+    //     crs.beforeFirst();
+    //     int n = crs.getMetaData().getColumnCount();
+    //     String[] names = new String[n];
+    //     logger.info("=====");
+    //     for(int i = 1; i <= n; i++) {
+    //         names[i-1] = crs.getMetaData().getColumnName(i);
+    //         logger.info(i + ":" + names[i-1]);
+    //     }
+    //     while(crs.next()) {
+    //         logger.info("-----");
+    //         for(int i = 1; i <= n; i++) {
+    //             logger.info(names[i-1] + ":" + crs.getObject(i));
+    //         }
+    //     }
+    //     logger.info("=====");
+    //     crs.beforeFirst();
+    //     return crs;
+    // }
 
 }
