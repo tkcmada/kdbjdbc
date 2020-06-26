@@ -5,701 +5,255 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
-
-import javax.sql.rowset.CachedRowSet;
-
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbDatabaseMetaData implements DatabaseMetaData {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
     private final Connection conn;
-    private final String user;
-    private final String url;
 
-    KdbDatabaseMetaData(final Connection conn) {
-        this.conn = conn;
-        this.url = null;
-        this.user = null;
+    KdbDatabaseMetaData(Connection conn) {
+    	this.conn = conn;
     }
 
 	@Override
-	public <T> T unwrap(final Class<T> iface) throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        throw new UnsupportedOperationException("not support");
-    }
-
-	@Override
-	public boolean allProceduresAreCallable() throws SQLException {
-        return false;
-	}
-
-	@Override
-	public boolean allTablesAreSelectable() throws SQLException {
-		return true;
-	}
-
-	@Override
-	public String getURL() throws SQLException {
-        return url;
-    }
-
-	@Override
-	public String getUserName() throws SQLException {
-        return user;
-	}
-
-	@Override
-	public boolean isReadOnly() throws SQLException {
-        return true;
-	}
-
-	@Override
-	public boolean nullsAreSortedHigh() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean nullsAreSortedLow() throws SQLException {
-        return true;
-	}
-
-	@Override
-	public boolean nullsAreSortedAtStart() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean nullsAreSortedAtEnd() throws SQLException {
-        return true;
-	}
-
-	@Override
-	public String getDatabaseProductName() throws SQLException {
-        return "kdb";
-	}
-
-	@Override
-	public String getDatabaseProductVersion() throws SQLException {
-        return "unknown";
-	}
-
-	@Override
-	public String getDriverName() throws SQLException {
-        return "kdbjdbc";
-	}
-
-	@Override
-	public String getDriverVersion() throws SQLException {
-        return getDriverMajorVersion() + "." + getDriverMinorVersion();
-	}
-
-	@Override
-	public int getDriverMajorVersion() {
-		return 0;
-	}
-
-	@Override
-	public int getDriverMinorVersion() {
-		return 1;
-	}
-
-	@Override
-	public boolean usesLocalFiles() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean usesLocalFilePerTable() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean supportsMixedCaseIdentifiers() throws SQLException {
-		return true;
-	}
-
-	@Override
-	public boolean storesUpperCaseIdentifiers() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean storesLowerCaseIdentifiers() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean storesMixedCaseIdentifiers() throws SQLException {
-		return true;
-	}
-
-	@Override
-	public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
-		return true;
-	}
-
-	@Override
-	public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
-		return false;
-	}
-
-	@Override
-	public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
-		return true;
-	}
-
-	@Override
-	public String getIdentifierQuoteString() throws SQLException {
-		return "'";
-	}
-
-	@Override
-	public String getSQLKeywords() throws SQLException {
-		return "select from where in";
-	}
-
-	@Override
-	public String getNumericFunctions() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getStringFunctions() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getSystemFunctions() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getTimeDateFunctions() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getSearchStringEscape() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getExtraNameCharacters() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsColumnAliasing() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean nullPlusNonNullIsNull() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsConvert() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsConvert(final int fromType, final int toType) throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsTableCorrelationNames() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsExpressionsInOrderBy() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsOrderByUnrelated() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsGroupBy() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsGroupByUnrelated() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsGroupByBeyondSelect() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsLikeEscapeClause() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsMultipleResultSets() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsMultipleTransactions() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsNonNullableColumns() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsMinimumSQLGrammar() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsCoreSQLGrammar() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsExtendedSQLGrammar() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsANSI92FullSQL() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsOuterJoins() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsFullOuterJoins() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsLimitedOuterJoins() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getSchemaTerm() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getProcedureTerm() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getCatalogTerm() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean isCatalogAtStart() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public String getCatalogSeparator() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsSchemasInDataManipulation() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        throw new UnsupportedOperationException("not support");
-	}
-
-	@Override
-	public boolean supportsSchemasInTableDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCatalogsInDataManipulation() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsPositionedDelete() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsPositionedUpdate() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSelectForUpdate() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsStoredProcedures() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSubqueriesInComparisons() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSubqueriesInExists() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSubqueriesInIns() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsSubqueriesInQuantifieds() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsCorrelatedSubqueries() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsUnion() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsUnionAll() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int getMaxBinaryLiteralLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxCharLiteralLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnsInGroupBy() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnsInIndex() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnsInOrderBy() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnsInSelect() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxColumnsInTable() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxConnections() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxCursorNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxIndexLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxSchemaNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxProcedureNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxCatalogNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxRowSize() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int getMaxStatementLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxStatements() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxTableNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxTablesInSelect() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxUserNameLength() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getDefaultTransactionIsolation() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean supportsTransactions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsTransactionIsolationLevel(final int level) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public ResultSet getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern)
-			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResultSet getProcedureColumns(final String catalog, final String schemaPattern, final String procedureNamePattern,
-			final String columnNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-    /**
+	public ResultSet getTableTypes() throws SQLException {
+		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+				new ColumnInfo("TABLE_TYPE", "text", false)
+		);
+		List<Object[]> rows = new ArrayList<Object[]>();
+		rows.add(new Object[] {"FOREIGN TABLE"});
+		rows.add(new Object[] {"INDEX"});
+		rows.add(new Object[] {"MATEALIZED VIEW"});
+		rows.add(new Object[] {"PARITIONED TABLE"});
+		rows.add(new Object[] {"SEQUENCE"});
+		rows.add(new Object[] {"TABLE"});
+		rows.add(new Object[] {"TYPE"});
+		rows.add(new Object[] {"VIEW"});
+		return new ResultSetImpl(meta, rows);
+	}
+	
+	/**
      * See https://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html
      */
 	@Override
 	public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern, final String[] types)
 			throws SQLException {                
-        return conn.createStatement().executeQuery("q) flip ( `TABLE_NAME`TABLE_SCHEM`TABLE_CATALOG`TABLE_TYPE`REMARKS`TYPE_CAT`TYPE_SCHEM`TYPE_NAME`SELF_REFERENCING_COL_NAME`REF_GENERATION ! ( tables[]; (count(tables[]))#(enlist `schema1); (count(tables[]))#(enlist `catalog1); (count(tables[]))#(enlist `TABLE); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `) ) )");
+//        return conn.createStatement().executeQuery("q) flip ( `TABLE_NAME`TABLE_SCHEM`TABLE_CATALOG`TABLE_TYPE`REMARKS`TYPE_CAT`TYPE_SCHEM`TYPE_NAME`SELF_REFERENCING_COL_NAME`REF_GENERATION ! ( tables[]; (count(tables[]))#(enlist `schema1); (count(tables[]))#(enlist `catalog1); (count(tables[]))#(enlist `TABLE); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `) ) )");
+		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+				new ColumnInfo("table_cat", "text", true),
+				new ColumnInfo("table_schem", "name", false),
+				new ColumnInfo("table_name" , "name", false),
+				new ColumnInfo("table_type"	, "text", true),
+				new ColumnInfo("remarks"	, "text", false),
+				new ColumnInfo("type_cat"	, "text", true),
+				new ColumnInfo("type_schem"	, "text", true),
+				new ColumnInfo("type_name"	, "text", true),
+				new ColumnInfo("self_referencing_col_name"	, "text", true),
+				new ColumnInfo("ref_generation"	, "text", true)
+		);
+		List<Object[]> rows = new ArrayList<Object[]>();
+		                       //table_cat   table_schem table_name table_type  remarks  type_cat   type_schem  type_name  selfref refgen
+		rows.add(new Object[] {  null     , "public"     , "t2"     , "TABLE" , null    , ""      , ""        , ""        , ""     , ""   });
+		return new ResultSetImpl(meta, rows);
+	}
+
+    @Override
+	public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
+//        final StringBuilder sql = new StringBuilder();
+//        sql.append("q) ");
+//        final ResultSet rs = getTables(catalog, schemaPattern, tableNamePattern, null);
+//        int i = 0;
+//        while(rs.next()) {
+//            if(i > 0)
+//                sql.append(" union ");
+//            final String tblname = rs.getString("TABLE_NAME");
+//            sql.append("flip `TABLE_CAT`TABLE_SCHEM`TABLE_NAME`COLUMN_NAME`COLUMN_TYPE!( (count(cols " + tblname + "))#(enlist `catalog1); (count(cols " + tblname + "))#(enlist `schema1); (count(cols " + tblname + "))#(enlist `" + tblname + "); cols " + tblname + "; (value meta " + tblname + ")[;`t] )");
+//            i++;
+//            break;
+//        }
+//        rs.close();
+//        logger.info("getColumns: " + sql);
+//        return conn.createStatement().executeQuery(sql.toString());
+		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+				new ColumnInfo("TABLE_CAT"		, "text", true), //1
+				new ColumnInfo("TABLE_SCHEM"	, "name", false), //2
+				new ColumnInfo("TABLE_NAME" 	, "name", false),//3
+				new ColumnInfo("COLUMN_NAME"	, "text", true),//4
+				new ColumnInfo("DATA_TYPE"		, "text", true),//5
+				new ColumnInfo("TYPE_NAME"		, "text", true),//6
+				new ColumnInfo("COLUMN_SIZE"	, "int4", true),//7
+				new ColumnInfo("BUFFER_LENGTH"	, "int4", true),//8
+				new ColumnInfo("DECIMAL_DIGITS"	, "int4", true),//9
+				new ColumnInfo("NUM_PREC_RADIX"	, "int4", true),//10
+				new ColumnInfo("NULLABLE"		, "int4", true),//11
+				new ColumnInfo("REMARKS"		, "text", true),//12
+				new ColumnInfo("COLUMN_DEF"		, "text", true),//13
+				new ColumnInfo("SQL_DATA_TYPE"	, "text", true),//14
+				new ColumnInfo("SQL_DATETIME_SUB"	, "text", true),//15
+				new ColumnInfo("CHAR_OCTET_LENGTH"	, "int4", true),//16
+				new ColumnInfo("ORDINAL_POSITION"	, "int4", true),//17
+				new ColumnInfo("IS_NULLABLE"		, "text", true),//18
+				new ColumnInfo("SCOPE_CATALOG"		, "text", true),//19
+				new ColumnInfo("SCOPE_SCHEMA"		, "text", true),//20
+				new ColumnInfo("SCOPE_TABLE"		, "text", true),//21
+				new ColumnInfo("SOURCE_DATA_TYPE"	, "text", true),//22
+				new ColumnInfo("IS_AUTO_INCREMENT"	, "text", true),//23
+				new ColumnInfo("IS_GENERATED_COLUMN", "text", true) //24
+		);
+		
+		final int MAX = ResultSetMetaDataImpl.MAX;
+		List<Object[]> rows = new ArrayList<Object[]>();
+		int pos = 1;
+		                       //1TABLE_CAT 2TABLE_SCHEM 3TABLE_NAME 4COLUMN_NAME 5DATA_TYPE 6TYPE_NAME  7COLUMN_SIZE  8BUF   9 DECIMAL  10 RADIX  11 NULLABLE  12 REMARKS 13COLUMN_DEF  14SQL_DATA_TYPE  15SQL_DATETIME_SUB  16 CHAR_OCTET_LEN 17 ORDINAL POS  18 IS_NULLABLE 19 SCOPE_CATALOG  20 SCOPE_SCHEMA  21 SCOPE_TABLE  22 SOURCE_DATA_TYPE 23 IS_Autoinc  24 IS_gen
+		rows.add(new Object[] {  null     , "public"     , "t2"     , "id"      , 4       , "int4"       , 10        , null , 0         , 10      , 1           , null     , null        , null           , null              , 10              , pos++        , "YES"         , null            , null           , null         , null                , "NO"        , "" });
+		rows.add(new Object[] {  null     , "public"     , "t2"     , "name"    , 12      , "text"    , MAX       , null , 0      , 10   , 1       , null  , null     , null        , null              , MAX          , pos++        , "YES"      , null          , null        , null    , null            , "NO"     , "" });
+		return new ResultSetImpl(meta, rows);
+	}
+    
+	@Override
+	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+				new ColumnInfo("pktable_cat"	, "text", true), //1
+				new ColumnInfo("pktable_schem"	, "name", false), //2
+				new ColumnInfo("pktable_name" 	, "name", false),//3
+				new ColumnInfo("pkcolumn_name"	, "name", false),//4
+				new ColumnInfo("fktable_cat"	, "text", true),//5
+				new ColumnInfo("fktable_schem"	, "name", false),//6
+				new ColumnInfo("fktable_name"	, "name", false),//7
+				new ColumnInfo("fkcolumn_name"	, "name", false),//8
+				new ColumnInfo("key_seq"		, "int4", true),//9
+				new ColumnInfo("update_rule"	, "int4", true),//10
+				new ColumnInfo("delete_rule"	, "int4", true),//11
+				new ColumnInfo("fk_name"		, "name", false),//12
+				new ColumnInfo("pk_name"		, "name", false),//13
+				new ColumnInfo("deferrability"	, "int4", true) //14
+		);
+		return new ResultSetImpl(meta);
+	}
+
+	@Override
+	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+				new ColumnInfo("table_cat"	, "text", true), //1
+				new ColumnInfo("table_schem"	, "name", false), //2
+				new ColumnInfo("table_name" 	, "name", false),//3
+				new ColumnInfo("column_name"	, "name", false),//4
+				new ColumnInfo("key_seq"		, "int4", true),//5
+				new ColumnInfo("pk_name"		, "name", false)//6
+		);
+		return new ResultSetImpl(meta);
+	}
+
+
+	@Override
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		logger.info("unwrap");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.unwrap is not supported");
+		
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		logger.info("isWrapperFor");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.isWrapperFor is not supported");
+		
+	}
+
+
+
+
+	@Override
+	public boolean allProceduresAreCallable() throws SQLException {
+		logger.info("allProceduresAreCallable");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.allProceduresAreCallable is not supported");
+		
+	}
+
+
+
+
+	@Override
+	public boolean allTablesAreSelectable() throws SQLException {
+		logger.info("allTablesAreSelectable");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.allTablesAreSelectable is not supported");
+		
+	}
+
+
+
+
+	@Override
+	public String getDatabaseProductName() throws SQLException {
+        return "12.3 (Debian 12.3-1.pgdg100+1)";
+	}
+
+	@Override
+	public String getDriverName() throws SQLException {
+        return "PostgreSQL JDBC Driver";
+	}
+
+	@Override
+	public String getDriverVersion() throws SQLException {
+        return "42.2.14";
+	}
+
+    @Override
+	public String getURL() throws SQLException {
+		logger.info("getURL");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getURL is not supported");
+		
+	}
+
+	@Override
+	public String getUserName() throws SQLException {
+		logger.info("getUserName");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getUserName is not supported");
+		
+	}
+
+	@Override
+	public boolean isReadOnly() throws SQLException {
+		logger.info("isReadOnly");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.isReadOnly is not supported");
+		
+	}
+
+	@Override
+	public boolean nullsAreSortedHigh() throws SQLException {
+		logger.info("nullsAreSortedHigh");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullsAreSortedHigh is not supported");
+		
+	}
+
+	@Override
+	public boolean nullsAreSortedLow() throws SQLException {
+		logger.info("nullsAreSortedLow");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullsAreSortedLow is not supported");
+		
+	}
+
+	@Override
+	public boolean nullsAreSortedAtStart() throws SQLException {
+		logger.info("nullsAreSortedAtStart");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullsAreSortedAtStart is not supported");
+		
+	}
+
+	@Override
+	public boolean nullsAreSortedAtEnd() throws SQLException {
+		logger.info("nullsAreSortedAtEnd");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullsAreSortedAtEnd is not supported");
+		
+	}
+
+	@Override
+	public String getDatabaseProductVersion() throws SQLException {
+		logger.info("getDatabaseProductVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDatabaseProductVersion is not supported");
+		
 	}
 
 	@Override
@@ -713,331 +267,1092 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	@Override
-	public ResultSet getTableTypes() throws SQLException {
-		throw new UnsupportedOperationException("not support");
-	}
-
-    @Override
-	public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
-        final StringBuilder sql = new StringBuilder();
-        sql.append("q) ");
-        final ResultSet rs = getTables(catalog, schemaPattern, tableNamePattern, null);
-        int i = 0;
-        while(rs.next()) {
-            if(i > 0)
-                sql.append(" union ");
-            final String tblname = rs.getString("TABLE_NAME");
-            sql.append("flip `TABLE_CAT`TABLE_SCHEM`TABLE_NAME`COLUMN_NAME`COLUMN_TYPE!( (count(cols " + tblname + "))#(enlist `catalog1); (count(cols " + tblname + "))#(enlist `schema1); (count(cols " + tblname + "))#(enlist `" + tblname + "); cols " + tblname + "; (value meta " + tblname + ")[;`t] )");
-            i++;
-            break;
-        }
-        rs.close();
-        logger.info("getColumns: " + sql);
-        return conn.createStatement().executeQuery(sql.toString());
+	public int getDriverMajorVersion() {
+		logger.info("getDriverMajorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDriverMajorVersion is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getColumnPrivileges(final String catalog, final String schema, final String table, final String columnNamePattern)
+	public int getDriverMinorVersion() {
+		logger.info("getDriverMinorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDriverMinorVersion is not supported");
+		
+	}
+
+	@Override
+	public boolean usesLocalFiles() throws SQLException {
+		logger.info("usesLocalFiles");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.usesLocalFiles is not supported");
+		
+	}
+
+	@Override
+	public boolean usesLocalFilePerTable() throws SQLException {
+		logger.info("usesLocalFilePerTable");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.usesLocalFilePerTable is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsMixedCaseIdentifiers() throws SQLException {
+		logger.info("supportsMixedCaseIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMixedCaseIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesUpperCaseIdentifiers() throws SQLException {
+		logger.info("storesUpperCaseIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesUpperCaseIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesLowerCaseIdentifiers() throws SQLException {
+		logger.info("storesLowerCaseIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesLowerCaseIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesMixedCaseIdentifiers() throws SQLException {
+		logger.info("storesMixedCaseIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesMixedCaseIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
+		logger.info("supportsMixedCaseQuotedIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMixedCaseQuotedIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
+		logger.info("storesUpperCaseQuotedIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesUpperCaseQuotedIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
+		logger.info("storesLowerCaseQuotedIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesLowerCaseQuotedIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
+		logger.info("storesMixedCaseQuotedIdentifiers");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.storesMixedCaseQuotedIdentifiers is not supported");
+		
+	}
+
+	@Override
+	public String getIdentifierQuoteString() throws SQLException {
+		logger.info("getIdentifierQuoteString");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getIdentifierQuoteString is not supported");
+		
+	}
+
+	@Override
+	public String getSQLKeywords() throws SQLException {
+		logger.info("getSQLKeywords");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSQLKeywords is not supported");
+		
+	}
+
+	@Override
+	public String getNumericFunctions() throws SQLException {
+		logger.info("getNumericFunctions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getNumericFunctions is not supported");
+		
+	}
+
+	@Override
+	public String getStringFunctions() throws SQLException {
+		logger.info("getStringFunctions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getStringFunctions is not supported");
+		
+	}
+
+	@Override
+	public String getSystemFunctions() throws SQLException {
+		logger.info("getSystemFunctions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSystemFunctions is not supported");
+		
+	}
+
+	@Override
+	public String getTimeDateFunctions() throws SQLException {
+		logger.info("getTimeDateFunctions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getTimeDateFunctions is not supported");
+		
+	}
+
+	@Override
+	public String getSearchStringEscape() throws SQLException {
+		logger.info("getSearchStringEscape");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSearchStringEscape is not supported");
+		
+	}
+
+	@Override
+	public String getExtraNameCharacters() throws SQLException {
+		logger.info("getExtraNameCharacters");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getExtraNameCharacters is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsAlterTableWithAddColumn() throws SQLException {
+		logger.info("supportsAlterTableWithAddColumn");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsAlterTableWithAddColumn is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsAlterTableWithDropColumn() throws SQLException {
+		logger.info("supportsAlterTableWithDropColumn");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsAlterTableWithDropColumn is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsColumnAliasing() throws SQLException {
+		logger.info("supportsColumnAliasing");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsColumnAliasing is not supported");
+		
+	}
+
+	@Override
+	public boolean nullPlusNonNullIsNull() throws SQLException {
+		logger.info("nullPlusNonNullIsNull");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullPlusNonNullIsNull is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsConvert() throws SQLException {
+		logger.info("supportsConvert");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsConvert is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsConvert(int fromType, int toType) throws SQLException {
+		logger.info("supportsConvert");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsConvert is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsTableCorrelationNames() throws SQLException {
+		logger.info("supportsTableCorrelationNames");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsTableCorrelationNames is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsDifferentTableCorrelationNames() throws SQLException {
+		logger.info("supportsDifferentTableCorrelationNames");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsDifferentTableCorrelationNames is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsExpressionsInOrderBy() throws SQLException {
+		logger.info("supportsExpressionsInOrderBy");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsExpressionsInOrderBy is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOrderByUnrelated() throws SQLException {
+		logger.info("supportsOrderByUnrelated");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOrderByUnrelated is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsGroupBy() throws SQLException {
+		logger.info("supportsGroupBy");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsGroupBy is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsGroupByUnrelated() throws SQLException {
+		logger.info("supportsGroupByUnrelated");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsGroupByUnrelated is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsGroupByBeyondSelect() throws SQLException {
+		logger.info("supportsGroupByBeyondSelect");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsGroupByBeyondSelect is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsLikeEscapeClause() throws SQLException {
+		logger.info("supportsLikeEscapeClause");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsLikeEscapeClause is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsMultipleResultSets() throws SQLException {
+		logger.info("supportsMultipleResultSets");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMultipleResultSets is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsMultipleTransactions() throws SQLException {
+		logger.info("supportsMultipleTransactions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMultipleTransactions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsNonNullableColumns() throws SQLException {
+		logger.info("supportsNonNullableColumns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsNonNullableColumns is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsMinimumSQLGrammar() throws SQLException {
+		logger.info("supportsMinimumSQLGrammar");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMinimumSQLGrammar is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCoreSQLGrammar() throws SQLException {
+		logger.info("supportsCoreSQLGrammar");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCoreSQLGrammar is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsExtendedSQLGrammar() throws SQLException {
+		logger.info("supportsExtendedSQLGrammar");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsExtendedSQLGrammar is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsANSI92EntryLevelSQL() throws SQLException {
+		logger.info("supportsANSI92EntryLevelSQL");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsANSI92EntryLevelSQL is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsANSI92IntermediateSQL() throws SQLException {
+		logger.info("supportsANSI92IntermediateSQL");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsANSI92IntermediateSQL is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsANSI92FullSQL() throws SQLException {
+		logger.info("supportsANSI92FullSQL");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsANSI92FullSQL is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsIntegrityEnhancementFacility() throws SQLException {
+		logger.info("supportsIntegrityEnhancementFacility");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsIntegrityEnhancementFacility is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOuterJoins() throws SQLException {
+		logger.info("supportsOuterJoins");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOuterJoins is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsFullOuterJoins() throws SQLException {
+		logger.info("supportsFullOuterJoins");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsFullOuterJoins is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsLimitedOuterJoins() throws SQLException {
+		logger.info("supportsLimitedOuterJoins");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsLimitedOuterJoins is not supported");
+		
+	}
+
+	@Override
+	public String getSchemaTerm() throws SQLException {
+		logger.info("getSchemaTerm");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSchemaTerm is not supported");
+		
+	}
+
+	@Override
+	public String getProcedureTerm() throws SQLException {
+		logger.info("getProcedureTerm");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getProcedureTerm is not supported");
+		
+	}
+
+	@Override
+	public String getCatalogTerm() throws SQLException {
+		logger.info("getCatalogTerm");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getCatalogTerm is not supported");
+		
+	}
+
+	@Override
+	public boolean isCatalogAtStart() throws SQLException {
+		logger.info("isCatalogAtStart");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.isCatalogAtStart is not supported");
+		
+	}
+
+	@Override
+	public String getCatalogSeparator() throws SQLException {
+		logger.info("getCatalogSeparator");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getCatalogSeparator is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSchemasInDataManipulation() throws SQLException {
+		logger.info("supportsSchemasInDataManipulation");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSchemasInDataManipulation is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSchemasInProcedureCalls() throws SQLException {
+		logger.info("supportsSchemasInProcedureCalls");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSchemasInProcedureCalls is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSchemasInTableDefinitions() throws SQLException {
+		logger.info("supportsSchemasInTableDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSchemasInTableDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSchemasInIndexDefinitions() throws SQLException {
+		logger.info("supportsSchemasInIndexDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSchemasInIndexDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
+		logger.info("supportsSchemasInPrivilegeDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSchemasInPrivilegeDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCatalogsInDataManipulation() throws SQLException {
+		logger.info("supportsCatalogsInDataManipulation");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCatalogsInDataManipulation is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCatalogsInProcedureCalls() throws SQLException {
+		logger.info("supportsCatalogsInProcedureCalls");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCatalogsInProcedureCalls is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCatalogsInTableDefinitions() throws SQLException {
+		logger.info("supportsCatalogsInTableDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCatalogsInTableDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
+		logger.info("supportsCatalogsInIndexDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCatalogsInIndexDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
+		logger.info("supportsCatalogsInPrivilegeDefinitions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCatalogsInPrivilegeDefinitions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsPositionedDelete() throws SQLException {
+		logger.info("supportsPositionedDelete");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsPositionedDelete is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsPositionedUpdate() throws SQLException {
+		logger.info("supportsPositionedUpdate");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsPositionedUpdate is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSelectForUpdate() throws SQLException {
+		logger.info("supportsSelectForUpdate");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSelectForUpdate is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsStoredProcedures() throws SQLException {
+		logger.info("supportsStoredProcedures");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsStoredProcedures is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSubqueriesInComparisons() throws SQLException {
+		logger.info("supportsSubqueriesInComparisons");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSubqueriesInComparisons is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSubqueriesInExists() throws SQLException {
+		logger.info("supportsSubqueriesInExists");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSubqueriesInExists is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSubqueriesInIns() throws SQLException {
+		logger.info("supportsSubqueriesInIns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSubqueriesInIns is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsSubqueriesInQuantifieds() throws SQLException {
+		logger.info("supportsSubqueriesInQuantifieds");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSubqueriesInQuantifieds is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsCorrelatedSubqueries() throws SQLException {
+		logger.info("supportsCorrelatedSubqueries");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsCorrelatedSubqueries is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsUnion() throws SQLException {
+		logger.info("supportsUnion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsUnion is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsUnionAll() throws SQLException {
+		logger.info("supportsUnionAll");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsUnionAll is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
+		logger.info("supportsOpenCursorsAcrossCommit");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOpenCursorsAcrossCommit is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
+		logger.info("supportsOpenCursorsAcrossRollback");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOpenCursorsAcrossRollback is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
+		logger.info("supportsOpenStatementsAcrossCommit");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOpenStatementsAcrossCommit is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
+		logger.info("supportsOpenStatementsAcrossRollback");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsOpenStatementsAcrossRollback is not supported");
+		
+	}
+
+	@Override
+	public int getMaxBinaryLiteralLength() throws SQLException {
+		logger.info("getMaxBinaryLiteralLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxBinaryLiteralLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxCharLiteralLength() throws SQLException {
+		logger.info("getMaxCharLiteralLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxCharLiteralLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnNameLength() throws SQLException {
+		logger.info("getMaxColumnNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnsInGroupBy() throws SQLException {
+		logger.info("getMaxColumnsInGroupBy");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnsInGroupBy is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnsInIndex() throws SQLException {
+		logger.info("getMaxColumnsInIndex");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnsInIndex is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnsInOrderBy() throws SQLException {
+		logger.info("getMaxColumnsInOrderBy");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnsInOrderBy is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnsInSelect() throws SQLException {
+		logger.info("getMaxColumnsInSelect");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnsInSelect is not supported");
+		
+	}
+
+	@Override
+	public int getMaxColumnsInTable() throws SQLException {
+		logger.info("getMaxColumnsInTable");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxColumnsInTable is not supported");
+		
+	}
+
+	@Override
+	public int getMaxConnections() throws SQLException {
+		logger.info("getMaxConnections");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxConnections is not supported");
+		
+	}
+
+	@Override
+	public int getMaxCursorNameLength() throws SQLException {
+		logger.info("getMaxCursorNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxCursorNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxIndexLength() throws SQLException {
+		logger.info("getMaxIndexLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxIndexLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxSchemaNameLength() throws SQLException {
+		logger.info("getMaxSchemaNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxSchemaNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxProcedureNameLength() throws SQLException {
+		logger.info("getMaxProcedureNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxProcedureNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxCatalogNameLength() throws SQLException {
+		logger.info("getMaxCatalogNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxCatalogNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxRowSize() throws SQLException {
+		logger.info("getMaxRowSize");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxRowSize is not supported");
+		
+	}
+
+	@Override
+	public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
+		logger.info("doesMaxRowSizeIncludeBlobs");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.doesMaxRowSizeIncludeBlobs is not supported");
+		
+	}
+
+	@Override
+	public int getMaxStatementLength() throws SQLException {
+		logger.info("getMaxStatementLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxStatementLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxStatements() throws SQLException {
+		logger.info("getMaxStatements");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxStatements is not supported");
+		
+	}
+
+	@Override
+	public int getMaxTableNameLength() throws SQLException {
+		logger.info("getMaxTableNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxTableNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getMaxTablesInSelect() throws SQLException {
+		logger.info("getMaxTablesInSelect");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxTablesInSelect is not supported");
+		
+	}
+
+	@Override
+	public int getMaxUserNameLength() throws SQLException {
+		logger.info("getMaxUserNameLength");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getMaxUserNameLength is not supported");
+		
+	}
+
+	@Override
+	public int getDefaultTransactionIsolation() throws SQLException {
+		logger.info("getDefaultTransactionIsolation");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDefaultTransactionIsolation is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsTransactions() throws SQLException {
+		logger.info("supportsTransactions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsTransactions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
+		logger.info("supportsTransactionIsolationLevel");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsTransactionIsolationLevel is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
+		logger.info("supportsDataDefinitionAndDataManipulationTransactions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsDataDefinitionAndDataManipulationTransactions is not supported");
+		
+	}
+
+	@Override
+	public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
+		logger.info("supportsDataManipulationTransactionsOnly");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsDataManipulationTransactionsOnly is not supported");
+		
+	}
+
+	@Override
+	public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
+		logger.info("dataDefinitionCausesTransactionCommit");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.dataDefinitionCausesTransactionCommit is not supported");
+		
+	}
+
+	@Override
+	public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
+		logger.info("dataDefinitionIgnoredInTransactions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.dataDefinitionIgnoredInTransactions is not supported");
+		
+	}
+
+	@Override
+	public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getProcedures");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getProcedures is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern)
+	public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
+			String columnNamePattern) throws SQLException {
+		logger.info("getProcedureColumns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getProcedureColumns is not supported");
+		
+	}
+
+	@Override
+	public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getColumnPrivileges");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getColumnPrivileges is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getBestRowIdentifier(final String catalog, final String schema, final String table, final int scope, final boolean nullable)
+	public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getTablePrivileges");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getTablePrivileges is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getVersionColumns(final String catalog, final String schema, final String table) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
+			throws SQLException {
+		logger.info("getBestRowIdentifier");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getBestRowIdentifier is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getPrimaryKeys(final String catalog, final String schema, final String table) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
+		logger.info("getVersionColumns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getVersionColumns is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getImportedKeys(final String catalog, final String schema, final String table) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
+		logger.info("getExportedKeys");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getExportedKeys is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getExportedKeys(final String catalog, final String schema, final String table) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResultSet getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
-			final String foreignCatalog, final String foreignSchema, final String foreignTable) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
+			String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+		logger.info("getCrossReference");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getCrossReference is not supported");
+		
 	}
 
 	@Override
 	public ResultSet getTypeInfo() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getTypeInfo");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getTypeInfo is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getIndexInfo(final String catalog, final String schema, final String table, final boolean unique, final boolean approximate)
+	public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getIndexInfo");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getIndexInfo is not supported");
+		
 	}
 
 	@Override
-	public boolean supportsResultSetType(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean supportsResultSetType(int type) throws SQLException {
+		logger.info("supportsResultSetType");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsResultSetType is not supported");
+		
 	}
 
 	@Override
-	public boolean supportsResultSetConcurrency(final int type, final int concurrency) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
+		logger.info("supportsResultSetConcurrency");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsResultSetConcurrency is not supported");
+		
 	}
 
 	@Override
-	public boolean ownUpdatesAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean ownUpdatesAreVisible(int type) throws SQLException {
+		logger.info("ownUpdatesAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.ownUpdatesAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean ownDeletesAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean ownDeletesAreVisible(int type) throws SQLException {
+		logger.info("ownDeletesAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.ownDeletesAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean ownInsertsAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean ownInsertsAreVisible(int type) throws SQLException {
+		logger.info("ownInsertsAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.ownInsertsAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean othersUpdatesAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean othersUpdatesAreVisible(int type) throws SQLException {
+		logger.info("othersUpdatesAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.othersUpdatesAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean othersDeletesAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean othersDeletesAreVisible(int type) throws SQLException {
+		logger.info("othersDeletesAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.othersDeletesAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean othersInsertsAreVisible(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean othersInsertsAreVisible(int type) throws SQLException {
+		logger.info("othersInsertsAreVisible");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.othersInsertsAreVisible is not supported");
+		
 	}
 
 	@Override
-	public boolean updatesAreDetected(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updatesAreDetected(int type) throws SQLException {
+		logger.info("updatesAreDetected");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.updatesAreDetected is not supported");
+		
 	}
 
 	@Override
-	public boolean deletesAreDetected(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deletesAreDetected(int type) throws SQLException {
+		logger.info("deletesAreDetected");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.deletesAreDetected is not supported");
+		
 	}
 
 	@Override
-	public boolean insertsAreDetected(final int type) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean insertsAreDetected(int type) throws SQLException {
+		logger.info("insertsAreDetected");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.insertsAreDetected is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsBatchUpdates() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsBatchUpdates");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsBatchUpdates is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern, final int[] types)
+	public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getUDTs");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getUDTs is not supported");
+		
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getConnection");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getConnection is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsSavepoints() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsSavepoints");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsSavepoints is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsNamedParameters() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsNamedParameters");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsNamedParameters is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsMultipleOpenResults() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsMultipleOpenResults");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsMultipleOpenResults is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsGetGeneratedKeys() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsGetGeneratedKeys");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsGetGeneratedKeys is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
+		logger.info("getSuperTypes");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSuperTypes is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+		logger.info("getSuperTables");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSuperTables is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-			final String attributeNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
+			String attributeNamePattern) throws SQLException {
+		logger.info("getAttributes");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getAttributes is not supported");
+		
 	}
 
 	@Override
-	public boolean supportsResultSetHoldability(final int holdability) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean supportsResultSetHoldability(int holdability) throws SQLException {
+		logger.info("supportsResultSetHoldability");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsResultSetHoldability is not supported");
+		
 	}
 
 	@Override
 	public int getResultSetHoldability() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getResultSetHoldability");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getResultSetHoldability is not supported");
+		
 	}
 
 	@Override
 	public int getDatabaseMajorVersion() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getDatabaseMajorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDatabaseMajorVersion is not supported");
+		
 	}
 
 	@Override
 	public int getDatabaseMinorVersion() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getDatabaseMinorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDatabaseMinorVersion is not supported");
+		
 	}
 
 	@Override
 	public int getJDBCMajorVersion() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getJDBCMajorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getJDBCMajorVersion is not supported");
+		
 	}
 
 	@Override
 	public int getJDBCMinorVersion() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getJDBCMinorVersion");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getJDBCMinorVersion is not supported");
+		
 	}
 
 	@Override
 	public int getSQLStateType() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("getSQLStateType");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSQLStateType is not supported");
+		
 	}
 
 	@Override
 	public boolean locatorsUpdateCopy() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("locatorsUpdateCopy");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.locatorsUpdateCopy is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsStatementPooling() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsStatementPooling");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsStatementPooling is not supported");
+		
 	}
 
 	@Override
 	public RowIdLifetime getRowIdLifetime() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getRowIdLifetime");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getRowIdLifetime is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getSchemas(final String catalog, final String schemaPattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
+		logger.info("getSchemas");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getSchemas is not supported");
+		
 	}
 
 	@Override
 	public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("supportsStoredFunctionsUsingCallSyntax");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.supportsStoredFunctionsUsingCallSyntax is not supported");
+		
 	}
 
 	@Override
 	public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("autoCommitFailureClosesAllResultSets");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.autoCommitFailureClosesAllResultSets is not supported");
+		
 	}
 
 	@Override
 	public ResultSet getClientInfoProperties() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getClientInfoProperties");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getClientInfoProperties is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern)
+	public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getFunctions");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getFunctions is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getFunctionColumns(final String catalog, final String schemaPattern, final String functionNamePattern,
-			final String columnNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern,
+			String columnNamePattern) throws SQLException {
+		logger.info("getFunctionColumns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getFunctionColumns is not supported");
+		
 	}
 
 	@Override
-	public ResultSet getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-			final String columnNamePattern) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
+			String columnNamePattern) throws SQLException {
+		logger.info("getPseudoColumns");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.getPseudoColumns is not supported");
+		
 	}
 
 	@Override
 	public boolean generatedKeyAlwaysReturned() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		logger.info("generatedKeyAlwaysReturned");
+		throw new UnsupportedOperationException("KdbDatabaseMetaData.generatedKeyAlwaysReturned is not supported");
+		
 	}
-
 }

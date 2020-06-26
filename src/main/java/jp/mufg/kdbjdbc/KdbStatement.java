@@ -11,45 +11,67 @@ import jp.mufg.slf4j.FileLogger;
 public class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
     private final Statement nativestmt;
-
+    private ResultSet rs;
     KdbStatement(Statement nativestmt) {
         this.nativestmt = nativestmt;
-    }
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public ResultSet executeQuery(String sql) throws SQLException {
-        logger.info("executeQuery:" + String.valueOf(sql));
-        if(sql.startsWith("q)")) {
-            return nativestmt.executeQuery(sql);
-        }
-        else {
-            throw new UnsupportedOperationException("not support");
-        }
-    }
-
-    @Override
-    public int executeUpdate(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
     @Override
     public void close() throws SQLException {
         nativestmt.close();
     }
+    
+    @Override
+    public boolean execute(String sql) throws SQLException {
+        logger.info("executeQuery:" + String.valueOf(sql));
+        if(sql.startsWith("q)")) {
+            rs = nativestmt.executeQuery(sql);
+            return true;
+        }
+        else {
+        	if(sql.contains(" TEMPORARY ")) {
+                logger.info("This sql is ignored.");
+                this.rs = null;
+        		return false;
+        	}
+            throw new UnsupportedOperationException("not support");
+        }
+    }
 
     @Override
+	public ResultSet getResultSet() throws SQLException {
+    	return rs;
+	}
+
+	@Override
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		logger.info("unwrap");
+		throw new UnsupportedOperationException("KdbStatement.unwrap is not supported");
+		
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		logger.info("isWrapperFor");
+		throw new UnsupportedOperationException("KdbStatement.isWrapperFor is not supported");
+		
+	}
+
+	@Override
+	public ResultSet executeQuery(String sql) throws SQLException {
+		logger.info("executeQuery");
+		throw new UnsupportedOperationException("KdbStatement.executeQuery is not supported");
+		
+	}
+
+	@Override
+	public int executeUpdate(String sql) throws SQLException {
+		logger.info("executeUpdate");
+		throw new UnsupportedOperationException("KdbStatement.executeUpdate is not supported");
+		
+	}
+
+	@Override
     public int getMaxFieldSize() throws SQLException {
         // TODO Auto-generated method stub
         return 0;
@@ -113,18 +135,6 @@ public class KdbStatement implements Statement {
     public void setCursorName(String name) throws SQLException {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public boolean execute(String sql) throws SQLException {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public ResultSet getResultSet() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
