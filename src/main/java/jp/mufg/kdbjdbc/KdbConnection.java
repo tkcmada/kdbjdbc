@@ -71,6 +71,7 @@ public class KdbConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
+        logger.info("getMetaData");
         return new KdbDatabaseMetaData();
     }
 

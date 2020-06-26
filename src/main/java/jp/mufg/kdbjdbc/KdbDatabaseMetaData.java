@@ -40,18 +40,19 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 
 	@Override
 	public ResultSet getTableTypes() throws SQLException {
+        logger.info("getTableTypes");
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
 				new ColumnInfo("TABLE_TYPE", "text", false)
 		);
 		List<Object[]> rows = new ArrayList<Object[]>();
-		rows.add(new Object[] {"FOREIGN TABLE"});
-		rows.add(new Object[] {"INDEX"});
-		rows.add(new Object[] {"MATEALIZED VIEW"});
-		rows.add(new Object[] {"PARITIONED TABLE"});
-		rows.add(new Object[] {"SEQUENCE"});
-		rows.add(new Object[] {"TABLE"});
-		rows.add(new Object[] {"TYPE"});
-		rows.add(new Object[] {"VIEW"});
+		rows.add(new Object[] {"FOREIGN TABLE"});//1
+		rows.add(new Object[] {"INDEX"});//2
+		rows.add(new Object[] {"MATEALIZED VIEW"});//3
+		rows.add(new Object[] {"PARITIONED TABLE"});//4
+		rows.add(new Object[] {"SEQUENCE"});//5
+		rows.add(new Object[] {"TABLE"});//6
+		rows.add(new Object[] {"TYPE"});//7
+		rows.add(new Object[] {"VIEW"});//8
 		return new ResultSetImpl(meta, rows);
 	}
 	

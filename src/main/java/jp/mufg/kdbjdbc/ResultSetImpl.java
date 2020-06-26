@@ -62,6 +62,7 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public boolean next() throws SQLException {
+        logger.info("next");
 		if(cursor >= rows.size())
 			return false;
 		cursor++;

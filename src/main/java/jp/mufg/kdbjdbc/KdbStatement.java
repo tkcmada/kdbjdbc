@@ -30,7 +30,7 @@ public class KdbStatement implements Statement {
     
     @Override
     public boolean execute(String sql) throws SQLException {
-        logger.info("executeQuery:" + String.valueOf(sql));
+        logger.info("execute:" + String.valueOf(sql));
         if(sql.startsWith("q)")) {
             // rs = nativestmt.executeQuery(sql);
             // return true;
