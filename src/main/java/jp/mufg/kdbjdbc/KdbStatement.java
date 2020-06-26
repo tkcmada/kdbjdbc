@@ -37,7 +37,7 @@ public class KdbStatement implements Statement {
             throw new UnsupportedOperationException("native q is not support " + sql);
         }
         else {
-        	if(sql.contains(" TEMPORARY ")) {
+        	if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
                 logger.info("This sql is ignored.");
                 this.rs = null;
         		return false;
