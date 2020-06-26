@@ -76,6 +76,6 @@ public class KdbDriver implements Driver {
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return null;
+		throw new SQLFeatureNotSupportedException("getParentLogger is not supported");
     }   
 }

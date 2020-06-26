@@ -18,6 +18,26 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
     	// this.conn = conn;
     }
 
+    @Override
+	public String getDatabaseProductName() throws SQLException {
+        return "12.3 (Debian 12.3-1.pgdg100+1)";
+	}
+
+	@Override
+	public String getDatabaseProductVersion() throws SQLException {
+        return "12.3 (Debian 12.3-1.pgdg100+1)";
+	}
+
+	@Override
+	public String getDriverName() throws SQLException {
+        return "PostgreSQL JDBC Driver";
+	}
+
+	@Override
+	public String getDriverVersion() throws SQLException {
+        return "42.2.14";
+	}
+
 	@Override
 	public ResultSet getTableTypes() throws SQLException {
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
@@ -182,24 +202,6 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 		
 	}
 
-
-
-
-	@Override
-	public String getDatabaseProductName() throws SQLException {
-        return "12.3 (Debian 12.3-1.pgdg100+1)";
-	}
-
-	@Override
-	public String getDriverName() throws SQLException {
-        return "PostgreSQL JDBC Driver";
-	}
-
-	@Override
-	public String getDriverVersion() throws SQLException {
-        return "42.2.14";
-	}
-
     @Override
 	public String getURL() throws SQLException {
 		logger.info("getURL");
@@ -246,13 +248,6 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 	public boolean nullsAreSortedAtEnd() throws SQLException {
 		logger.info("nullsAreSortedAtEnd");
 		throw new UnsupportedOperationException("KdbDatabaseMetaData.nullsAreSortedAtEnd is not supported");
-		
-	}
-
-	@Override
-	public String getDatabaseProductVersion() throws SQLException {
-		logger.info("getDatabaseProductVersion");
-		throw new UnsupportedOperationException("KdbDatabaseMetaData.getDatabaseProductVersion is not supported");
 		
 	}
 
