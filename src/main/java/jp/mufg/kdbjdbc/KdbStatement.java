@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import jp.mufg.slf4j.FileLogger;
 
@@ -49,7 +50,19 @@ public class KdbStatement implements Statement {
         	if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
                 logger.info("This sql is not supported. " + sql);
                 throw new SQLException("temp table is not supported. " + sql);
-        	}
+            }
+            else if(sql.startsWith("SELECT ")) {
+                //always return result of select * from t2.
+                ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
+                    new ColumnInfo("id"  , "int4", true),
+                    new ColumnInfo("name", "text", true)
+                );
+                java.util.List<Object[]> rows = new ArrayList<Object[]>();
+                rows.add(new Object[] {1, "abckdb"});
+                rows.add(new Object[] {2, "defkdb"});
+                this.rs = new ResultSetImpl(meta, rows);
+                return true;
+            }
             throw new SQLException("general SQL is not support " + sql);
         }
     }
