@@ -27,12 +27,9 @@ public class FileLogger extends LoggerBase {
                 writer.get().write(log);
                 writer.get().write("\r\n");
                 writer.get().flush();
-                Thread.sleep(1);
 			} catch (IOException e) {
 				System.out.println("error writing log. " + e.getMessage());
 				e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
 	}
