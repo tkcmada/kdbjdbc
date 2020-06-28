@@ -28,907 +28,1203 @@ import org.slf4j.Logger;
 import jp.mufg.slf4j.FileLogger;
 
 public class LogResultSet implements ResultSet {
-	private static final Logger logger = FileLogger.getLogger(LogResultSet.class);
+    private static final Logger logger = FileLogger.getLogger(LogResultSet.class);
 
-	private final ResultSet rs;
+    private final ResultSet rs, target;
 
-	public LogResultSet(ResultSet rs) {
-		super();
-		this.rs = rs;
-	}
+    public LogResultSet(ResultSet rs) {
+        super();
+        this.target = this.rs = rs;
+    }
 
-	public <T> T unwrap(Class<T> iface) throws SQLException {
-        logger.info("unrwap");
-		return rs.unwrap(iface);
-	}
-
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        logger.info("isWrapperFor");
-		return rs.isWrapperFor(iface);
-	}
-
-	public boolean next() throws SQLException {
-		boolean result = rs.next();
-		logger.info("next() -> " + result);
-		if(result) {
-			logger.info("----");
-			ResultSetMetaData meta = getMetaData();
-			int n = meta.getColumnCount();
-			for(int i = 1; i <= n; i++) {
+    public boolean next() throws SQLException {
+        boolean result = rs.next();
+        logger.info("next() -> " + result);
+        if (result) {
+            logger.info("----");
+            ResultSetMetaData meta = getMetaData();
+            int n = meta.getColumnCount();
+            for (int i = 1; i <= n; i++) {
                 Object value = getObject(i);
-				logger.info(i + ":" + meta.getColumnName(i) + ":" + value + "(" + (value == null ? "null" : value.getClass().getName()) + ")");
-			}
-			logger.info("----");
-		}
-		return result;
-	}
-
-	public void close() throws SQLException {
-        logger.info("close");
-        rs.close();
-	}
-
-	public boolean wasNull() throws SQLException {
-        logger.info("wasNull");
-		return rs.wasNull();
-	}
-
-	public String getString(int columnIndex) throws SQLException {
-        logger.info("getString" + columnIndex);
-		return rs.getString(columnIndex);
-	}
-
-	public boolean getBoolean(int columnIndex) throws SQLException {
-        logger.info("getBoolean" + columnIndex);
-		return rs.getBoolean(columnIndex);
-	}
-
-	public byte getByte(int columnIndex) throws SQLException {
-        logger.info("getByte" + columnIndex);
-		return rs.getByte(columnIndex);
-	}
-
-	public short getShort(int columnIndex) throws SQLException {
-        logger.info("getShort" + columnIndex);
-		return rs.getShort(columnIndex);
-	}
-
-	public int getInt(int columnIndex) throws SQLException {
-        logger.info("getInt" + columnIndex);
-		return rs.getInt(columnIndex);
-	}
-
-	public long getLong(int columnIndex) throws SQLException {
-        logger.info("getLong" + columnIndex);
-		return rs.getLong(columnIndex);
-	}
-
-	public float getFloat(int columnIndex) throws SQLException {
-        logger.info("getFloat" + columnIndex);
-		return rs.getFloat(columnIndex);
-	}
-
-	public double getDouble(int columnIndex) throws SQLException {
-        logger.info("getDouble" + columnIndex);
-		return rs.getDouble(columnIndex);
-	}
-
-	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        logger.info("getBigDecimal" + columnIndex + " " + scale);
-		return rs.getBigDecimal(columnIndex, scale);
-	}
-
-	public byte[] getBytes(int columnIndex) throws SQLException {
-        logger.info("getBytes" + columnIndex);
-		return rs.getBytes(columnIndex);
-	}
-
-	public Date getDate(int columnIndex) throws SQLException {
-        logger.info("getDate" + columnIndex);
-		return rs.getDate(columnIndex);
-	}
-
-	public Time getTime(int columnIndex) throws SQLException {
-        logger.info("getTime" + columnIndex);
-		return rs.getTime(columnIndex);
-	}
-
-	public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        logger.info("getTimestamp" + columnIndex);
-		return rs.getTimestamp(columnIndex);
-	}
-
-	public InputStream getAsciiStream(int columnIndex) throws SQLException {
-        logger.info("getAsciiStream" + columnIndex);
-		return rs.getAsciiStream(columnIndex);
-	}
-
-	public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        logger.info("getUnicodeStream" + columnIndex);
-		return rs.getUnicodeStream(columnIndex);
-	}
-
-	public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        logger.info("getBinaryStream" + columnIndex);
-		return rs.getBinaryStream(columnIndex);
-	}
-
-	public String getString(String columnLabel) throws SQLException {
-        logger.info("getString " + columnLabel);
-		return rs.getString(columnLabel);
-	}
-
-	public boolean getBoolean(String columnLabel) throws SQLException {
-        logger.info("getBoolean " + columnLabel);
-		return rs.getBoolean(columnLabel);
-	}
-
-	public byte getByte(String columnLabel) throws SQLException {
-        logger.info("getByte " + columnLabel);
-		return rs.getByte(columnLabel);
-	}
-
-	public short getShort(String columnLabel) throws SQLException {
-        logger.info("getShort " + columnLabel);
-		return rs.getShort(columnLabel);
-	}
-
-	public int getInt(String columnLabel) throws SQLException {
-        logger.info("getInt " + columnLabel);
-		return rs.getInt(columnLabel);
-	}
-
-	public long getLong(String columnLabel) throws SQLException {
-        logger.info("getLong " + columnLabel);
-		return rs.getLong(columnLabel);
-	}
-
-	public float getFloat(String columnLabel) throws SQLException {
-        logger.info("getFloat " + columnLabel);
-		return rs.getFloat(columnLabel);
-	}
-
-	public double getDouble(String columnLabel) throws SQLException {
-        logger.info("getDouble " + columnLabel);
-		return rs.getDouble(columnLabel);
-	}
-
-	public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        logger.info("getBigDecimal " + columnLabel + " " + scale);
-		return rs.getBigDecimal(columnLabel, scale);
-	}
-
-	public byte[] getBytes(String columnLabel) throws SQLException {
-        logger.info("getBytes " + columnLabel);
-		return rs.getBytes(columnLabel);
-	}
-
-	public Date getDate(String columnLabel) throws SQLException {
-        logger.info("getDate " + columnLabel);
-		return rs.getDate(columnLabel);
-	}
-
-	public Time getTime(String columnLabel) throws SQLException {
-        logger.info("getTime " + columnLabel);
-		return rs.getTime(columnLabel);
-	}
-
-	public Timestamp getTimestamp(String columnLabel) throws SQLException {
-        logger.info("getTimestamp " + columnLabel);
-		return rs.getTimestamp(columnLabel);
-	}
-
-	public InputStream getAsciiStream(String columnLabel) throws SQLException {
-        logger.info("getAsciiStream " + columnLabel);
-		return rs.getAsciiStream(columnLabel);
-	}
-
-	public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        logger.info("getUnicodeStream " + columnLabel);
-		return rs.getUnicodeStream(columnLabel);
-	}
-
-	public InputStream getBinaryStream(String columnLabel) throws SQLException {
-        logger.info("getBinaryStream " + columnLabel);
-		return rs.getBinaryStream(columnLabel);
-	}
-
-	public SQLWarning getWarnings() throws SQLException {
-        logger.info("getWarnings");
-		return rs.getWarnings();
-	}
-
-	public void clearWarnings() throws SQLException {
-        logger.info("clearWarnings");
-		rs.clearWarnings();
-	}
-
-	public String getCursorName() throws SQLException {
-        logger.info("getCursorName");
-		return rs.getCursorName();
-	}
-
-	public ResultSetMetaData getMetaData() throws SQLException {
-        logger.info("getMetaData for ResultSetMetaData");
-		return new LogResultSetMetaData(rs.getMetaData());
-	}
-
-	public Object getObject(int columnIndex) throws SQLException {
-        logger.info("getObject " + columnIndex);
-		return rs.getObject(columnIndex);
-	}
-
-	public Object getObject(String columnLabel) throws SQLException {
-        logger.info("getObject " + columnLabel);
-		return rs.getObject(columnLabel);
-	}
-
-	public int findColumn(String columnLabel) throws SQLException {
-        logger.info("findColumn " + columnLabel);
-		return rs.findColumn(columnLabel);
-	}
-
-	public Reader getCharacterStream(int columnIndex) throws SQLException {
-        logger.info("getCharacterStream " + columnIndex);
-		return rs.getCharacterStream(columnIndex);
-	}
-
-	public Reader getCharacterStream(String columnLabel) throws SQLException {
-        logger.info("getCharacterStream " + columnLabel);
-		return rs.getCharacterStream(columnLabel);
-	}
-
-	public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        logger.info("getBigDecimal " + columnIndex);
-		return rs.getBigDecimal(columnIndex);
-	}
-
-	public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        logger.info("getBigDecimal " + columnLabel);
-		return rs.getBigDecimal(columnLabel);
-	}
-
-	public boolean isBeforeFirst() throws SQLException {
-        logger.info("isBeforeFirst");
-		return rs.isBeforeFirst();
-	}
-
-	public boolean isAfterLast() throws SQLException {
-        logger.info("isAfterLast");
-		return rs.isAfterLast();
-	}
-
-	public boolean isFirst() throws SQLException {
-        logger.info("isFirst");
-		return rs.isFirst();
-	}
-
-	public boolean isLast() throws SQLException {
-        logger.info("isLast");
-		return rs.isLast();
-	}
-
-	public void beforeFirst() throws SQLException {
-        logger.info("beforeFirst");
-		rs.beforeFirst();
-	}
-
-	public void afterLast() throws SQLException {
-        logger.info("afterLast");
-		rs.afterLast();
-	}
-
-	public boolean first() throws SQLException {
-        logger.info("first");
-		return rs.first();
-	}
-
-	public boolean last() throws SQLException {
-        logger.info("last");
-		return rs.last();
-	}
-
-	public int getRow() throws SQLException {
-        logger.info("getRow");
-		return rs.getRow();
-	}
-
-	public boolean absolute(int row) throws SQLException {
-        logger.info("absolute");
-		return rs.absolute(row);
-	}
-
-	public boolean relative(int rows) throws SQLException {
-        logger.info("relative");
-		return rs.relative(rows);
-	}
-
-	public boolean previous() throws SQLException {
-        logger.info("previous");
-		return rs.previous();
-	}
-
-	public void setFetchDirection(int direction) throws SQLException {
-        logger.info("setFetchDirection");
-		rs.setFetchDirection(direction);
-	}
-
-	public int getFetchDirection() throws SQLException {
-        logger.info("getFetchDirection");
-		return rs.getFetchDirection();
-	}
-
-	public void setFetchSize(int rows) throws SQLException {
-        logger.info("setFetchSize");
-		rs.setFetchSize(rows);
-	}
-
-	public int getFetchSize() throws SQLException {
-        logger.info("getFetchSize");
-		return rs.getFetchSize();
-	}
-
-	public int getType() throws SQLException {
-        logger.info("getType");
-		return rs.getType();
-	}
-
-	public int getConcurrency() throws SQLException {
-        logger.info("getConcurrency");
-		return rs.getConcurrency();
-	}
-
-	public boolean rowUpdated() throws SQLException {
-        logger.info("rowUpdated");
-		return rs.rowUpdated();
-	}
-
-	public boolean rowInserted() throws SQLException {
-        logger.info("rowInserted");
-		return rs.rowInserted();
-	}
-
-	public boolean rowDeleted() throws SQLException {
-        logger.info("rowDeleted");
-		return rs.rowDeleted();
-	}
-
-	public void updateNull(int columnIndex) throws SQLException {
-        logger.info("updateNull");
-		rs.updateNull(columnIndex);
-	}
-
-	public void updateBoolean(int columnIndex, boolean x) throws SQLException {
-		rs.updateBoolean(columnIndex, x);
-	}
-
-	public void updateByte(int columnIndex, byte x) throws SQLException {
-		rs.updateByte(columnIndex, x);
-	}
-
-	public void updateShort(int columnIndex, short x) throws SQLException {
-		rs.updateShort(columnIndex, x);
-	}
-
-	public void updateInt(int columnIndex, int x) throws SQLException {
-		rs.updateInt(columnIndex, x);
-	}
-
-	public void updateLong(int columnIndex, long x) throws SQLException {
-		rs.updateLong(columnIndex, x);
-	}
-
-	public void updateFloat(int columnIndex, float x) throws SQLException {
-		rs.updateFloat(columnIndex, x);
-	}
-
-	public void updateDouble(int columnIndex, double x) throws SQLException {
-		rs.updateDouble(columnIndex, x);
-	}
-
-	public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
-		rs.updateBigDecimal(columnIndex, x);
-	}
-
-	public void updateString(int columnIndex, String x) throws SQLException {
-		rs.updateString(columnIndex, x);
-	}
-
-	public void updateBytes(int columnIndex, byte[] x) throws SQLException {
-		rs.updateBytes(columnIndex, x);
-	}
-
-	public void updateDate(int columnIndex, Date x) throws SQLException {
-		rs.updateDate(columnIndex, x);
-	}
-
-	public void updateTime(int columnIndex, Time x) throws SQLException {
-		rs.updateTime(columnIndex, x);
-	}
-
-	public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
-		rs.updateTimestamp(columnIndex, x);
-	}
-
-	public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
-		rs.updateAsciiStream(columnIndex, x, length);
-	}
-
-	public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
-		rs.updateBinaryStream(columnIndex, x, length);
-	}
-
-	public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
-		rs.updateCharacterStream(columnIndex, x, length);
-	}
-
-	public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
-		rs.updateObject(columnIndex, x, scaleOrLength);
-	}
-
-	public void updateObject(int columnIndex, Object x) throws SQLException {
-		rs.updateObject(columnIndex, x);
-	}
-
-	public void updateNull(String columnLabel) throws SQLException {
-		rs.updateNull(columnLabel);
-	}
-
-	public void updateBoolean(String columnLabel, boolean x) throws SQLException {
-		rs.updateBoolean(columnLabel, x);
-	}
-
-	public void updateByte(String columnLabel, byte x) throws SQLException {
-		rs.updateByte(columnLabel, x);
-	}
-
-	public void updateShort(String columnLabel, short x) throws SQLException {
-		rs.updateShort(columnLabel, x);
-	}
-
-	public void updateInt(String columnLabel, int x) throws SQLException {
-		rs.updateInt(columnLabel, x);
-	}
-
-	public void updateLong(String columnLabel, long x) throws SQLException {
-		rs.updateLong(columnLabel, x);
-	}
-
-	public void updateFloat(String columnLabel, float x) throws SQLException {
-		rs.updateFloat(columnLabel, x);
-	}
-
-	public void updateDouble(String columnLabel, double x) throws SQLException {
-		rs.updateDouble(columnLabel, x);
-	}
-
-	public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
-		rs.updateBigDecimal(columnLabel, x);
-	}
-
-	public void updateString(String columnLabel, String x) throws SQLException {
-		rs.updateString(columnLabel, x);
-	}
-
-	public void updateBytes(String columnLabel, byte[] x) throws SQLException {
-		rs.updateBytes(columnLabel, x);
-	}
-
-	public void updateDate(String columnLabel, Date x) throws SQLException {
-		rs.updateDate(columnLabel, x);
-	}
-
-	public void updateTime(String columnLabel, Time x) throws SQLException {
-		rs.updateTime(columnLabel, x);
-	}
-
-	public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
-		rs.updateTimestamp(columnLabel, x);
-	}
-
-	public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
-		rs.updateAsciiStream(columnLabel, x, length);
-	}
-
-	public void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException {
-		rs.updateBinaryStream(columnLabel, x, length);
-	}
-
-	public void updateCharacterStream(String columnLabel, Reader reader, int length) throws SQLException {
-		rs.updateCharacterStream(columnLabel, reader, length);
-	}
-
-	public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
-		rs.updateObject(columnLabel, x, scaleOrLength);
-	}
-
-	public void updateObject(String columnLabel, Object x) throws SQLException {
-		rs.updateObject(columnLabel, x);
-	}
-
-	public void insertRow() throws SQLException {
-		rs.insertRow();
-	}
-
-	public void updateRow() throws SQLException {
-		rs.updateRow();
-	}
-
-	public void deleteRow() throws SQLException {
-		rs.deleteRow();
-	}
-
-	public void refreshRow() throws SQLException {
-		rs.refreshRow();
-	}
-
-	public void cancelRowUpdates() throws SQLException {
-		rs.cancelRowUpdates();
-	}
-
-	public void moveToInsertRow() throws SQLException {
-		rs.moveToInsertRow();
-	}
-
-	public void moveToCurrentRow() throws SQLException {
-		rs.moveToCurrentRow();
-	}
-
-	public Statement getStatement() throws SQLException {
-        logger.info("getStatement");
-		return rs.getStatement();
-	}
-
-	public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
-        logger.info("getObject " + columnIndex + " " + map);
-		return rs.getObject(columnIndex, map);
-	}
-
-	public Ref getRef(int columnIndex) throws SQLException {
-        logger.info("getRef " + columnIndex);
-		return rs.getRef(columnIndex);
-	}
-
-	public Blob getBlob(int columnIndex) throws SQLException {
-        logger.info("getBlob " + columnIndex);
-		return rs.getBlob(columnIndex);
-	}
-
-	public Clob getClob(int columnIndex) throws SQLException {
-        logger.info("getClob " + columnIndex);
-		return rs.getClob(columnIndex);
-	}
-
-	public Array getArray(int columnIndex) throws SQLException {
-        logger.info("getArray " + columnIndex);
-		return rs.getArray(columnIndex);
-	}
-
-	public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-        logger.info("getObject " + columnLabel + " " + map);
-		return rs.getObject(columnLabel, map);
-	}
-
-	public Ref getRef(String columnLabel) throws SQLException {
-        logger.info("getRef " + columnLabel);
-		return rs.getRef(columnLabel);
-	}
-
-	public Blob getBlob(String columnLabel) throws SQLException {
-        logger.info("getBlob " + columnLabel);
-		return rs.getBlob(columnLabel);
-	}
-
-	public Clob getClob(String columnLabel) throws SQLException {
-        logger.info("getClob " + columnLabel);
-		return rs.getClob(columnLabel);
-	}
-
-	public Array getArray(String columnLabel) throws SQLException {
-        logger.info("getArray " + columnLabel);
-		return rs.getArray(columnLabel);
-	}
-
-	public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        logger.info("getDate " + columnIndex + " " + cal);
-		return rs.getDate(columnIndex, cal);
-	}
-
-	public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-        logger.info("getDate " + columnLabel + " " + cal);
-		return rs.getDate(columnLabel, cal);
-	}
-
-	public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        logger.info("getTime " + columnIndex + " " + cal);
-		return rs.getTime(columnIndex, cal);
-	}
-
-	public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-        logger.info("getTime " + columnLabel + " " + cal);
-		return rs.getTime(columnLabel, cal);
-	}
-
-	public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-        logger.info("getTimestamp " + columnIndex + " " + cal);
-		return rs.getTimestamp(columnIndex, cal);
-	}
-
-	public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-        logger.info("getTimestamp " + columnLabel + " " + cal);
-		return rs.getTimestamp(columnLabel, cal);
-	}
-
-	public URL getURL(int columnIndex) throws SQLException {
-        logger.info("getURL " + columnIndex);
-		return rs.getURL(columnIndex);
-	}
-
-	public URL getURL(String columnLabel) throws SQLException {
-        logger.info("getURL " + columnLabel);
-		return rs.getURL(columnLabel);
-	}
-
-	public void updateRef(int columnIndex, Ref x) throws SQLException {
-		rs.updateRef(columnIndex, x);
-	}
-
-	public void updateRef(String columnLabel, Ref x) throws SQLException {
-		rs.updateRef(columnLabel, x);
-	}
-
-	public void updateBlob(int columnIndex, Blob x) throws SQLException {
-		rs.updateBlob(columnIndex, x);
-	}
-
-	public void updateBlob(String columnLabel, Blob x) throws SQLException {
-		rs.updateBlob(columnLabel, x);
-	}
-
-	public void updateClob(int columnIndex, Clob x) throws SQLException {
-		rs.updateClob(columnIndex, x);
-	}
-
-	public void updateClob(String columnLabel, Clob x) throws SQLException {
-		rs.updateClob(columnLabel, x);
-	}
-
-	public void updateArray(int columnIndex, Array x) throws SQLException {
-		rs.updateArray(columnIndex, x);
-	}
-
-	public void updateArray(String columnLabel, Array x) throws SQLException {
-		rs.updateArray(columnLabel, x);
-	}
-
-	public RowId getRowId(int columnIndex) throws SQLException {
-        logger.info("getRowId " + columnIndex);
-		return rs.getRowId(columnIndex);
-	}
-
-	public RowId getRowId(String columnLabel) throws SQLException {
-        logger.info("getRowId " + columnLabel);
-		return rs.getRowId(columnLabel);
-	}
-
-	public void updateRowId(int columnIndex, RowId x) throws SQLException {
-		rs.updateRowId(columnIndex, x);
-	}
-
-	public void updateRowId(String columnLabel, RowId x) throws SQLException {
-		rs.updateRowId(columnLabel, x);
-	}
-
-	public int getHoldability() throws SQLException {
-        logger.info("getHoldability");
-		return rs.getHoldability();
-	}
-
-	public boolean isClosed() throws SQLException {
-        logger.info("isClosed");
-		return rs.isClosed();
-	}
-
-	public void updateNString(int columnIndex, String nString) throws SQLException {
-		rs.updateNString(columnIndex, nString);
-	}
-
-	public void updateNString(String columnLabel, String nString) throws SQLException {
-		rs.updateNString(columnLabel, nString);
-	}
-
-	public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
-		rs.updateNClob(columnIndex, nClob);
-	}
-
-	public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
-		rs.updateNClob(columnLabel, nClob);
-	}
-
-	public NClob getNClob(int columnIndex) throws SQLException {
-        logger.info("getNClob " + columnIndex);
-		return rs.getNClob(columnIndex);
-	}
-
-	public NClob getNClob(String columnLabel) throws SQLException {
-        logger.info("getNClob " + columnLabel);
-		return rs.getNClob(columnLabel);
-	}
-
-	public SQLXML getSQLXML(int columnIndex) throws SQLException {
-        logger.info("getSQLXML " + columnIndex);
-		return rs.getSQLXML(columnIndex);
-	}
-
-	public SQLXML getSQLXML(String columnLabel) throws SQLException {
-        logger.info("getSQLXML " + columnLabel);
-		return rs.getSQLXML(columnLabel);
-	}
-
-	public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
-		rs.updateSQLXML(columnIndex, xmlObject);
-	}
-
-	public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
-		rs.updateSQLXML(columnLabel, xmlObject);
-	}
-
-	public String getNString(int columnIndex) throws SQLException {
-        logger.info("getNString " + columnIndex);
-		return rs.getNString(columnIndex);
-	}
-
-	public String getNString(String columnLabel) throws SQLException {
-        logger.info("getNString " + columnLabel);
-		return rs.getNString(columnLabel);
-	}
-
-	public Reader getNCharacterStream(int columnIndex) throws SQLException {
-        logger.info("getNCharacterStream " + columnIndex);
-		return rs.getNCharacterStream(columnIndex);
-	}
-
-	public Reader getNCharacterStream(String columnLabel) throws SQLException {
-        logger.info("getNCharacterStream " + columnLabel);
-		return rs.getNCharacterStream(columnLabel);
-	}
-
-	public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
-		rs.updateNCharacterStream(columnIndex, x, length);
-	}
-
-	public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-		rs.updateNCharacterStream(columnLabel, reader, length);
-	}
-
-	public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
-		rs.updateAsciiStream(columnIndex, x, length);
-	}
-
-	public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
-		rs.updateBinaryStream(columnIndex, x, length);
-	}
-
-	public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
-		rs.updateCharacterStream(columnIndex, x, length);
-	}
-
-	public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
-		rs.updateAsciiStream(columnLabel, x, length);
-	}
-
-	public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
-		rs.updateBinaryStream(columnLabel, x, length);
-	}
-
-	public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-		rs.updateCharacterStream(columnLabel, reader, length);
-	}
-
-	public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
-		rs.updateBlob(columnIndex, inputStream, length);
-	}
-
-	public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
-		rs.updateBlob(columnLabel, inputStream, length);
-	}
-
-	public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
-		rs.updateClob(columnIndex, reader, length);
-	}
-
-	public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
-		rs.updateClob(columnLabel, reader, length);
-	}
-
-	public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
-		rs.updateNClob(columnIndex, reader, length);
-	}
-
-	public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
-		rs.updateNClob(columnLabel, reader, length);
-	}
-
-	public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
-		rs.updateNCharacterStream(columnIndex, x);
-	}
-
-	public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
-		rs.updateNCharacterStream(columnLabel, reader);
-	}
-
-	public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
-		rs.updateAsciiStream(columnIndex, x);
-	}
-
-	public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
-		rs.updateBinaryStream(columnIndex, x);
-	}
-
-	public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
-		rs.updateCharacterStream(columnIndex, x);
-	}
-
-	public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
-		rs.updateAsciiStream(columnLabel, x);
-	}
-
-	public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
-		rs.updateBinaryStream(columnLabel, x);
-	}
-
-	public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
-		rs.updateCharacterStream(columnLabel, reader);
-	}
-
-	public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
-		rs.updateBlob(columnIndex, inputStream);
-	}
-
-	public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
-		rs.updateBlob(columnLabel, inputStream);
-	}
-
-	public void updateClob(int columnIndex, Reader reader) throws SQLException {
-		rs.updateClob(columnIndex, reader);
-	}
-
-	public void updateClob(String columnLabel, Reader reader) throws SQLException {
-		rs.updateClob(columnLabel, reader);
-	}
-
-	public void updateNClob(int columnIndex, Reader reader) throws SQLException {
-		rs.updateNClob(columnIndex, reader);
-	}
-
-	public void updateNClob(String columnLabel, Reader reader) throws SQLException {
-		rs.updateNClob(columnLabel, reader);
-	}
-
-	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        logger.info("getObject " + columnIndex + " type:" + type);
-		return rs.getObject(columnIndex, type);
-	}
-
-	public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-        logger.info("getObject " + columnLabel + " type:" + type);
-		return rs.getObject(columnLabel, type);
-	}
-
-	public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
-		rs.updateObject(columnIndex, x, targetSqlType, scaleOrLength);
-	}
-
-	public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
-			throws SQLException {
-		rs.updateObject(columnLabel, x, targetSqlType, scaleOrLength);
-	}
-
-	public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
-		rs.updateObject(columnIndex, x, targetSqlType);
-	}
-
-	public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
-		rs.updateObject(columnLabel, x, targetSqlType);
-	}	
+                logger.info(i + ":" + meta.getColumnName(i) + ":" + value + "("
+                        + (value == null ? "null" : value.getClass().getName()) + ")");
+            }
+            logger.info("----");
+        }
+        return result;
+    }
+
+    // ==============================
+
+
+public boolean absolute(int arg0) throws java.sql.SQLException {
+	logger.info("absolute" + " , " + arg0 );
+	boolean result = target.absolute(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public String getString(String arg0) throws java.sql.SQLException {
+	logger.info("getString" + " , " + arg0 );
+	String result = target.getString(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public String getString(int arg0) throws java.sql.SQLException {
+	logger.info("getString" + " , " + arg0 );
+	String result = target.getString(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.net.URL getURL(String arg0) throws java.sql.SQLException {
+	logger.info("getURL" + " , " + arg0 );
+	java.net.URL result = target.getURL(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.net.URL getURL(int arg0) throws java.sql.SQLException {
+	logger.info("getURL" + " , " + arg0 );
+	java.net.URL result = target.getURL(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Array getArray(String arg0) throws java.sql.SQLException {
+	logger.info("getArray" + " , " + arg0 );
+	java.sql.Array result = target.getArray(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Array getArray(int arg0) throws java.sql.SQLException {
+	logger.info("getArray" + " , " + arg0 );
+	java.sql.Array result = target.getArray(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+
+public void updateBytes(String arg0, byte[] arg1) throws java.sql.SQLException {
+	logger.info("updateBytes" + " , " + arg0  + " , " + arg1 );
+target.updateBytes(arg0, arg1);
+}
+
+public void updateBytes(int arg0, byte[] arg1) throws java.sql.SQLException {
+	logger.info("updateBytes" + " , " + arg0  + " , " + arg1 );
+target.updateBytes(arg0, arg1);
+}
+
+public Object getObject(String arg0, java.util.Map<String, Class<?>> arg1) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0  + " , " + arg1 );
+	Object result = target.getObject(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public Object getObject(int arg0, java.util.Map<String, Class<?>> arg1) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0  + " , " + arg1 );
+	Object result = target.getObject(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public <T> T getObject(String arg0, Class<T> arg1) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0  + " , " + arg1 );
+	T result = target.getObject(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public Object getObject(int arg0) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0 );
+	Object result = target.getObject(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public Object getObject(String arg0) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0 );
+	Object result = target.getObject(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public <T> T getObject(int arg0, Class<T> arg1) throws java.sql.SQLException {
+	logger.info("getObject" + " , " + arg0  + " , " + arg1 );
+	T result = target.getObject(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean getBoolean(int arg0) throws java.sql.SQLException {
+	logger.info("getBoolean" + " , " + arg0 );
+	boolean result = target.getBoolean(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean getBoolean(String arg0) throws java.sql.SQLException {
+	logger.info("getBoolean" + " , " + arg0 );
+	boolean result = target.getBoolean(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public byte getByte(int arg0) throws java.sql.SQLException {
+	logger.info("getByte" + " , " + arg0 );
+	byte result = target.getByte(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public byte getByte(String arg0) throws java.sql.SQLException {
+	logger.info("getByte" + " , " + arg0 );
+	byte result = target.getByte(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public short getShort(String arg0) throws java.sql.SQLException {
+	logger.info("getShort" + " , " + arg0 );
+	short result = target.getShort(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public short getShort(int arg0) throws java.sql.SQLException {
+	logger.info("getShort" + " , " + arg0 );
+	short result = target.getShort(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public int getInt(int arg0) throws java.sql.SQLException {
+	logger.info("getInt" + " , " + arg0 );
+	int result = target.getInt(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public int getInt(String arg0) throws java.sql.SQLException {
+	logger.info("getInt" + " , " + arg0 );
+	int result = target.getInt(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public long getLong(int arg0) throws java.sql.SQLException {
+	logger.info("getLong" + " , " + arg0 );
+	long result = target.getLong(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public long getLong(String arg0) throws java.sql.SQLException {
+	logger.info("getLong" + " , " + arg0 );
+	long result = target.getLong(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public float getFloat(String arg0) throws java.sql.SQLException {
+	logger.info("getFloat" + " , " + arg0 );
+	float result = target.getFloat(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public float getFloat(int arg0) throws java.sql.SQLException {
+	logger.info("getFloat" + " , " + arg0 );
+	float result = target.getFloat(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public double getDouble(String arg0) throws java.sql.SQLException {
+	logger.info("getDouble" + " , " + arg0 );
+	double result = target.getDouble(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public double getDouble(int arg0) throws java.sql.SQLException {
+	logger.info("getDouble" + " , " + arg0 );
+	double result = target.getDouble(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public byte[] getBytes(String arg0) throws java.sql.SQLException {
+	logger.info("getBytes" + " , " + arg0 );
+	byte[] result = target.getBytes(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public byte[] getBytes(int arg0) throws java.sql.SQLException {
+	logger.info("getBytes" + " , " + arg0 );
+	byte[] result = target.getBytes(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean last() throws java.sql.SQLException {
+	logger.info("last");
+	boolean result = target.last();
+	logger.info("result is " + result);
+	return result;
+}
+
+// public boolean next() throws java.sql.SQLException {
+// 	logger.info("next");
+// 	boolean result = target.next();
+// 	logger.info("result is " + result);
+// 	return result;
+// }
+
+public boolean first() throws java.sql.SQLException {
+	logger.info("first");
+	boolean result = target.first();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void close() throws java.sql.SQLException {
+	logger.info("close");
+target.close();
+}
+
+public int getType() throws java.sql.SQLException {
+	logger.info("getType");
+	int result = target.getType();
+	logger.info("result is " + result);
+	return result;
+}
+
+public <T> T unwrap(Class<T> arg0) throws java.sql.SQLException {
+	logger.info("unwrap" + " , " + arg0 );
+	T result = target.unwrap(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Ref getRef(int arg0) throws java.sql.SQLException {
+	logger.info("getRef" + " , " + arg0 );
+	java.sql.Ref result = target.getRef(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Ref getRef(String arg0) throws java.sql.SQLException {
+	logger.info("getRef" + " , " + arg0 );
+	java.sql.Ref result = target.getRef(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean previous() throws java.sql.SQLException {
+	logger.info("previous");
+	boolean result = target.previous();
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.ResultSetMetaData getMetaData() throws java.sql.SQLException {
+	logger.info("getMetaData");
+	java.sql.ResultSetMetaData result = new LogResultSetMetaData(target.getMetaData());
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean wasNull() throws java.sql.SQLException {
+	logger.info("wasNull");
+	boolean result = target.wasNull();
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.math.BigDecimal getBigDecimal(String arg0) throws java.sql.SQLException {
+	logger.info("getBigDecimal" + " , " + arg0 );
+	java.math.BigDecimal result = target.getBigDecimal(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.math.BigDecimal getBigDecimal(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("getBigDecimal" + " , " + arg0  + " , " + arg1 );
+	java.math.BigDecimal result = target.getBigDecimal(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.math.BigDecimal getBigDecimal(int arg0, int arg1) throws java.sql.SQLException {
+	logger.info("getBigDecimal" + " , " + arg0  + " , " + arg1 );
+	java.math.BigDecimal result = target.getBigDecimal(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.math.BigDecimal getBigDecimal(int arg0) throws java.sql.SQLException {
+	logger.info("getBigDecimal" + " , " + arg0 );
+	java.math.BigDecimal result = target.getBigDecimal(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Date getDate(String arg0) throws java.sql.SQLException {
+	logger.info("getDate" + " , " + arg0 );
+	java.sql.Date result = target.getDate(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Date getDate(int arg0) throws java.sql.SQLException {
+	logger.info("getDate" + " , " + arg0 );
+	java.sql.Date result = target.getDate(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Date getDate(int arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getDate" + " , " + arg0  + " , " + arg1 );
+	java.sql.Date result = target.getDate(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Date getDate(String arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getDate" + " , " + arg0  + " , " + arg1 );
+	java.sql.Date result = target.getDate(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Time getTime(String arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getTime" + " , " + arg0  + " , " + arg1 );
+	java.sql.Time result = target.getTime(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Time getTime(String arg0) throws java.sql.SQLException {
+	logger.info("getTime" + " , " + arg0 );
+	java.sql.Time result = target.getTime(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Time getTime(int arg0) throws java.sql.SQLException {
+	logger.info("getTime" + " , " + arg0 );
+	java.sql.Time result = target.getTime(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Time getTime(int arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getTime" + " , " + arg0  + " , " + arg1 );
+	java.sql.Time result = target.getTime(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Timestamp getTimestamp(String arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getTimestamp" + " , " + arg0  + " , " + arg1 );
+	java.sql.Timestamp result = target.getTimestamp(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Timestamp getTimestamp(String arg0) throws java.sql.SQLException {
+	logger.info("getTimestamp" + " , " + arg0 );
+	java.sql.Timestamp result = target.getTimestamp(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Timestamp getTimestamp(int arg0, java.util.Calendar arg1) throws java.sql.SQLException {
+	logger.info("getTimestamp" + " , " + arg0  + " , " + arg1 );
+	java.sql.Timestamp result = target.getTimestamp(arg0, arg1);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Timestamp getTimestamp(int arg0) throws java.sql.SQLException {
+	logger.info("getTimestamp" + " , " + arg0 );
+	java.sql.Timestamp result = target.getTimestamp(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getAsciiStream(int arg0) throws java.sql.SQLException {
+	logger.info("getAsciiStream" + " , " + arg0 );
+	java.io.InputStream result = target.getAsciiStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getAsciiStream(String arg0) throws java.sql.SQLException {
+	logger.info("getAsciiStream" + " , " + arg0 );
+	java.io.InputStream result = target.getAsciiStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getUnicodeStream(String arg0) throws java.sql.SQLException {
+	logger.info("getUnicodeStream" + " , " + arg0 );
+	java.io.InputStream result = target.getUnicodeStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getUnicodeStream(int arg0) throws java.sql.SQLException {
+	logger.info("getUnicodeStream" + " , " + arg0 );
+	java.io.InputStream result = target.getUnicodeStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getBinaryStream(String arg0) throws java.sql.SQLException {
+	logger.info("getBinaryStream" + " , " + arg0 );
+	java.io.InputStream result = target.getBinaryStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.InputStream getBinaryStream(int arg0) throws java.sql.SQLException {
+	logger.info("getBinaryStream" + " , " + arg0 );
+	java.io.InputStream result = target.getBinaryStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.SQLWarning getWarnings() throws java.sql.SQLException {
+	logger.info("getWarnings");
+	java.sql.SQLWarning result = target.getWarnings();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void clearWarnings() throws java.sql.SQLException {
+	logger.info("clearWarnings");
+target.clearWarnings();
+}
+
+public String getCursorName() throws java.sql.SQLException {
+	logger.info("getCursorName");
+	String result = target.getCursorName();
+	logger.info("result is " + result);
+	return result;
+}
+
+public int findColumn(String arg0) throws java.sql.SQLException {
+	logger.info("findColumn" + " , " + arg0 );
+	int result = target.findColumn(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.Reader getCharacterStream(int arg0) throws java.sql.SQLException {
+	logger.info("getCharacterStream" + " , " + arg0 );
+	java.io.Reader result = target.getCharacterStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.Reader getCharacterStream(String arg0) throws java.sql.SQLException {
+	logger.info("getCharacterStream" + " , " + arg0 );
+	java.io.Reader result = target.getCharacterStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean isBeforeFirst() throws java.sql.SQLException {
+	logger.info("isBeforeFirst");
+	boolean result = target.isBeforeFirst();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean isAfterLast() throws java.sql.SQLException {
+	logger.info("isAfterLast");
+	boolean result = target.isAfterLast();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean isFirst() throws java.sql.SQLException {
+	logger.info("isFirst");
+	boolean result = target.isFirst();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean isLast() throws java.sql.SQLException {
+	logger.info("isLast");
+	boolean result = target.isLast();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void beforeFirst() throws java.sql.SQLException {
+	logger.info("beforeFirst");
+target.beforeFirst();
+}
+
+public void afterLast() throws java.sql.SQLException {
+	logger.info("afterLast");
+target.afterLast();
+}
+
+public int getRow() throws java.sql.SQLException {
+	logger.info("getRow");
+	int result = target.getRow();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean relative(int arg0) throws java.sql.SQLException {
+	logger.info("relative" + " , " + arg0 );
+	boolean result = target.relative(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public void setFetchDirection(int arg0) throws java.sql.SQLException {
+	logger.info("setFetchDirection" + " , " + arg0 );
+target.setFetchDirection(arg0);
+}
+
+public int getFetchDirection() throws java.sql.SQLException {
+	logger.info("getFetchDirection");
+	int result = target.getFetchDirection();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void setFetchSize(int arg0) throws java.sql.SQLException {
+	logger.info("setFetchSize" + " , " + arg0 );
+target.setFetchSize(arg0);
+}
+
+public int getFetchSize() throws java.sql.SQLException {
+	logger.info("getFetchSize");
+	int result = target.getFetchSize();
+	logger.info("result is " + result);
+	return result;
+}
+
+public int getConcurrency() throws java.sql.SQLException {
+	logger.info("getConcurrency");
+	int result = target.getConcurrency();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean rowUpdated() throws java.sql.SQLException {
+	logger.info("rowUpdated");
+	boolean result = target.rowUpdated();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean rowInserted() throws java.sql.SQLException {
+	logger.info("rowInserted");
+	boolean result = target.rowInserted();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean rowDeleted() throws java.sql.SQLException {
+	logger.info("rowDeleted");
+	boolean result = target.rowDeleted();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateNull(int arg0) throws java.sql.SQLException {
+	logger.info("updateNull" + " , " + arg0 );
+target.updateNull(arg0);
+}
+
+public void updateNull(String arg0) throws java.sql.SQLException {
+	logger.info("updateNull" + " , " + arg0 );
+target.updateNull(arg0);
+}
+
+public void updateBoolean(String arg0, boolean arg1) throws java.sql.SQLException {
+	logger.info("updateBoolean" + " , " + arg0  + " , " + arg1 );
+target.updateBoolean(arg0, arg1);
+}
+
+public void updateBoolean(int arg0, boolean arg1) throws java.sql.SQLException {
+	logger.info("updateBoolean" + " , " + arg0  + " , " + arg1 );
+target.updateBoolean(arg0, arg1);
+}
+
+public void updateByte(int arg0, byte arg1) throws java.sql.SQLException {
+	logger.info("updateByte" + " , " + arg0  + " , " + arg1 );
+target.updateByte(arg0, arg1);
+}
+
+public void updateByte(String arg0, byte arg1) throws java.sql.SQLException {
+	logger.info("updateByte" + " , " + arg0  + " , " + arg1 );
+target.updateByte(arg0, arg1);
+}
+
+public void updateShort(int arg0, short arg1) throws java.sql.SQLException {
+	logger.info("updateShort" + " , " + arg0  + " , " + arg1 );
+target.updateShort(arg0, arg1);
+}
+
+public void updateShort(String arg0, short arg1) throws java.sql.SQLException {
+	logger.info("updateShort" + " , " + arg0  + " , " + arg1 );
+target.updateShort(arg0, arg1);
+}
+
+public void updateInt(int arg0, int arg1) throws java.sql.SQLException {
+	logger.info("updateInt" + " , " + arg0  + " , " + arg1 );
+target.updateInt(arg0, arg1);
+}
+
+public void updateInt(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("updateInt" + " , " + arg0  + " , " + arg1 );
+target.updateInt(arg0, arg1);
+}
+
+public void updateLong(int arg0, long arg1) throws java.sql.SQLException {
+	logger.info("updateLong" + " , " + arg0  + " , " + arg1 );
+target.updateLong(arg0, arg1);
+}
+
+public void updateLong(String arg0, long arg1) throws java.sql.SQLException {
+	logger.info("updateLong" + " , " + arg0  + " , " + arg1 );
+target.updateLong(arg0, arg1);
+}
+
+public void updateFloat(String arg0, float arg1) throws java.sql.SQLException {
+	logger.info("updateFloat" + " , " + arg0  + " , " + arg1 );
+target.updateFloat(arg0, arg1);
+}
+
+public void updateFloat(int arg0, float arg1) throws java.sql.SQLException {
+	logger.info("updateFloat" + " , " + arg0  + " , " + arg1 );
+target.updateFloat(arg0, arg1);
+}
+
+public void updateDouble(int arg0, double arg1) throws java.sql.SQLException {
+	logger.info("updateDouble" + " , " + arg0  + " , " + arg1 );
+target.updateDouble(arg0, arg1);
+}
+
+public void updateDouble(String arg0, double arg1) throws java.sql.SQLException {
+	logger.info("updateDouble" + " , " + arg0  + " , " + arg1 );
+target.updateDouble(arg0, arg1);
+}
+
+public void updateBigDecimal(String arg0, java.math.BigDecimal arg1) throws java.sql.SQLException {
+	logger.info("updateBigDecimal" + " , " + arg0  + " , " + arg1 );
+target.updateBigDecimal(arg0, arg1);
+}
+
+public void updateBigDecimal(int arg0, java.math.BigDecimal arg1) throws java.sql.SQLException {
+	logger.info("updateBigDecimal" + " , " + arg0  + " , " + arg1 );
+target.updateBigDecimal(arg0, arg1);
+}
+
+public void updateString(int arg0, String arg1) throws java.sql.SQLException {
+	logger.info("updateString" + " , " + arg0  + " , " + arg1 );
+target.updateString(arg0, arg1);
+}
+
+public void updateString(String arg0, String arg1) throws java.sql.SQLException {
+	logger.info("updateString" + " , " + arg0  + " , " + arg1 );
+target.updateString(arg0, arg1);
+}
+
+public void updateDate(String arg0, java.sql.Date arg1) throws java.sql.SQLException {
+	logger.info("updateDate" + " , " + arg0  + " , " + arg1 );
+target.updateDate(arg0, arg1);
+}
+
+public void updateDate(int arg0, java.sql.Date arg1) throws java.sql.SQLException {
+	logger.info("updateDate" + " , " + arg0  + " , " + arg1 );
+target.updateDate(arg0, arg1);
+}
+
+public void updateTime(int arg0, java.sql.Time arg1) throws java.sql.SQLException {
+	logger.info("updateTime" + " , " + arg0  + " , " + arg1 );
+target.updateTime(arg0, arg1);
+}
+
+public void updateTime(String arg0, java.sql.Time arg1) throws java.sql.SQLException {
+	logger.info("updateTime" + " , " + arg0  + " , " + arg1 );
+target.updateTime(arg0, arg1);
+}
+
+public void updateTimestamp(int arg0, java.sql.Timestamp arg1) throws java.sql.SQLException {
+	logger.info("updateTimestamp" + " , " + arg0  + " , " + arg1 );
+target.updateTimestamp(arg0, arg1);
+}
+
+public void updateTimestamp(String arg0, java.sql.Timestamp arg1) throws java.sql.SQLException {
+	logger.info("updateTimestamp" + " , " + arg0  + " , " + arg1 );
+target.updateTimestamp(arg0, arg1);
+}
+
+public void updateAsciiStream(int arg0, java.io.InputStream arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateAsciiStream(arg0, arg1, arg2);
+}
+
+public void updateAsciiStream(String arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1 );
+target.updateAsciiStream(arg0, arg1);
+}
+
+public void updateAsciiStream(int arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1 );
+target.updateAsciiStream(arg0, arg1);
+}
+
+public void updateAsciiStream(int arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateAsciiStream(arg0, arg1, arg2);
+}
+
+public void updateAsciiStream(String arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateAsciiStream(arg0, arg1, arg2);
+}
+
+public void updateAsciiStream(String arg0, java.io.InputStream arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateAsciiStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateAsciiStream(arg0, arg1, arg2);
+}
+
+public void updateBinaryStream(String arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1 );
+target.updateBinaryStream(arg0, arg1);
+}
+
+public void updateBinaryStream(String arg0, java.io.InputStream arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBinaryStream(arg0, arg1, arg2);
+}
+
+public void updateBinaryStream(int arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBinaryStream(arg0, arg1, arg2);
+}
+
+public void updateBinaryStream(String arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBinaryStream(arg0, arg1, arg2);
+}
+
+public void updateBinaryStream(int arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1 );
+target.updateBinaryStream(arg0, arg1);
+}
+
+public void updateBinaryStream(int arg0, java.io.InputStream arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateBinaryStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBinaryStream(arg0, arg1, arg2);
+}
+
+public void updateCharacterStream(String arg0, java.io.Reader arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateCharacterStream(arg0, arg1, arg2);
+}
+
+public void updateCharacterStream(int arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateCharacterStream(arg0, arg1, arg2);
+}
+
+public void updateCharacterStream(String arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateCharacterStream(arg0, arg1, arg2);
+}
+
+public void updateCharacterStream(int arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1 );
+target.updateCharacterStream(arg0, arg1);
+}
+
+public void updateCharacterStream(int arg0, java.io.Reader arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateCharacterStream(arg0, arg1, arg2);
+}
+
+public void updateCharacterStream(String arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateCharacterStream" + " , " + arg0  + " , " + arg1 );
+target.updateCharacterStream(arg0, arg1);
+}
+
+public void updateObject(String arg0, Object arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateObject(arg0, arg1, arg2);
+}
+
+public void updateObject(int arg0, Object arg1) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1 );
+target.updateObject(arg0, arg1);
+}
+
+public void updateObject(String arg0, Object arg1, java.sql.SQLType arg2) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateObject(arg0, arg1, arg2);
+}
+
+public void updateObject(int arg0, Object arg1, java.sql.SQLType arg2) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateObject(arg0, arg1, arg2);
+}
+
+public void updateObject(String arg0, Object arg1, java.sql.SQLType arg2, int arg3) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+target.updateObject(arg0, arg1, arg2, arg3);
+}
+
+public void updateObject(int arg0, Object arg1, java.sql.SQLType arg2, int arg3) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+target.updateObject(arg0, arg1, arg2, arg3);
+}
+
+public void updateObject(int arg0, Object arg1, int arg2) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateObject(arg0, arg1, arg2);
+}
+
+public void updateObject(String arg0, Object arg1) throws java.sql.SQLException {
+	logger.info("updateObject" + " , " + arg0  + " , " + arg1 );
+target.updateObject(arg0, arg1);
+}
+
+public void insertRow() throws java.sql.SQLException {
+	logger.info("insertRow");
+target.insertRow();
+}
+
+public void updateRow() throws java.sql.SQLException {
+	logger.info("updateRow");
+target.updateRow();
+}
+
+public void deleteRow() throws java.sql.SQLException {
+	logger.info("deleteRow");
+target.deleteRow();
+}
+
+public void refreshRow() throws java.sql.SQLException {
+	logger.info("refreshRow");
+target.refreshRow();
+}
+
+public void cancelRowUpdates() throws java.sql.SQLException {
+	logger.info("cancelRowUpdates");
+target.cancelRowUpdates();
+}
+
+public void moveToInsertRow() throws java.sql.SQLException {
+	logger.info("moveToInsertRow");
+target.moveToInsertRow();
+}
+
+public void moveToCurrentRow() throws java.sql.SQLException {
+	logger.info("moveToCurrentRow");
+target.moveToCurrentRow();
+}
+
+public java.sql.Statement getStatement() throws java.sql.SQLException {
+	logger.info("getStatement");
+	java.sql.Statement result = target.getStatement();
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Blob getBlob(int arg0) throws java.sql.SQLException {
+	logger.info("getBlob" + " , " + arg0 );
+	java.sql.Blob result = target.getBlob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Blob getBlob(String arg0) throws java.sql.SQLException {
+	logger.info("getBlob" + " , " + arg0 );
+	java.sql.Blob result = target.getBlob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Clob getClob(int arg0) throws java.sql.SQLException {
+	logger.info("getClob" + " , " + arg0 );
+	java.sql.Clob result = target.getClob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.Clob getClob(String arg0) throws java.sql.SQLException {
+	logger.info("getClob" + " , " + arg0 );
+	java.sql.Clob result = target.getClob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateRef(int arg0, java.sql.Ref arg1) throws java.sql.SQLException {
+	logger.info("updateRef" + " , " + arg0  + " , " + arg1 );
+target.updateRef(arg0, arg1);
+}
+
+public void updateRef(String arg0, java.sql.Ref arg1) throws java.sql.SQLException {
+	logger.info("updateRef" + " , " + arg0  + " , " + arg1 );
+target.updateRef(arg0, arg1);
+}
+
+public void updateBlob(int arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBlob(arg0, arg1, arg2);
+}
+
+public void updateBlob(String arg0, java.sql.Blob arg1) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1 );
+target.updateBlob(arg0, arg1);
+}
+
+public void updateBlob(int arg0, java.sql.Blob arg1) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1 );
+target.updateBlob(arg0, arg1);
+}
+
+public void updateBlob(String arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1 );
+target.updateBlob(arg0, arg1);
+}
+
+public void updateBlob(int arg0, java.io.InputStream arg1) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1 );
+target.updateBlob(arg0, arg1);
+}
+
+public void updateBlob(String arg0, java.io.InputStream arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateBlob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateBlob(arg0, arg1, arg2);
+}
+
+public void updateClob(String arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateClob(arg0, arg1, arg2);
+}
+
+public void updateClob(String arg0, java.sql.Clob arg1) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1 );
+target.updateClob(arg0, arg1);
+}
+
+public void updateClob(String arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1 );
+target.updateClob(arg0, arg1);
+}
+
+public void updateClob(int arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateClob(arg0, arg1, arg2);
+}
+
+public void updateClob(int arg0, java.sql.Clob arg1) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1 );
+target.updateClob(arg0, arg1);
+}
+
+public void updateClob(int arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateClob" + " , " + arg0  + " , " + arg1 );
+target.updateClob(arg0, arg1);
+}
+
+public void updateArray(int arg0, java.sql.Array arg1) throws java.sql.SQLException {
+	logger.info("updateArray" + " , " + arg0  + " , " + arg1 );
+target.updateArray(arg0, arg1);
+}
+
+public void updateArray(String arg0, java.sql.Array arg1) throws java.sql.SQLException {
+	logger.info("updateArray" + " , " + arg0  + " , " + arg1 );
+target.updateArray(arg0, arg1);
+}
+
+public java.sql.RowId getRowId(int arg0) throws java.sql.SQLException {
+	logger.info("getRowId" + " , " + arg0 );
+	java.sql.RowId result = target.getRowId(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.RowId getRowId(String arg0) throws java.sql.SQLException {
+	logger.info("getRowId" + " , " + arg0 );
+	java.sql.RowId result = target.getRowId(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateRowId(String arg0, java.sql.RowId arg1) throws java.sql.SQLException {
+	logger.info("updateRowId" + " , " + arg0  + " , " + arg1 );
+target.updateRowId(arg0, arg1);
+}
+
+public void updateRowId(int arg0, java.sql.RowId arg1) throws java.sql.SQLException {
+	logger.info("updateRowId" + " , " + arg0  + " , " + arg1 );
+target.updateRowId(arg0, arg1);
+}
+
+public int getHoldability() throws java.sql.SQLException {
+	logger.info("getHoldability");
+	int result = target.getHoldability();
+	logger.info("result is " + result);
+	return result;
+}
+
+public boolean isClosed() throws java.sql.SQLException {
+	logger.info("isClosed");
+	boolean result = target.isClosed();
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateNString(int arg0, String arg1) throws java.sql.SQLException {
+	logger.info("updateNString" + " , " + arg0  + " , " + arg1 );
+target.updateNString(arg0, arg1);
+}
+
+public void updateNString(String arg0, String arg1) throws java.sql.SQLException {
+	logger.info("updateNString" + " , " + arg0  + " , " + arg1 );
+target.updateNString(arg0, arg1);
+}
+
+public void updateNClob(String arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1 );
+target.updateNClob(arg0, arg1);
+}
+
+public void updateNClob(String arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateNClob(arg0, arg1, arg2);
+}
+
+public void updateNClob(int arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1 );
+target.updateNClob(arg0, arg1);
+}
+
+public void updateNClob(String arg0, java.sql.NClob arg1) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1 );
+target.updateNClob(arg0, arg1);
+}
+
+public void updateNClob(int arg0, java.sql.NClob arg1) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1 );
+target.updateNClob(arg0, arg1);
+}
+
+public void updateNClob(int arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateNClob" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateNClob(arg0, arg1, arg2);
+}
+
+public java.sql.NClob getNClob(String arg0) throws java.sql.SQLException {
+	logger.info("getNClob" + " , " + arg0 );
+	java.sql.NClob result = target.getNClob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.NClob getNClob(int arg0) throws java.sql.SQLException {
+	logger.info("getNClob" + " , " + arg0 );
+	java.sql.NClob result = target.getNClob(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.SQLXML getSQLXML(int arg0) throws java.sql.SQLException {
+	logger.info("getSQLXML" + " , " + arg0 );
+	java.sql.SQLXML result = target.getSQLXML(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.sql.SQLXML getSQLXML(String arg0) throws java.sql.SQLException {
+	logger.info("getSQLXML" + " , " + arg0 );
+	java.sql.SQLXML result = target.getSQLXML(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateSQLXML(int arg0, java.sql.SQLXML arg1) throws java.sql.SQLException {
+	logger.info("updateSQLXML" + " , " + arg0  + " , " + arg1 );
+target.updateSQLXML(arg0, arg1);
+}
+
+public void updateSQLXML(String arg0, java.sql.SQLXML arg1) throws java.sql.SQLException {
+	logger.info("updateSQLXML" + " , " + arg0  + " , " + arg1 );
+target.updateSQLXML(arg0, arg1);
+}
+
+public String getNString(String arg0) throws java.sql.SQLException {
+	logger.info("getNString" + " , " + arg0 );
+	String result = target.getNString(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public String getNString(int arg0) throws java.sql.SQLException {
+	logger.info("getNString" + " , " + arg0 );
+	String result = target.getNString(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.Reader getNCharacterStream(int arg0) throws java.sql.SQLException {
+	logger.info("getNCharacterStream" + " , " + arg0 );
+	java.io.Reader result = target.getNCharacterStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public java.io.Reader getNCharacterStream(String arg0) throws java.sql.SQLException {
+	logger.info("getNCharacterStream" + " , " + arg0 );
+	java.io.Reader result = target.getNCharacterStream(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+public void updateNCharacterStream(int arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateNCharacterStream" + " , " + arg0  + " , " + arg1 );
+target.updateNCharacterStream(arg0, arg1);
+}
+
+public void updateNCharacterStream(String arg0, java.io.Reader arg1) throws java.sql.SQLException {
+	logger.info("updateNCharacterStream" + " , " + arg0  + " , " + arg1 );
+target.updateNCharacterStream(arg0, arg1);
+}
+
+public void updateNCharacterStream(int arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateNCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateNCharacterStream(arg0, arg1, arg2);
+}
+
+public void updateNCharacterStream(String arg0, java.io.Reader arg1, long arg2) throws java.sql.SQLException {
+	logger.info("updateNCharacterStream" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+target.updateNCharacterStream(arg0, arg1, arg2);
+}
+
+public boolean isWrapperFor(Class<?> arg0) throws java.sql.SQLException {
+	logger.info("isWrapperFor" + " , " + arg0 );
+	boolean result = target.isWrapperFor(arg0);
+	logger.info("result is " + result);
+	return result;
+}
+
+
+
 }

@@ -9,121 +9,177 @@ import jp.mufg.slf4j.FileLogger;
 
 public class LogResultSetMetaData implements ResultSetMetaData {
 private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.class);
-	private final ResultSetMetaData meta;
+	private final ResultSetMetaData target;
 
-	public LogResultSetMetaData(ResultSetMetaData meta) {
+	public LogResultSetMetaData(ResultSetMetaData target) {
 		super();
-		this.meta = meta;
+		this.target = target;
 	}
 
-	public <T> T unwrap(Class<T> iface) throws SQLException { logger.info("unwrap");
-		return meta.unwrap(iface);
-	}
+    //==========================================
+public boolean isReadOnly(int arg0) throws java.sql.SQLException {
+	logger.info("isReadOnly" + " , " + arg0 );
+	boolean result = target.isReadOnly(arg0);
+	logger.info("isReadOnly result is " + result);
+	return result;
+}
 
-	public int getColumnCount() throws SQLException { //logger.info("getColumnCount");
-		return meta.getColumnCount();
-	}
+public boolean isDefinitelyWritable(int arg0) throws java.sql.SQLException {
+	logger.info("isDefinitelyWritable" + " , " + arg0 );
+	boolean result = target.isDefinitelyWritable(arg0);
+	logger.info("isDefinitelyWritable result is " + result);
+	return result;
+}
 
-	public boolean isAutoIncrement(int column) throws SQLException { logger.info("isAutoIncrement");
-		return meta.isAutoIncrement(column);
-	}
+public int getColumnDisplaySize(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnDisplaySize" + " , " + arg0 );
+	int result = target.getColumnDisplaySize(arg0);
+	logger.info("getColumnDisplaySize result is " + result);
+	return result;
+}
 
-	public boolean isCaseSensitive(int column) throws SQLException { logger.info("isCaseSensitive");
-		return meta.isCaseSensitive(column);
-	}
+public boolean isAutoIncrement(int arg0) throws java.sql.SQLException {
+	logger.info("isAutoIncrement" + " , " + arg0 );
+	boolean result = target.isAutoIncrement(arg0);
+	logger.info("isAutoIncrement result is " + result);
+	return result;
+}
 
-	public boolean isSearchable(int column) throws SQLException { logger.info("isSearchable");
-		return meta.isSearchable(column);
-	}
+public int getColumnType(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnType" + " , " + arg0 );
+	int result = target.getColumnType(arg0);
+	logger.info("getColumnType result is " + result);
+	return result;
+}
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException { logger.info("isWrapperFor");
-		return meta.isWrapperFor(iface);
-	}
+public String getColumnTypeName(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnTypeName" + " , " + arg0 );
+	String result = target.getColumnTypeName(arg0);
+	logger.info("getColumnTypeName result is " + result);
+	return result;
+}
 
-	public boolean isCurrency(int column) throws SQLException { logger.info("isCurrency");
-		return meta.isCurrency(column);
-	}
+public boolean isSearchable(int arg0) throws java.sql.SQLException {
+	logger.info("isSearchable" + " , " + arg0 );
+	boolean result = target.isSearchable(arg0);
+	logger.info("isSearchable result is " + result);
+	return result;
+}
 
-	public int isNullable(int column) throws SQLException {
-        int result = meta.isNullable(column);
-        logger.info("isNullable(" + column + ") -> " + result);
-		return result;
-	}
+public int getColumnCount() throws java.sql.SQLException {
+	logger.info("getColumnCount");
+	int result = target.getColumnCount();
+	logger.info("getColumnCount result is " + result);
+	return result;
+}
 
-	public boolean isSigned(int column) throws SQLException { logger.info("isSigned");
-		return meta.isSigned(column);
-	}
+public int getPrecision(int arg0) throws java.sql.SQLException {
+	logger.info("getPrecision" + " , " + arg0 );
+	int result = target.getPrecision(arg0);
+	logger.info("getPrecision result is " + result);
+	return result;
+}
 
-	public int getColumnDisplaySize(int column) throws SQLException {
-        int result = meta.getColumnDisplaySize(column);
-        logger.info("getColumnDisplaySize(" + column + ") -> " + result);
-		return result;
-    }
+public String getCatalogName(int arg0) throws java.sql.SQLException {
+	logger.info("getCatalogName" + " , " + arg0 );
+	String result = target.getCatalogName(arg0);
+	logger.info("getCatalogName result is " + result);
+	return result;
+}
 
-	public String getColumnLabel(int column) throws SQLException {
-        String result = meta.getColumnLabel(column);
-        logger.info("getColumnLabel(" + column + ") -> " + result);
-		return result;
-	}
+public int getScale(int arg0) throws java.sql.SQLException {
+	logger.info("getScale" + " , " + arg0 );
+	int result = target.getScale(arg0);
+	logger.info("getScale result is " + result);
+	return result;
+}
 
-	public String getColumnName(int column) throws SQLException { //logger.info("getColumnName");
-		return meta.getColumnName(column);
-	}
+public String getColumnName(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnName" + " , " + arg0 );
+	String result = target.getColumnName(arg0);
+	logger.info("getColumnName result is " + result);
+	return result;
+}
 
-	public String getSchemaName(int column) throws SQLException { logger.info("getSchemaName");
-		return meta.getSchemaName(column);
-	}
+public String getColumnLabel(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnLabel" + " , " + arg0 );
+	String result = target.getColumnLabel(arg0);
+	logger.info("getColumnLabel result is " + result);
+	return result;
+}
 
-	public int getPrecision(int column) throws SQLException {
-        int result = meta.getPrecision(column);
-        logger.info("getPrecision(" + column + ") -> " + result);
-		return result;
-	}
+public String getColumnClassName(int arg0) throws java.sql.SQLException {
+	logger.info("getColumnClassName" + " , " + arg0 );
+	String result = target.getColumnClassName(arg0);
+	logger.info("getColumnClassName result is " + result);
+	return result;
+}
 
-	public int getScale(int column) throws SQLException {
-        int result = meta.getScale(column);
-        logger.info("getScale(" + column + ") -> " + result);
-		return result;
+public boolean isCaseSensitive(int arg0) throws java.sql.SQLException {
+	logger.info("isCaseSensitive" + " , " + arg0 );
+	boolean result = target.isCaseSensitive(arg0);
+	logger.info("isCaseSensitive result is " + result);
+	return result;
+}
 
-	}
+public String getTableName(int arg0) throws java.sql.SQLException {
+	logger.info("getTableName" + " , " + arg0 );
+	String result = target.getTableName(arg0);
+	logger.info("getTableName result is " + result);
+	return result;
+}
 
-	public String getTableName(int column) throws SQLException { logger.info("getTableName");
-		return meta.getTableName(column);
-	}
+public boolean isWritable(int arg0) throws java.sql.SQLException {
+	logger.info("isWritable" + " , " + arg0 );
+	boolean result = target.isWritable(arg0);
+	logger.info("isWritable result is " + result);
+	return result;
+}
 
-	public String getCatalogName(int column) throws SQLException { logger.info("getCatalogName");
-		return meta.getCatalogName(column);
-	}
+public int isNullable(int arg0) throws java.sql.SQLException {
+	logger.info("isNullable" + " , " + arg0 );
+	int result = target.isNullable(arg0);
+	logger.info("isNullable result is " + result);
+	return result;
+}
 
-	public int getColumnType(int column) throws SQLException {
-        int result = meta.getColumnType(column);
-        logger.info("getColumnType(" + column + ") -> " + result);
-        return result;
-	}
+public boolean isCurrency(int arg0) throws java.sql.SQLException {
+	logger.info("isCurrency" + " , " + arg0 );
+	boolean result = target.isCurrency(arg0);
+	logger.info("isCurrency result is " + result);
+	return result;
+}
 
-	public String getColumnTypeName(int column) throws SQLException {
-        String result = meta.getColumnTypeName(column);
-        logger.info("getColumnTypeName(" + column + ") -> " + result);
-		return result;
-	}
+public boolean isSigned(int arg0) throws java.sql.SQLException {
+	logger.info("isSigned" + " , " + arg0 );
+	boolean result = target.isSigned(arg0);
+	logger.info("isSigned result is " + result);
+	return result;
+}
 
-	public boolean isReadOnly(int column) throws SQLException { logger.info("isReadOnly");
-		return meta.isReadOnly(column);
-	}
+public String getSchemaName(int arg0) throws java.sql.SQLException {
+	logger.info("getSchemaName" + " , " + arg0 );
+	String result = target.getSchemaName(arg0);
+	logger.info("getSchemaName result is " + result);
+	return result;
+}
 
-	public boolean isWritable(int column) throws SQLException { logger.info("isWritable");
-		return meta.isWritable(column);
-	}
 
-	public boolean isDefinitelyWritable(int column) throws SQLException { logger.info("isDefinitelyWritable");
-		return meta.isDefinitelyWritable(column);
-	}
+public <T> T unwrap(java.lang.Class<T> arg0) throws java.sql.SQLException {
+	logger.info("unwrap" + " , " + arg0 );
+	T result = target.unwrap(arg0);
+	logger.info("unwrap result is " + result);
+	return result;
+}
 
-	public String getColumnClassName(int column) throws SQLException { logger.info("getColumnClassName");
-		return meta.getColumnClassName(column);
-	}
-	
-	
+public boolean isWrapperFor(java.lang.Class<?> arg0) throws java.sql.SQLException {
+	logger.info("isWrapperFor" + " , " + arg0 );
+	boolean result = target.isWrapperFor(arg0);
+	logger.info("isWrapperFor result is " + result);
+	return result;
+}
+
+
 	
 	
 }

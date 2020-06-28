@@ -13,766 +13,1268 @@ import jp.mufg.slf4j.FileLogger;
 
 public class LogDatabaseMetaData implements DatabaseMetaData {
 	private static final Logger logger = FileLogger.getLogger(LogDatabaseMetaData.class);
-	private final DatabaseMetaData meta;
+	private final DatabaseMetaData target;
 
-	public LogDatabaseMetaData(DatabaseMetaData meta) {
+	public LogDatabaseMetaData(DatabaseMetaData target) {
 		super();
-        this.meta = meta;
-	}
-
-	public <T> T unwrap(Class<T> iface) throws SQLException {
-		logger.info("unwrap");
-		return meta.unwrap(iface);
-	}
-
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		logger.info("isWrapperFor");
-		return meta.isWrapperFor(iface);
-	}
-
-	public boolean allProceduresAreCallable() throws SQLException { 
-		logger.info("allProceduresAreCallable");
-		return meta.allProceduresAreCallable();
-	}
-
-	public boolean allTablesAreSelectable() throws SQLException { 
-		logger.info("allTablesAreSelectable");
-		return meta.allTablesAreSelectable();
-	}
-
-	public String getURL() throws SQLException { 
-		logger.info("getURL");
-		return meta.getURL();
-	}
-
-	public String getUserName() throws SQLException { 
-		logger.info("getUserName");
-		return meta.getUserName();
-	}
-
-	public boolean isReadOnly() throws SQLException {
-		logger.info("isReadOnly");
-		return meta.isReadOnly();
-	}
-
-	public boolean nullsAreSortedHigh() throws SQLException { 
-		logger.info("nullsAreSortedHigh");
-		return meta.nullsAreSortedHigh();
-	}
-
-	public boolean nullsAreSortedLow() throws SQLException { 
-		logger.info("xxx");
-		return meta.nullsAreSortedLow();
-	}
-
-	public boolean nullsAreSortedAtStart() throws SQLException { 
-		logger.info("xxx");
-		return meta.nullsAreSortedAtStart();
-	}
-
-	public boolean nullsAreSortedAtEnd() throws SQLException { 
-		logger.info("nullsAreSortedAtEnd");
-		return meta.nullsAreSortedAtEnd();
-	}
-
-	public String getDatabaseProductName() throws SQLException { 
-		logger.info("getDatabaseProductName");
-		return meta.getDatabaseProductName();
-	}
-
-	public String getDatabaseProductVersion() throws SQLException { 
-		String result = meta.getDatabaseProductVersion();
-        logger.info("getDatabaseProductVersion -> " + result);
-        return result;
-	}
-
-	public String getDriverName() throws SQLException { 
-		String result = meta.getDriverName();
-        logger.info("getDriverName -> " + result);
-        return result;
-	}
-
-	public String getDriverVersion() throws SQLException { 
-		String result = meta.getDriverVersion();
-        logger.info("getDriverVersion -> " + result);
-        return result;
-	}
-
-	public int getDriverMajorVersion() { logger.info("getDriverMajorVersion");
-		return meta.getDriverMajorVersion();
-	}
-
-	public int getDriverMinorVersion() { logger.info("getDriverMinorVersion");
-		return meta.getDriverMinorVersion();
-	}
-
-	public boolean usesLocalFiles() throws SQLException { logger.info("usesLocalFiles");
-		return meta.usesLocalFiles();
-	}
-
-	public boolean usesLocalFilePerTable() throws SQLException { logger.info("usesLocalFilePerTable");
-		return meta.usesLocalFilePerTable();
-	}
-
-	public boolean supportsMixedCaseIdentifiers() throws SQLException { logger.info("supportsMixedCaseIdentifiers");
-		return meta.supportsMixedCaseIdentifiers();
-	}
-
-	public boolean storesUpperCaseIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesUpperCaseIdentifiers();
-	}
-
-	public boolean storesLowerCaseIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesLowerCaseIdentifiers();
-	}
-
-	public boolean storesMixedCaseIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesMixedCaseIdentifiers();
-	}
-
-	public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.supportsMixedCaseQuotedIdentifiers();
-	}
-
-	public boolean storesUpperCaseQuotedIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesUpperCaseQuotedIdentifiers();
-	}
-
-	public boolean storesLowerCaseQuotedIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesLowerCaseQuotedIdentifiers();
-	}
-
-	public boolean storesMixedCaseQuotedIdentifiers() throws SQLException { logger.info("xxx");
-		return meta.storesMixedCaseQuotedIdentifiers();
-	}
-
-	public String getIdentifierQuoteString() throws SQLException { logger.info("xxx");
-		return meta.getIdentifierQuoteString();
-	}
-
-	public String getSQLKeywords() throws SQLException { logger.info("xxx");
-		return meta.getSQLKeywords();
-	}
-
-	public String getNumericFunctions() throws SQLException { logger.info("xxx");
-		return meta.getNumericFunctions();
-	}
-
-	public String getStringFunctions() throws SQLException { logger.info("xxx");
-		return meta.getStringFunctions();
-	}
-
-	public String getSystemFunctions() throws SQLException { logger.info("xxx");
-		return meta.getSystemFunctions();
-	}
-
-	public String getTimeDateFunctions() throws SQLException { logger.info("xxx");
-		return meta.getTimeDateFunctions();
-	}
-
-	public String getSearchStringEscape() throws SQLException { logger.info("xxx");
-		return meta.getSearchStringEscape();
-	}
-
-	public String getExtraNameCharacters() throws SQLException { logger.info("xxx");
-		return meta.getExtraNameCharacters();
-	}
-
-	public boolean supportsAlterTableWithAddColumn() throws SQLException { logger.info("xxx");
-		return meta.supportsAlterTableWithAddColumn();
-	}
-
-	public boolean supportsAlterTableWithDropColumn() throws SQLException { logger.info("xxx");
-		return meta.supportsAlterTableWithDropColumn();
-	}
-
-	public boolean supportsColumnAliasing() throws SQLException { logger.info("xxx");
-		return meta.supportsColumnAliasing();
-	}
-
-	public boolean nullPlusNonNullIsNull() throws SQLException { logger.info("xxx");
-		return meta.nullPlusNonNullIsNull();
-	}
-
-	public boolean supportsConvert() throws SQLException { logger.info("xxx");
-		return meta.supportsConvert();
-	}
-
-	public boolean supportsConvert(int fromType, int toType) throws SQLException { logger.info("xxx");
-		return meta.supportsConvert(fromType, toType);
-	}
-
-	public boolean supportsTableCorrelationNames() throws SQLException { logger.info("xxx");
-		return meta.supportsTableCorrelationNames();
-	}
-
-	public boolean supportsDifferentTableCorrelationNames() throws SQLException { logger.info("xxx");
-		return meta.supportsDifferentTableCorrelationNames();
-	}
-
-	public boolean supportsExpressionsInOrderBy() throws SQLException { logger.info("xxx");
-		return meta.supportsExpressionsInOrderBy();
-	}
-
-	public boolean supportsOrderByUnrelated() throws SQLException { logger.info("xxx");
-		return meta.supportsOrderByUnrelated();
-	}
-
-	public boolean supportsGroupBy() throws SQLException { logger.info("xxx");
-		return meta.supportsGroupBy();
-	}
-
-	public boolean supportsGroupByUnrelated() throws SQLException { logger.info("xxx");
-		return meta.supportsGroupByUnrelated();
-	}
-
-	public boolean supportsGroupByBeyondSelect() throws SQLException { logger.info("xxx");
-		return meta.supportsGroupByBeyondSelect();
-	}
-
-	public boolean supportsLikeEscapeClause() throws SQLException { logger.info("xxx");
-		return meta.supportsLikeEscapeClause();
-	}
-
-	public boolean supportsMultipleResultSets() throws SQLException { logger.info("xxx");
-		return meta.supportsMultipleResultSets();
-	}
-
-	public boolean supportsMultipleTransactions() throws SQLException { logger.info("xxx");
-		return meta.supportsMultipleTransactions();
-	}
-
-	public boolean supportsNonNullableColumns() throws SQLException { logger.info("xxx");
-		return meta.supportsNonNullableColumns();
-	}
-
-	public boolean supportsMinimumSQLGrammar() throws SQLException { logger.info("xxx");
-		return meta.supportsMinimumSQLGrammar();
-	}
-
-	public boolean supportsCoreSQLGrammar() throws SQLException { logger.info("xxx");
-		return meta.supportsCoreSQLGrammar();
-	}
-
-	public boolean supportsExtendedSQLGrammar() throws SQLException { logger.info("xxx");
-		return meta.supportsExtendedSQLGrammar();
-	}
-
-	public boolean supportsANSI92EntryLevelSQL() throws SQLException { logger.info("xxx");
-		return meta.supportsANSI92EntryLevelSQL();
-	}
-
-	public boolean supportsANSI92IntermediateSQL() throws SQLException { logger.info("xxx");
-		return meta.supportsANSI92IntermediateSQL();
-	}
-
-	public boolean supportsANSI92FullSQL() throws SQLException { logger.info("xxx");
-		return meta.supportsANSI92FullSQL();
-	}
-
-	public boolean supportsIntegrityEnhancementFacility() throws SQLException { logger.info("xxx");
-		return meta.supportsIntegrityEnhancementFacility();
-	}
-
-	public boolean supportsOuterJoins() throws SQLException { logger.info("xxx");
-		return meta.supportsOuterJoins();
-	}
-
-	public boolean supportsFullOuterJoins() throws SQLException { logger.info("xxx");
-		return meta.supportsFullOuterJoins();
-	}
-
-	public boolean supportsLimitedOuterJoins() throws SQLException { logger.info("xxx");
-		return meta.supportsLimitedOuterJoins();
-	}
-
-	public String getSchemaTerm() throws SQLException { logger.info("xxx");
-		return meta.getSchemaTerm();
-	}
-
-	public String getProcedureTerm() throws SQLException { logger.info("xxx");
-		return meta.getProcedureTerm();
-	}
-
-	public String getCatalogTerm() throws SQLException { logger.info("xxx");
-		return meta.getCatalogTerm();
-	}
-
-	public boolean isCatalogAtStart() throws SQLException { logger.info("xxx");
-		return meta.isCatalogAtStart();
-	}
-
-	public String getCatalogSeparator() throws SQLException { logger.info("xxx");
-		return meta.getCatalogSeparator();
-	}
-
-	public boolean supportsSchemasInDataManipulation() throws SQLException { logger.info("xxx");
-		return meta.supportsSchemasInDataManipulation();
-	}
-
-	public boolean supportsSchemasInProcedureCalls() throws SQLException { logger.info("xxx");
-		return meta.supportsSchemasInProcedureCalls();
-	}
-
-	public boolean supportsSchemasInTableDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsSchemasInTableDefinitions();
-	}
-
-	public boolean supportsSchemasInIndexDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsSchemasInIndexDefinitions();
-	}
-
-	public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsSchemasInPrivilegeDefinitions();
-	}
-
-	public boolean supportsCatalogsInDataManipulation() throws SQLException { logger.info("xxx");
-		return meta.supportsCatalogsInDataManipulation();
-	}
-
-	public boolean supportsCatalogsInProcedureCalls() throws SQLException { logger.info("xxx");
-		return meta.supportsCatalogsInProcedureCalls();
-	}
-
-	public boolean supportsCatalogsInTableDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsCatalogsInTableDefinitions();
-	}
-
-	public boolean supportsCatalogsInIndexDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsCatalogsInIndexDefinitions();
-	}
-
-	public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException { logger.info("xxx");
-		return meta.supportsCatalogsInPrivilegeDefinitions();
-	}
-
-	public boolean supportsPositionedDelete() throws SQLException { logger.info("xxx");
-		return meta.supportsPositionedDelete();
-	}
-
-	public boolean supportsPositionedUpdate() throws SQLException { logger.info("xxx");
-		return meta.supportsPositionedUpdate();
-	}
-
-	public boolean supportsSelectForUpdate() throws SQLException { logger.info("xxx");
-		return meta.supportsSelectForUpdate();
-	}
-
-	public boolean supportsStoredProcedures() throws SQLException { logger.info("xxx");
-		return meta.supportsStoredProcedures();
-	}
-
-	public boolean supportsSubqueriesInComparisons() throws SQLException { logger.info("xxx");
-		return meta.supportsSubqueriesInComparisons();
-	}
-
-	public boolean supportsSubqueriesInExists() throws SQLException { logger.info("xxx");
-		return meta.supportsSubqueriesInExists();
-	}
-
-	public boolean supportsSubqueriesInIns() throws SQLException { logger.info("xxx");
-		return meta.supportsSubqueriesInIns();
-	}
-
-	public boolean supportsSubqueriesInQuantifieds() throws SQLException { logger.info("xxx");
-		return meta.supportsSubqueriesInQuantifieds();
-	}
-
-	public boolean supportsCorrelatedSubqueries() throws SQLException { logger.info("xxx");
-		return meta.supportsCorrelatedSubqueries();
-	}
-
-	public boolean supportsUnion() throws SQLException { logger.info("xxx");
-		return meta.supportsUnion();
-	}
-
-	public boolean supportsUnionAll() throws SQLException { logger.info("xxx");
-		return meta.supportsUnionAll();
-	}
+        this.target = target;
+	}
+
+    //-------------------------------------------------------
+
+public String getURL() throws java.sql.SQLException {
+	logger.info("getURL");
+	String result = target.getURL();
+	logger.info("getURL result is " + result);
+	return result;
+}
+
+public boolean supportsDataDefinitionAndDataManipulationTransactions() throws java.sql.SQLException {
+	logger.info("supportsDataDefinitionAndDataManipulationTransactions");
+	boolean result = target.supportsDataDefinitionAndDataManipulationTransactions();
+	logger.info("supportsDataDefinitionAndDataManipulationTransactions result is " + result);
+	return result;
+}
+
+public boolean isWrapperFor(java.lang.Class<?> arg0) throws java.sql.SQLException {
+	logger.info("isWrapperFor" + " , " + arg0 );
+	boolean result = target.isWrapperFor(arg0);
+	logger.info("isWrapperFor result is " + result);
+	return result;
+}
+
+public boolean allProceduresAreCallable() throws java.sql.SQLException {
+	logger.info("allProceduresAreCallable");
+	boolean result = target.allProceduresAreCallable();
+	logger.info("allProceduresAreCallable result is " + result);
+	return result;
+}
+
+public boolean allTablesAreSelectable() throws java.sql.SQLException {
+	logger.info("allTablesAreSelectable");
+	boolean result = target.allTablesAreSelectable();
+	logger.info("allTablesAreSelectable result is " + result);
+	return result;
+}
+
+public String getUserName() throws java.sql.SQLException {
+	logger.info("getUserName");
+	String result = target.getUserName();
+	logger.info("getUserName result is " + result);
+	return result;
+}
+
+public boolean nullsAreSortedHigh() throws java.sql.SQLException {
+	logger.info("nullsAreSortedHigh");
+	boolean result = target.nullsAreSortedHigh();
+	logger.info("nullsAreSortedHigh result is " + result);
+	return result;
+}
+
+public boolean nullsAreSortedLow() throws java.sql.SQLException {
+	logger.info("nullsAreSortedLow");
+	boolean result = target.nullsAreSortedLow();
+	logger.info("nullsAreSortedLow result is " + result);
+	return result;
+}
+
+public boolean nullsAreSortedAtStart() throws java.sql.SQLException {
+	logger.info("nullsAreSortedAtStart");
+	boolean result = target.nullsAreSortedAtStart();
+	logger.info("nullsAreSortedAtStart result is " + result);
+	return result;
+}
+
+public boolean nullsAreSortedAtEnd() throws java.sql.SQLException {
+	logger.info("nullsAreSortedAtEnd");
+	boolean result = target.nullsAreSortedAtEnd();
+	logger.info("nullsAreSortedAtEnd result is " + result);
+	return result;
+}
+
+public String getDatabaseProductName() throws java.sql.SQLException {
+	logger.info("getDatabaseProductName");
+	String result = target.getDatabaseProductName();
+	logger.info("getDatabaseProductName result is " + result);
+	return result;
+}
+
+public String getDatabaseProductVersion() throws java.sql.SQLException {
+	logger.info("getDatabaseProductVersion");
+	String result = target.getDatabaseProductVersion();
+	logger.info("getDatabaseProductVersion result is " + result);
+	return result;
+}
+
+public String getDriverName() throws java.sql.SQLException {
+	logger.info("getDriverName");
+	String result = target.getDriverName();
+	logger.info("getDriverName result is " + result);
+	return result;
+}
+
+public String getDriverVersion() throws java.sql.SQLException {
+	logger.info("getDriverVersion");
+	String result = target.getDriverVersion();
+	logger.info("getDriverVersion result is " + result);
+	return result;
+}
+
+public int getDriverMajorVersion(){
+	logger.info("getDriverMajorVersion");
+	int result = target.getDriverMajorVersion();
+	logger.info("getDriverMajorVersion result is " + result);
+	return result;
+}
+
+public int getDriverMinorVersion(){
+	logger.info("getDriverMinorVersion");
+	int result = target.getDriverMinorVersion();
+	logger.info("getDriverMinorVersion result is " + result);
+	return result;
+}
+
+public boolean usesLocalFiles() throws java.sql.SQLException {
+	logger.info("usesLocalFiles");
+	boolean result = target.usesLocalFiles();
+	logger.info("usesLocalFiles result is " + result);
+	return result;
+}
+
+public boolean usesLocalFilePerTable() throws java.sql.SQLException {
+	logger.info("usesLocalFilePerTable");
+	boolean result = target.usesLocalFilePerTable();
+	logger.info("usesLocalFilePerTable result is " + result);
+	return result;
+}
+
+public boolean supportsMixedCaseIdentifiers() throws java.sql.SQLException {
+	logger.info("supportsMixedCaseIdentifiers");
+	boolean result = target.supportsMixedCaseIdentifiers();
+	logger.info("supportsMixedCaseIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesUpperCaseIdentifiers() throws java.sql.SQLException {
+	logger.info("storesUpperCaseIdentifiers");
+	boolean result = target.storesUpperCaseIdentifiers();
+	logger.info("storesUpperCaseIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesLowerCaseIdentifiers() throws java.sql.SQLException {
+	logger.info("storesLowerCaseIdentifiers");
+	boolean result = target.storesLowerCaseIdentifiers();
+	logger.info("storesLowerCaseIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesMixedCaseIdentifiers() throws java.sql.SQLException {
+	logger.info("storesMixedCaseIdentifiers");
+	boolean result = target.storesMixedCaseIdentifiers();
+	logger.info("storesMixedCaseIdentifiers result is " + result);
+	return result;
+}
+
+public boolean supportsMixedCaseQuotedIdentifiers() throws java.sql.SQLException {
+	logger.info("supportsMixedCaseQuotedIdentifiers");
+	boolean result = target.supportsMixedCaseQuotedIdentifiers();
+	logger.info("supportsMixedCaseQuotedIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesUpperCaseQuotedIdentifiers() throws java.sql.SQLException {
+	logger.info("storesUpperCaseQuotedIdentifiers");
+	boolean result = target.storesUpperCaseQuotedIdentifiers();
+	logger.info("storesUpperCaseQuotedIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesLowerCaseQuotedIdentifiers() throws java.sql.SQLException {
+	logger.info("storesLowerCaseQuotedIdentifiers");
+	boolean result = target.storesLowerCaseQuotedIdentifiers();
+	logger.info("storesLowerCaseQuotedIdentifiers result is " + result);
+	return result;
+}
+
+public boolean storesMixedCaseQuotedIdentifiers() throws java.sql.SQLException {
+	logger.info("storesMixedCaseQuotedIdentifiers");
+	boolean result = target.storesMixedCaseQuotedIdentifiers();
+	logger.info("storesMixedCaseQuotedIdentifiers result is " + result);
+	return result;
+}
+
+public String getIdentifierQuoteString() throws java.sql.SQLException {
+	logger.info("getIdentifierQuoteString");
+	String result = target.getIdentifierQuoteString();
+	logger.info("getIdentifierQuoteString result is " + result);
+	return result;
+}
+
+public String getSQLKeywords() throws java.sql.SQLException {
+	logger.info("getSQLKeywords");
+	String result = target.getSQLKeywords();
+	logger.info("getSQLKeywords result is " + result);
+	return result;
+}
+
+public String getNumericFunctions() throws java.sql.SQLException {
+	logger.info("getNumericFunctions");
+	String result = target.getNumericFunctions();
+	logger.info("getNumericFunctions result is " + result);
+	return result;
+}
+
+public String getStringFunctions() throws java.sql.SQLException {
+	logger.info("getStringFunctions");
+	String result = target.getStringFunctions();
+	logger.info("getStringFunctions result is " + result);
+	return result;
+}
+
+public String getSystemFunctions() throws java.sql.SQLException {
+	logger.info("getSystemFunctions");
+	String result = target.getSystemFunctions();
+	logger.info("getSystemFunctions result is " + result);
+	return result;
+}
+
+public String getTimeDateFunctions() throws java.sql.SQLException {
+	logger.info("getTimeDateFunctions");
+	String result = target.getTimeDateFunctions();
+	logger.info("getTimeDateFunctions result is " + result);
+	return result;
+}
+
+public String getSearchStringEscape() throws java.sql.SQLException {
+	logger.info("getSearchStringEscape");
+	String result = target.getSearchStringEscape();
+	logger.info("getSearchStringEscape result is " + result);
+	return result;
+}
+
+public String getExtraNameCharacters() throws java.sql.SQLException {
+	logger.info("getExtraNameCharacters");
+	String result = target.getExtraNameCharacters();
+	logger.info("getExtraNameCharacters result is " + result);
+	return result;
+}
+
+public boolean supportsAlterTableWithAddColumn() throws java.sql.SQLException {
+	logger.info("supportsAlterTableWithAddColumn");
+	boolean result = target.supportsAlterTableWithAddColumn();
+	logger.info("supportsAlterTableWithAddColumn result is " + result);
+	return result;
+}
+
+public boolean supportsAlterTableWithDropColumn() throws java.sql.SQLException {
+	logger.info("supportsAlterTableWithDropColumn");
+	boolean result = target.supportsAlterTableWithDropColumn();
+	logger.info("supportsAlterTableWithDropColumn result is " + result);
+	return result;
+}
+
+public boolean supportsColumnAliasing() throws java.sql.SQLException {
+	logger.info("supportsColumnAliasing");
+	boolean result = target.supportsColumnAliasing();
+	logger.info("supportsColumnAliasing result is " + result);
+	return result;
+}
+
+public boolean nullPlusNonNullIsNull() throws java.sql.SQLException {
+	logger.info("nullPlusNonNullIsNull");
+	boolean result = target.nullPlusNonNullIsNull();
+	logger.info("nullPlusNonNullIsNull result is " + result);
+	return result;
+}
+
+public boolean supportsConvert() throws java.sql.SQLException {
+	logger.info("supportsConvert");
+	boolean result = target.supportsConvert();
+	logger.info("supportsConvert result is " + result);
+	return result;
+}
+
+public boolean supportsConvert(int arg0, int arg1) throws java.sql.SQLException {
+	logger.info("supportsConvert" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.supportsConvert(arg0, arg1);
+	logger.info("supportsConvert result is " + result);
+	return result;
+}
+
+public boolean supportsTableCorrelationNames() throws java.sql.SQLException {
+	logger.info("supportsTableCorrelationNames");
+	boolean result = target.supportsTableCorrelationNames();
+	logger.info("supportsTableCorrelationNames result is " + result);
+	return result;
+}
+
+public boolean supportsDifferentTableCorrelationNames() throws java.sql.SQLException {
+	logger.info("supportsDifferentTableCorrelationNames");
+	boolean result = target.supportsDifferentTableCorrelationNames();
+	logger.info("supportsDifferentTableCorrelationNames result is " + result);
+	return result;
+}
+
+public boolean supportsExpressionsInOrderBy() throws java.sql.SQLException {
+	logger.info("supportsExpressionsInOrderBy");
+	boolean result = target.supportsExpressionsInOrderBy();
+	logger.info("supportsExpressionsInOrderBy result is " + result);
+	return result;
+}
+
+public boolean supportsOrderByUnrelated() throws java.sql.SQLException {
+	logger.info("supportsOrderByUnrelated");
+	boolean result = target.supportsOrderByUnrelated();
+	logger.info("supportsOrderByUnrelated result is " + result);
+	return result;
+}
+
+public boolean supportsGroupBy() throws java.sql.SQLException {
+	logger.info("supportsGroupBy");
+	boolean result = target.supportsGroupBy();
+	logger.info("supportsGroupBy result is " + result);
+	return result;
+}
+
+public boolean supportsGroupByUnrelated() throws java.sql.SQLException {
+	logger.info("supportsGroupByUnrelated");
+	boolean result = target.supportsGroupByUnrelated();
+	logger.info("supportsGroupByUnrelated result is " + result);
+	return result;
+}
+
+public boolean supportsGroupByBeyondSelect() throws java.sql.SQLException {
+	logger.info("supportsGroupByBeyondSelect");
+	boolean result = target.supportsGroupByBeyondSelect();
+	logger.info("supportsGroupByBeyondSelect result is " + result);
+	return result;
+}
+
+public boolean supportsLikeEscapeClause() throws java.sql.SQLException {
+	logger.info("supportsLikeEscapeClause");
+	boolean result = target.supportsLikeEscapeClause();
+	logger.info("supportsLikeEscapeClause result is " + result);
+	return result;
+}
+
+public boolean supportsMultipleResultSets() throws java.sql.SQLException {
+	logger.info("supportsMultipleResultSets");
+	boolean result = target.supportsMultipleResultSets();
+	logger.info("supportsMultipleResultSets result is " + result);
+	return result;
+}
+
+public boolean supportsMultipleTransactions() throws java.sql.SQLException {
+	logger.info("supportsMultipleTransactions");
+	boolean result = target.supportsMultipleTransactions();
+	logger.info("supportsMultipleTransactions result is " + result);
+	return result;
+}
+
+public boolean supportsNonNullableColumns() throws java.sql.SQLException {
+	logger.info("supportsNonNullableColumns");
+	boolean result = target.supportsNonNullableColumns();
+	logger.info("supportsNonNullableColumns result is " + result);
+	return result;
+}
+
+public boolean supportsMinimumSQLGrammar() throws java.sql.SQLException {
+	logger.info("supportsMinimumSQLGrammar");
+	boolean result = target.supportsMinimumSQLGrammar();
+	logger.info("supportsMinimumSQLGrammar result is " + result);
+	return result;
+}
+
+public boolean supportsCoreSQLGrammar() throws java.sql.SQLException {
+	logger.info("supportsCoreSQLGrammar");
+	boolean result = target.supportsCoreSQLGrammar();
+	logger.info("supportsCoreSQLGrammar result is " + result);
+	return result;
+}
+
+public boolean supportsExtendedSQLGrammar() throws java.sql.SQLException {
+	logger.info("supportsExtendedSQLGrammar");
+	boolean result = target.supportsExtendedSQLGrammar();
+	logger.info("supportsExtendedSQLGrammar result is " + result);
+	return result;
+}
+
+public boolean supportsANSI92EntryLevelSQL() throws java.sql.SQLException {
+	logger.info("supportsANSI92EntryLevelSQL");
+	boolean result = target.supportsANSI92EntryLevelSQL();
+	logger.info("supportsANSI92EntryLevelSQL result is " + result);
+	return result;
+}
+
+public boolean supportsANSI92IntermediateSQL() throws java.sql.SQLException {
+	logger.info("supportsANSI92IntermediateSQL");
+	boolean result = target.supportsANSI92IntermediateSQL();
+	logger.info("supportsANSI92IntermediateSQL result is " + result);
+	return result;
+}
+
+public boolean supportsANSI92FullSQL() throws java.sql.SQLException {
+	logger.info("supportsANSI92FullSQL");
+	boolean result = target.supportsANSI92FullSQL();
+	logger.info("supportsANSI92FullSQL result is " + result);
+	return result;
+}
+
+public boolean supportsIntegrityEnhancementFacility() throws java.sql.SQLException {
+	logger.info("supportsIntegrityEnhancementFacility");
+	boolean result = target.supportsIntegrityEnhancementFacility();
+	logger.info("supportsIntegrityEnhancementFacility result is " + result);
+	return result;
+}
+
+public boolean supportsOuterJoins() throws java.sql.SQLException {
+	logger.info("supportsOuterJoins");
+	boolean result = target.supportsOuterJoins();
+	logger.info("supportsOuterJoins result is " + result);
+	return result;
+}
+
+public boolean supportsFullOuterJoins() throws java.sql.SQLException {
+	logger.info("supportsFullOuterJoins");
+	boolean result = target.supportsFullOuterJoins();
+	logger.info("supportsFullOuterJoins result is " + result);
+	return result;
+}
+
+public boolean supportsLimitedOuterJoins() throws java.sql.SQLException {
+	logger.info("supportsLimitedOuterJoins");
+	boolean result = target.supportsLimitedOuterJoins();
+	logger.info("supportsLimitedOuterJoins result is " + result);
+	return result;
+}
+
+public String getSchemaTerm() throws java.sql.SQLException {
+	logger.info("getSchemaTerm");
+	String result = target.getSchemaTerm();
+	logger.info("getSchemaTerm result is " + result);
+	return result;
+}
+
+public String getProcedureTerm() throws java.sql.SQLException {
+	logger.info("getProcedureTerm");
+	String result = target.getProcedureTerm();
+	logger.info("getProcedureTerm result is " + result);
+	return result;
+}
+
+public String getCatalogTerm() throws java.sql.SQLException {
+	logger.info("getCatalogTerm");
+	String result = target.getCatalogTerm();
+	logger.info("getCatalogTerm result is " + result);
+	return result;
+}
+
+public boolean isCatalogAtStart() throws java.sql.SQLException {
+	logger.info("isCatalogAtStart");
+	boolean result = target.isCatalogAtStart();
+	logger.info("isCatalogAtStart result is " + result);
+	return result;
+}
+
+public String getCatalogSeparator() throws java.sql.SQLException {
+	logger.info("getCatalogSeparator");
+	String result = target.getCatalogSeparator();
+	logger.info("getCatalogSeparator result is " + result);
+	return result;
+}
+
+public boolean supportsSchemasInDataManipulation() throws java.sql.SQLException {
+	logger.info("supportsSchemasInDataManipulation");
+	boolean result = target.supportsSchemasInDataManipulation();
+	logger.info("supportsSchemasInDataManipulation result is " + result);
+	return result;
+}
+
+public boolean supportsSchemasInProcedureCalls() throws java.sql.SQLException {
+	logger.info("supportsSchemasInProcedureCalls");
+	boolean result = target.supportsSchemasInProcedureCalls();
+	logger.info("supportsSchemasInProcedureCalls result is " + result);
+	return result;
+}
+
+public boolean supportsSchemasInTableDefinitions() throws java.sql.SQLException {
+	logger.info("supportsSchemasInTableDefinitions");
+	boolean result = target.supportsSchemasInTableDefinitions();
+	logger.info("supportsSchemasInTableDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsSchemasInIndexDefinitions() throws java.sql.SQLException {
+	logger.info("supportsSchemasInIndexDefinitions");
+	boolean result = target.supportsSchemasInIndexDefinitions();
+	logger.info("supportsSchemasInIndexDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsSchemasInPrivilegeDefinitions() throws java.sql.SQLException {
+	logger.info("supportsSchemasInPrivilegeDefinitions");
+	boolean result = target.supportsSchemasInPrivilegeDefinitions();
+	logger.info("supportsSchemasInPrivilegeDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsCatalogsInDataManipulation() throws java.sql.SQLException {
+	logger.info("supportsCatalogsInDataManipulation");
+	boolean result = target.supportsCatalogsInDataManipulation();
+	logger.info("supportsCatalogsInDataManipulation result is " + result);
+	return result;
+}
+
+public boolean supportsCatalogsInProcedureCalls() throws java.sql.SQLException {
+	logger.info("supportsCatalogsInProcedureCalls");
+	boolean result = target.supportsCatalogsInProcedureCalls();
+	logger.info("supportsCatalogsInProcedureCalls result is " + result);
+	return result;
+}
+
+public boolean supportsCatalogsInTableDefinitions() throws java.sql.SQLException {
+	logger.info("supportsCatalogsInTableDefinitions");
+	boolean result = target.supportsCatalogsInTableDefinitions();
+	logger.info("supportsCatalogsInTableDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsCatalogsInIndexDefinitions() throws java.sql.SQLException {
+	logger.info("supportsCatalogsInIndexDefinitions");
+	boolean result = target.supportsCatalogsInIndexDefinitions();
+	logger.info("supportsCatalogsInIndexDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsCatalogsInPrivilegeDefinitions() throws java.sql.SQLException {
+	logger.info("supportsCatalogsInPrivilegeDefinitions");
+	boolean result = target.supportsCatalogsInPrivilegeDefinitions();
+	logger.info("supportsCatalogsInPrivilegeDefinitions result is " + result);
+	return result;
+}
+
+public boolean supportsPositionedDelete() throws java.sql.SQLException {
+	logger.info("supportsPositionedDelete");
+	boolean result = target.supportsPositionedDelete();
+	logger.info("supportsPositionedDelete result is " + result);
+	return result;
+}
+
+public boolean supportsPositionedUpdate() throws java.sql.SQLException {
+	logger.info("supportsPositionedUpdate");
+	boolean result = target.supportsPositionedUpdate();
+	logger.info("supportsPositionedUpdate result is " + result);
+	return result;
+}
+
+public boolean supportsSelectForUpdate() throws java.sql.SQLException {
+	logger.info("supportsSelectForUpdate");
+	boolean result = target.supportsSelectForUpdate();
+	logger.info("supportsSelectForUpdate result is " + result);
+	return result;
+}
+
+public boolean supportsStoredProcedures() throws java.sql.SQLException {
+	logger.info("supportsStoredProcedures");
+	boolean result = target.supportsStoredProcedures();
+	logger.info("supportsStoredProcedures result is " + result);
+	return result;
+}
+
+public boolean supportsSubqueriesInComparisons() throws java.sql.SQLException {
+	logger.info("supportsSubqueriesInComparisons");
+	boolean result = target.supportsSubqueriesInComparisons();
+	logger.info("supportsSubqueriesInComparisons result is " + result);
+	return result;
+}
+
+public boolean supportsSubqueriesInExists() throws java.sql.SQLException {
+	logger.info("supportsSubqueriesInExists");
+	boolean result = target.supportsSubqueriesInExists();
+	logger.info("supportsSubqueriesInExists result is " + result);
+	return result;
+}
+
+public boolean supportsSubqueriesInIns() throws java.sql.SQLException {
+	logger.info("supportsSubqueriesInIns");
+	boolean result = target.supportsSubqueriesInIns();
+	logger.info("supportsSubqueriesInIns result is " + result);
+	return result;
+}
+
+public boolean supportsSubqueriesInQuantifieds() throws java.sql.SQLException {
+	logger.info("supportsSubqueriesInQuantifieds");
+	boolean result = target.supportsSubqueriesInQuantifieds();
+	logger.info("supportsSubqueriesInQuantifieds result is " + result);
+	return result;
+}
+
+public boolean supportsCorrelatedSubqueries() throws java.sql.SQLException {
+	logger.info("supportsCorrelatedSubqueries");
+	boolean result = target.supportsCorrelatedSubqueries();
+	logger.info("supportsCorrelatedSubqueries result is " + result);
+	return result;
+}
+
+public boolean supportsUnion() throws java.sql.SQLException {
+	logger.info("supportsUnion");
+	boolean result = target.supportsUnion();
+	logger.info("supportsUnion result is " + result);
+	return result;
+}
+
+public boolean supportsUnionAll() throws java.sql.SQLException {
+	logger.info("supportsUnionAll");
+	boolean result = target.supportsUnionAll();
+	logger.info("supportsUnionAll result is " + result);
+	return result;
+}
+
+public boolean supportsOpenCursorsAcrossCommit() throws java.sql.SQLException {
+	logger.info("supportsOpenCursorsAcrossCommit");
+	boolean result = target.supportsOpenCursorsAcrossCommit();
+	logger.info("supportsOpenCursorsAcrossCommit result is " + result);
+	return result;
+}
+
+public boolean supportsOpenCursorsAcrossRollback() throws java.sql.SQLException {
+	logger.info("supportsOpenCursorsAcrossRollback");
+	boolean result = target.supportsOpenCursorsAcrossRollback();
+	logger.info("supportsOpenCursorsAcrossRollback result is " + result);
+	return result;
+}
+
+public boolean supportsOpenStatementsAcrossCommit() throws java.sql.SQLException {
+	logger.info("supportsOpenStatementsAcrossCommit");
+	boolean result = target.supportsOpenStatementsAcrossCommit();
+	logger.info("supportsOpenStatementsAcrossCommit result is " + result);
+	return result;
+}
+
+public boolean supportsOpenStatementsAcrossRollback() throws java.sql.SQLException {
+	logger.info("supportsOpenStatementsAcrossRollback");
+	boolean result = target.supportsOpenStatementsAcrossRollback();
+	logger.info("supportsOpenStatementsAcrossRollback result is " + result);
+	return result;
+}
+
+public int getMaxBinaryLiteralLength() throws java.sql.SQLException {
+	logger.info("getMaxBinaryLiteralLength");
+	int result = target.getMaxBinaryLiteralLength();
+	logger.info("getMaxBinaryLiteralLength result is " + result);
+	return result;
+}
+
+public int getMaxCharLiteralLength() throws java.sql.SQLException {
+	logger.info("getMaxCharLiteralLength");
+	int result = target.getMaxCharLiteralLength();
+	logger.info("getMaxCharLiteralLength result is " + result);
+	return result;
+}
+
+public int getMaxColumnNameLength() throws java.sql.SQLException {
+	logger.info("getMaxColumnNameLength");
+	int result = target.getMaxColumnNameLength();
+	logger.info("getMaxColumnNameLength result is " + result);
+	return result;
+}
+
+public int getMaxColumnsInGroupBy() throws java.sql.SQLException {
+	logger.info("getMaxColumnsInGroupBy");
+	int result = target.getMaxColumnsInGroupBy();
+	logger.info("getMaxColumnsInGroupBy result is " + result);
+	return result;
+}
+
+public int getMaxColumnsInIndex() throws java.sql.SQLException {
+	logger.info("getMaxColumnsInIndex");
+	int result = target.getMaxColumnsInIndex();
+	logger.info("getMaxColumnsInIndex result is " + result);
+	return result;
+}
+
+public int getMaxColumnsInOrderBy() throws java.sql.SQLException {
+	logger.info("getMaxColumnsInOrderBy");
+	int result = target.getMaxColumnsInOrderBy();
+	logger.info("getMaxColumnsInOrderBy result is " + result);
+	return result;
+}
+
+public int getMaxColumnsInSelect() throws java.sql.SQLException {
+	logger.info("getMaxColumnsInSelect");
+	int result = target.getMaxColumnsInSelect();
+	logger.info("getMaxColumnsInSelect result is " + result);
+	return result;
+}
+
+public int getMaxColumnsInTable() throws java.sql.SQLException {
+	logger.info("getMaxColumnsInTable");
+	int result = target.getMaxColumnsInTable();
+	logger.info("getMaxColumnsInTable result is " + result);
+	return result;
+}
+
+public int getMaxConnections() throws java.sql.SQLException {
+	logger.info("getMaxConnections");
+	int result = target.getMaxConnections();
+	logger.info("getMaxConnections result is " + result);
+	return result;
+}
+
+public int getMaxCursorNameLength() throws java.sql.SQLException {
+	logger.info("getMaxCursorNameLength");
+	int result = target.getMaxCursorNameLength();
+	logger.info("getMaxCursorNameLength result is " + result);
+	return result;
+}
+
+public int getMaxIndexLength() throws java.sql.SQLException {
+	logger.info("getMaxIndexLength");
+	int result = target.getMaxIndexLength();
+	logger.info("getMaxIndexLength result is " + result);
+	return result;
+}
+
+public int getMaxSchemaNameLength() throws java.sql.SQLException {
+	logger.info("getMaxSchemaNameLength");
+	int result = target.getMaxSchemaNameLength();
+	logger.info("getMaxSchemaNameLength result is " + result);
+	return result;
+}
+
+public int getMaxProcedureNameLength() throws java.sql.SQLException {
+	logger.info("getMaxProcedureNameLength");
+	int result = target.getMaxProcedureNameLength();
+	logger.info("getMaxProcedureNameLength result is " + result);
+	return result;
+}
+
+public int getMaxCatalogNameLength() throws java.sql.SQLException {
+	logger.info("getMaxCatalogNameLength");
+	int result = target.getMaxCatalogNameLength();
+	logger.info("getMaxCatalogNameLength result is " + result);
+	return result;
+}
+
+public int getMaxRowSize() throws java.sql.SQLException {
+	logger.info("getMaxRowSize");
+	int result = target.getMaxRowSize();
+	logger.info("getMaxRowSize result is " + result);
+	return result;
+}
+
+public boolean doesMaxRowSizeIncludeBlobs() throws java.sql.SQLException {
+	logger.info("doesMaxRowSizeIncludeBlobs");
+	boolean result = target.doesMaxRowSizeIncludeBlobs();
+	logger.info("doesMaxRowSizeIncludeBlobs result is " + result);
+	return result;
+}
+
+public int getMaxStatementLength() throws java.sql.SQLException {
+	logger.info("getMaxStatementLength");
+	int result = target.getMaxStatementLength();
+	logger.info("getMaxStatementLength result is " + result);
+	return result;
+}
+
+public int getMaxStatements() throws java.sql.SQLException {
+	logger.info("getMaxStatements");
+	int result = target.getMaxStatements();
+	logger.info("getMaxStatements result is " + result);
+	return result;
+}
+
+public int getMaxTableNameLength() throws java.sql.SQLException {
+	logger.info("getMaxTableNameLength");
+	int result = target.getMaxTableNameLength();
+	logger.info("getMaxTableNameLength result is " + result);
+	return result;
+}
+
+public int getMaxTablesInSelect() throws java.sql.SQLException {
+	logger.info("getMaxTablesInSelect");
+	int result = target.getMaxTablesInSelect();
+	logger.info("getMaxTablesInSelect result is " + result);
+	return result;
+}
+
+public int getMaxUserNameLength() throws java.sql.SQLException {
+	logger.info("getMaxUserNameLength");
+	int result = target.getMaxUserNameLength();
+	logger.info("getMaxUserNameLength result is " + result);
+	return result;
+}
+
+public int getDefaultTransactionIsolation() throws java.sql.SQLException {
+	logger.info("getDefaultTransactionIsolation");
+	int result = target.getDefaultTransactionIsolation();
+	logger.info("getDefaultTransactionIsolation result is " + result);
+	return result;
+}
+
+public boolean supportsTransactions() throws java.sql.SQLException {
+	logger.info("supportsTransactions");
+	boolean result = target.supportsTransactions();
+	logger.info("supportsTransactions result is " + result);
+	return result;
+}
+
+public boolean supportsTransactionIsolationLevel(int arg0) throws java.sql.SQLException {
+	logger.info("supportsTransactionIsolationLevel" + " , " + arg0 );
+	boolean result = target.supportsTransactionIsolationLevel(arg0);
+	logger.info("supportsTransactionIsolationLevel result is " + result);
+	return result;
+}
+
+public boolean supportsDataManipulationTransactionsOnly() throws java.sql.SQLException {
+	logger.info("supportsDataManipulationTransactionsOnly");
+	boolean result = target.supportsDataManipulationTransactionsOnly();
+	logger.info("supportsDataManipulationTransactionsOnly result is " + result);
+	return result;
+}
+
+public boolean dataDefinitionCausesTransactionCommit() throws java.sql.SQLException {
+	logger.info("dataDefinitionCausesTransactionCommit");
+	boolean result = target.dataDefinitionCausesTransactionCommit();
+	logger.info("dataDefinitionCausesTransactionCommit result is " + result);
+	return result;
+}
+
+public boolean dataDefinitionIgnoredInTransactions() throws java.sql.SQLException {
+	logger.info("dataDefinitionIgnoredInTransactions");
+	boolean result = target.dataDefinitionIgnoredInTransactions();
+	logger.info("dataDefinitionIgnoredInTransactions result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getProcedures(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getProcedures" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet( target.getProcedures(arg0, arg1, arg2) );
+	logger.info("getProcedures result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getProcedureColumns(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getProcedureColumns" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getProcedureColumns(arg0, arg1, arg2, arg3));
+	logger.info("getProcedureColumns result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getTables(String arg0, String arg1, String arg2, String[] arg3) throws java.sql.SQLException {
+	logger.info("getTables" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getTables(arg0, arg1, arg2, arg3));
+	logger.info("getTables result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getSchemas() throws java.sql.SQLException {
+	logger.info("getSchemas");
+	java.sql.ResultSet result = new LogResultSet(target.getSchemas());
+	logger.info("getSchemas result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getSchemas(String arg0, String arg1) throws java.sql.SQLException {
+	logger.info("getSchemas" + " , " + arg0  + " , " + arg1 );
+	java.sql.ResultSet result = new LogResultSet(target.getSchemas(arg0, arg1));
+	logger.info("getSchemas result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getCatalogs() throws java.sql.SQLException {
+	logger.info("getCatalogs");
+	java.sql.ResultSet result = new LogResultSet(target.getCatalogs());
+	logger.info("getCatalogs result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getTableTypes() throws java.sql.SQLException {
+	logger.info("getTableTypes");
+	java.sql.ResultSet result = new LogResultSet(target.getTableTypes());
+	logger.info("getTableTypes result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getColumns(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getColumns" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getColumns(arg0, arg1, arg2, arg3));
+	logger.info("getColumns result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getColumnPrivileges(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getColumnPrivileges" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getColumnPrivileges(arg0, arg1, arg2, arg3));
+	logger.info("getColumnPrivileges result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getTablePrivileges(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getTablePrivileges" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getTablePrivileges(arg0, arg1, arg2));
+	logger.info("getTablePrivileges result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getBestRowIdentifier(String arg0, String arg1, String arg2, int arg3, boolean arg4) throws java.sql.SQLException {
+	logger.info("getBestRowIdentifier" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3  + " , " + arg4 );
+	java.sql.ResultSet result = new LogResultSet(target.getBestRowIdentifier(arg0, arg1, arg2, arg3, arg4));
+	logger.info("getBestRowIdentifier result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getVersionColumns(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getVersionColumns" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getVersionColumns(arg0, arg1, arg2));
+	logger.info("getVersionColumns result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getPrimaryKeys(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getPrimaryKeys" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getPrimaryKeys(arg0, arg1, arg2));
+	logger.info("getPrimaryKeys result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getImportedKeys(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getImportedKeys" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getImportedKeys(arg0, arg1, arg2));
+	logger.info("getImportedKeys result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getExportedKeys(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getExportedKeys" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getExportedKeys(arg0, arg1, arg2));
+	logger.info("getExportedKeys result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getCrossReference(String arg0, String arg1, String arg2, String arg3, String arg4, String arg5) throws java.sql.SQLException {
+	logger.info("getCrossReference" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3  + " , " + arg4  + " , " + arg5 );
+	java.sql.ResultSet result = new LogResultSet(target.getCrossReference(arg0, arg1, arg2, arg3, arg4, arg5));
+	logger.info("getCrossReference result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getTypeInfo() throws java.sql.SQLException {
+	logger.info("getTypeInfo");
+	java.sql.ResultSet result = new LogResultSet(target.getTypeInfo());
+	logger.info("getTypeInfo result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getIndexInfo(String arg0, String arg1, String arg2, boolean arg3, boolean arg4) throws java.sql.SQLException {
+	logger.info("getIndexInfo" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3  + " , " + arg4 );
+	java.sql.ResultSet result = new LogResultSet(target.getIndexInfo(arg0, arg1, arg2, arg3, arg4));
+	logger.info("getIndexInfo result is " + result);
+	return result;
+}
+
+public boolean supportsResultSetType(int arg0) throws java.sql.SQLException {
+	logger.info("supportsResultSetType" + " , " + arg0 );
+	boolean result = target.supportsResultSetType(arg0);
+	logger.info("supportsResultSetType result is " + result);
+	return result;
+}
+
+public boolean supportsResultSetConcurrency(int arg0, int arg1) throws java.sql.SQLException {
+	logger.info("supportsResultSetConcurrency" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.supportsResultSetConcurrency(arg0, arg1);
+	logger.info("supportsResultSetConcurrency result is " + result);
+	return result;
+}
+
+public boolean ownUpdatesAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("ownUpdatesAreVisible" + " , " + arg0 );
+	boolean result = target.ownUpdatesAreVisible(arg0);
+	logger.info("ownUpdatesAreVisible result is " + result);
+	return result;
+}
+
+public boolean ownDeletesAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("ownDeletesAreVisible" + " , " + arg0 );
+	boolean result = target.ownDeletesAreVisible(arg0);
+	logger.info("ownDeletesAreVisible result is " + result);
+	return result;
+}
+
+public boolean ownInsertsAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("ownInsertsAreVisible" + " , " + arg0 );
+	boolean result = target.ownInsertsAreVisible(arg0);
+	logger.info("ownInsertsAreVisible result is " + result);
+	return result;
+}
+
+public boolean othersUpdatesAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("othersUpdatesAreVisible" + " , " + arg0 );
+	boolean result = target.othersUpdatesAreVisible(arg0);
+	logger.info("othersUpdatesAreVisible result is " + result);
+	return result;
+}
+
+public boolean othersDeletesAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("othersDeletesAreVisible" + " , " + arg0 );
+	boolean result = target.othersDeletesAreVisible(arg0);
+	logger.info("othersDeletesAreVisible result is " + result);
+	return result;
+}
+
+public boolean othersInsertsAreVisible(int arg0) throws java.sql.SQLException {
+	logger.info("othersInsertsAreVisible" + " , " + arg0 );
+	boolean result = target.othersInsertsAreVisible(arg0);
+	logger.info("othersInsertsAreVisible result is " + result);
+	return result;
+}
+
+public boolean updatesAreDetected(int arg0) throws java.sql.SQLException {
+	logger.info("updatesAreDetected" + " , " + arg0 );
+	boolean result = target.updatesAreDetected(arg0);
+	logger.info("updatesAreDetected result is " + result);
+	return result;
+}
+
+public boolean deletesAreDetected(int arg0) throws java.sql.SQLException {
+	logger.info("deletesAreDetected" + " , " + arg0 );
+	boolean result = target.deletesAreDetected(arg0);
+	logger.info("deletesAreDetected result is " + result);
+	return result;
+}
+
+public boolean insertsAreDetected(int arg0) throws java.sql.SQLException {
+	logger.info("insertsAreDetected" + " , " + arg0 );
+	boolean result = target.insertsAreDetected(arg0);
+	logger.info("insertsAreDetected result is " + result);
+	return result;
+}
+
+public boolean supportsBatchUpdates() throws java.sql.SQLException {
+	logger.info("supportsBatchUpdates");
+	boolean result = target.supportsBatchUpdates();
+	logger.info("supportsBatchUpdates result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getUDTs(String arg0, String arg1, String arg2, int[] arg3) throws java.sql.SQLException {
+	logger.info("getUDTs" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getUDTs(arg0, arg1, arg2, arg3));
+	logger.info("getUDTs result is " + result);
+	return result;
+}
+
+public java.sql.Connection getConnection() throws java.sql.SQLException {
+	logger.info("getConnection");
+	java.sql.Connection result = target.getConnection();
+	logger.info("getConnection result is " + result);
+	return result;
+}
+
+public boolean supportsSavepoints() throws java.sql.SQLException {
+	logger.info("supportsSavepoints");
+	boolean result = target.supportsSavepoints();
+	logger.info("supportsSavepoints result is " + result);
+	return result;
+}
+
+public boolean supportsNamedParameters() throws java.sql.SQLException {
+	logger.info("supportsNamedParameters");
+	boolean result = target.supportsNamedParameters();
+	logger.info("supportsNamedParameters result is " + result);
+	return result;
+}
+
+public boolean supportsMultipleOpenResults() throws java.sql.SQLException {
+	logger.info("supportsMultipleOpenResults");
+	boolean result = target.supportsMultipleOpenResults();
+	logger.info("supportsMultipleOpenResults result is " + result);
+	return result;
+}
+
+public boolean supportsGetGeneratedKeys() throws java.sql.SQLException {
+	logger.info("supportsGetGeneratedKeys");
+	boolean result = target.supportsGetGeneratedKeys();
+	logger.info("supportsGetGeneratedKeys result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getSuperTypes(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getSuperTypes" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getSuperTypes(arg0, arg1, arg2));
+	logger.info("getSuperTypes result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getSuperTables(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getSuperTables" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getSuperTables(arg0, arg1, arg2));
+	logger.info("getSuperTables result is " + result);
+	return result;
+}
+
+public boolean supportsResultSetHoldability(int arg0) throws java.sql.SQLException {
+	logger.info("supportsResultSetHoldability" + " , " + arg0 );
+	boolean result = target.supportsResultSetHoldability(arg0);
+	logger.info("supportsResultSetHoldability result is " + result);
+	return result;
+}
+
+public int getResultSetHoldability() throws java.sql.SQLException {
+	logger.info("getResultSetHoldability");
+	int result = target.getResultSetHoldability();
+	logger.info("getResultSetHoldability result is " + result);
+	return result;
+}
+
+public int getDatabaseMajorVersion() throws java.sql.SQLException {
+	logger.info("getDatabaseMajorVersion");
+	int result = target.getDatabaseMajorVersion();
+	logger.info("getDatabaseMajorVersion result is " + result);
+	return result;
+}
+
+public int getDatabaseMinorVersion() throws java.sql.SQLException {
+	logger.info("getDatabaseMinorVersion");
+	int result = target.getDatabaseMinorVersion();
+	logger.info("getDatabaseMinorVersion result is " + result);
+	return result;
+}
+
+public int getJDBCMajorVersion() throws java.sql.SQLException {
+	logger.info("getJDBCMajorVersion");
+	int result = target.getJDBCMajorVersion();
+	logger.info("getJDBCMajorVersion result is " + result);
+	return result;
+}
+
+public int getJDBCMinorVersion() throws java.sql.SQLException {
+	logger.info("getJDBCMinorVersion");
+	int result = target.getJDBCMinorVersion();
+	logger.info("getJDBCMinorVersion result is " + result);
+	return result;
+}
+
+public int getSQLStateType() throws java.sql.SQLException {
+	logger.info("getSQLStateType");
+	int result = target.getSQLStateType();
+	logger.info("getSQLStateType result is " + result);
+	return result;
+}
+
+public boolean locatorsUpdateCopy() throws java.sql.SQLException {
+	logger.info("locatorsUpdateCopy");
+	boolean result = target.locatorsUpdateCopy();
+	logger.info("locatorsUpdateCopy result is " + result);
+	return result;
+}
+
+public boolean supportsStatementPooling() throws java.sql.SQLException {
+	logger.info("supportsStatementPooling");
+	boolean result = target.supportsStatementPooling();
+	logger.info("supportsStatementPooling result is " + result);
+	return result;
+}
+
+public java.sql.RowIdLifetime getRowIdLifetime() throws java.sql.SQLException {
+	logger.info("getRowIdLifetime");
+	java.sql.RowIdLifetime result = target.getRowIdLifetime();
+	logger.info("getRowIdLifetime result is " + result);
+	return result;
+}
+
+public boolean supportsStoredFunctionsUsingCallSyntax() throws java.sql.SQLException {
+	logger.info("supportsStoredFunctionsUsingCallSyntax");
+	boolean result = target.supportsStoredFunctionsUsingCallSyntax();
+	logger.info("supportsStoredFunctionsUsingCallSyntax result is " + result);
+	return result;
+}
+
+public boolean autoCommitFailureClosesAllResultSets() throws java.sql.SQLException {
+	logger.info("autoCommitFailureClosesAllResultSets");
+	boolean result = target.autoCommitFailureClosesAllResultSets();
+	logger.info("autoCommitFailureClosesAllResultSets result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getClientInfoProperties() throws java.sql.SQLException {
+	logger.info("getClientInfoProperties");
+	java.sql.ResultSet result = new LogResultSet(target.getClientInfoProperties());
+	logger.info("getClientInfoProperties result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getFunctions(String arg0, String arg1, String arg2) throws java.sql.SQLException {
+	logger.info("getFunctions" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.ResultSet result = new LogResultSet(target.getFunctions(arg0, arg1, arg2));
+	logger.info("getFunctions result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getFunctionColumns(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getFunctionColumns" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getFunctionColumns(arg0, arg1, arg2, arg3));
+	logger.info("getFunctionColumns result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getPseudoColumns(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getPseudoColumns" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getPseudoColumns(arg0, arg1, arg2, arg3));
+	logger.info("getPseudoColumns result is " + result);
+	return result;
+}
+
+public boolean generatedKeyAlwaysReturned() throws java.sql.SQLException {
+	logger.info("generatedKeyAlwaysReturned");
+	boolean result = target.generatedKeyAlwaysReturned();
+	logger.info("generatedKeyAlwaysReturned result is " + result);
+	return result;
+}
+
+public long getMaxLogicalLobSize() throws java.sql.SQLException {
+	logger.info("getMaxLogicalLobSize");
+	long result = target.getMaxLogicalLobSize();
+	logger.info("getMaxLogicalLobSize result is " + result);
+	return result;
+}
+
+public boolean supportsRefCursors() throws java.sql.SQLException {
+	logger.info("supportsRefCursors");
+	boolean result = target.supportsRefCursors();
+	logger.info("supportsRefCursors result is " + result);
+	return result;
+}
+
+public boolean supportsSharding() throws java.sql.SQLException {
+	logger.info("supportsSharding");
+	boolean result = target.supportsSharding();
+	logger.info("supportsSharding result is " + result);
+	return result;
+}
+
+public <T> T unwrap(java.lang.Class<T> arg0) throws java.sql.SQLException {
+	logger.info("unwrap" + " , " + arg0 );
+	T result = target.unwrap(arg0);
+	logger.info("unwrap result is " + result);
+	return result;
+}
+
+public java.sql.ResultSet getAttributes(String arg0, String arg1, String arg2, String arg3) throws java.sql.SQLException {
+	logger.info("getAttributes" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.ResultSet result = new LogResultSet(target.getAttributes(arg0, arg1, arg2, arg3));
+	logger.info("getAttributes result is " + result);
+	return result;
+}
+
+public boolean isReadOnly() throws java.sql.SQLException {
+	logger.info("isReadOnly");
+	boolean result = target.isReadOnly();
+	logger.info("isReadOnly result is " + result);
+	return result;
+}
 
-	public boolean supportsOpenCursorsAcrossCommit() throws SQLException { logger.info("xxx");
-		return meta.supportsOpenCursorsAcrossCommit();
-	}
-
-	public boolean supportsOpenCursorsAcrossRollback() throws SQLException { logger.info("xxx");
-		return meta.supportsOpenCursorsAcrossRollback();
-	}
-
-	public boolean supportsOpenStatementsAcrossCommit() throws SQLException { logger.info("xxx");
-		return meta.supportsOpenStatementsAcrossCommit();
-	}
-
-	public boolean supportsOpenStatementsAcrossRollback() throws SQLException { logger.info("xxx");
-		return meta.supportsOpenStatementsAcrossRollback();
-	}
-
-	public int getMaxBinaryLiteralLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxBinaryLiteralLength();
-	}
-
-	public int getMaxCharLiteralLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxCharLiteralLength();
-	}
-
-	public int getMaxColumnNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnNameLength();
-	}
-
-	public int getMaxColumnsInGroupBy() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnsInGroupBy();
-	}
-
-	public int getMaxColumnsInIndex() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnsInIndex();
-	}
-
-	public int getMaxColumnsInOrderBy() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnsInOrderBy();
-	}
-
-	public int getMaxColumnsInSelect() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnsInSelect();
-	}
-
-	public int getMaxColumnsInTable() throws SQLException { logger.info("xxx");
-		return meta.getMaxColumnsInTable();
-	}
-
-	public int getMaxConnections() throws SQLException { logger.info("xxx");
-		return meta.getMaxConnections();
-	}
-
-	public int getMaxCursorNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxCursorNameLength();
-	}
-
-	public int getMaxIndexLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxIndexLength();
-	}
-
-	public int getMaxSchemaNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxSchemaNameLength();
-	}
-
-	public int getMaxProcedureNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxProcedureNameLength();
-	}
-
-	public int getMaxCatalogNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxCatalogNameLength();
-	}
-
-	public int getMaxRowSize() throws SQLException { logger.info("xxx");
-		return meta.getMaxRowSize();
-	}
-
-	public boolean doesMaxRowSizeIncludeBlobs() throws SQLException { logger.info("xxx");
-		return meta.doesMaxRowSizeIncludeBlobs();
-	}
-
-	public int getMaxStatementLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxStatementLength();
-	}
-
-	public int getMaxStatements() throws SQLException { logger.info("xxx");
-		return meta.getMaxStatements();
-	}
-
-	public int getMaxTableNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxTableNameLength();
-	}
-
-	public int getMaxTablesInSelect() throws SQLException { logger.info("xxx");
-		return meta.getMaxTablesInSelect();
-	}
-
-	public int getMaxUserNameLength() throws SQLException { logger.info("xxx");
-		return meta.getMaxUserNameLength();
-	}
-
-	public int getDefaultTransactionIsolation() throws SQLException { logger.info("xxx");
-		return meta.getDefaultTransactionIsolation();
-	}
-
-	public boolean supportsTransactions() throws SQLException { logger.info("xxx");
-		return meta.supportsTransactions();
-	}
-
-	public boolean supportsTransactionIsolationLevel(int level) throws SQLException { logger.info("xxx");
-		return meta.supportsTransactionIsolationLevel(level);
-	}
-
-	public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException { logger.info("xxx");
-		return meta.supportsDataDefinitionAndDataManipulationTransactions();
-	}
-
-	public boolean supportsDataManipulationTransactionsOnly() throws SQLException { logger.info("xxx");
-		return meta.supportsDataManipulationTransactionsOnly();
-	}
-
-	public boolean dataDefinitionCausesTransactionCommit() throws SQLException { logger.info("xxx");
-		return meta.dataDefinitionCausesTransactionCommit();
-	}
-
-	public boolean dataDefinitionIgnoredInTransactions() throws SQLException { logger.info("xxx");
-		return meta.dataDefinitionIgnoredInTransactions();
-	}
-
-	public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
-			throws SQLException { logger.info("getProcedures " + catalog + " " + schemaPattern + " " + procedureNamePattern);
-		return new LogResultSet(meta.getProcedures(catalog, schemaPattern, procedureNamePattern));
-	}
-
-	public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
-			String columnNamePattern) 
-			throws SQLException { logger.info("getProcedureColumns " + catalog + " " + schemaPattern + " " + procedureNamePattern + " " + columnNamePattern);
-		return new LogResultSet(meta.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern));
-	}
-
-	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
-			throws SQLException {
-        logger.info("getTables " + catalog + " " + schemaPattern + " " + schemaPattern + " " + tableNamePattern + " " + Arrays.toString(types));
-        return new LogResultSet(meta.getTables(catalog, schemaPattern, tableNamePattern, types));
-    }
-    
-	public ResultSet getSchemas() throws SQLException { logger.info("getSchemas");
-		return new LogResultSet(meta.getSchemas());
-	}
-
-	public ResultSet getCatalogs() throws SQLException { logger.info("getCatalogs");
-		return new LogResultSet(meta.getCatalogs());
-	}
-
-	public ResultSet getTableTypes() throws SQLException {
-        logger.info("getTableTypes");
-		return new LogResultSet(meta.getTableTypes());
-	}
-
-	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-			throws SQLException { logger.info("getColumns " + catalog + " " + schemaPattern + " " + tableNamePattern + " " + columnNamePattern);
-		return new LogResultSet(meta.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
-	}
-
-	public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
-			throws SQLException { logger.info("getColumnPrivileges " + catalog + " " + schema + " " + table + " " + columnNamePattern);
-		return new LogResultSet(meta.getColumnPrivileges(catalog, schema, table, columnNamePattern));
-	}
-
-	public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
-			throws SQLException { logger.info("getTablePrivileges");
-		return meta.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
-	}
-
-	public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
-			throws SQLException { logger.info("getBestRowIdentifier");
-		return meta.getBestRowIdentifier(catalog, schema, table, scope, nullable);
-	}
-
-	public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException { logger.info("getVersionColumns");
-		return meta.getVersionColumns(catalog, schema, table);
-	}
-
-	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-        logger.info("getPrimaryKeys(" + catalog + " , " + schema + " , " + table + ")");
-		return new LogResultSet(meta.getPrimaryKeys(catalog, schema, table));
-	}
-
-	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
-        logger.info("getImportedKeys(" + catalog + " , " + schema + " , " + table + ")");
-		return new LogResultSet(meta.getImportedKeys(catalog, schema, table));
-	}
-
-	public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException { logger.info("getExportedKeys");
-		return meta.getExportedKeys(catalog, schema, table);
-	}
 
-	public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
-			String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException { logger.info("getCrossReference");
-		return meta.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
-				foreignTable);
-	}
-
-	public ResultSet getTypeInfo() throws SQLException { logger.info("getTypeInfo");
-		return meta.getTypeInfo();
-	}
-
-	public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
-			throws SQLException { logger.info("getIndexInfo " + catalog + " " + schema + " " + table + " " + unique + " " + approximate);
-		return meta.getIndexInfo(catalog, schema, table, unique, approximate);
-	}
-
-	public boolean supportsResultSetType(int type) throws SQLException { logger.info("supportsResultSetType");
-		return meta.supportsResultSetType(type);
-	}
-
-	public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException { logger.info("supportsResultSetConcurrency");
-		return meta.supportsResultSetConcurrency(type, concurrency);
-	}
-
-	public boolean ownUpdatesAreVisible(int type) throws SQLException { logger.info("ownUpdatesAreVisible");
-		return meta.ownUpdatesAreVisible(type);
-	}
-
-	public boolean ownDeletesAreVisible(int type) throws SQLException { logger.info("ownDeletesAreVisible");
-		return meta.ownDeletesAreVisible(type);
-	}
-
-	public boolean ownInsertsAreVisible(int type) throws SQLException { logger.info("ownInsertsAreVisible");
-		return meta.ownInsertsAreVisible(type);
-	}
-
-	public boolean othersUpdatesAreVisible(int type) throws SQLException { logger.info("othersUpdatesAreVisible");
-		return meta.othersUpdatesAreVisible(type);
-	}
-
-	public boolean othersDeletesAreVisible(int type) throws SQLException { logger.info("othersDeletesAreVisible");
-		return meta.othersDeletesAreVisible(type);
-	}
-
-	public boolean othersInsertsAreVisible(int type) throws SQLException { logger.info("othersInsertsAreVisible");
-		return meta.othersInsertsAreVisible(type);
-	}
-
-	public boolean updatesAreDetected(int type) throws SQLException { logger.info("updatesAreDetected");
-		return meta.updatesAreDetected(type);
-	}
-
-	public boolean deletesAreDetected(int type) throws SQLException { logger.info("deletesAreDetected");
-		return meta.deletesAreDetected(type);
-	}
-
-	public boolean insertsAreDetected(int type) throws SQLException { logger.info("insertsAreDetected");
-		return meta.insertsAreDetected(type);
-	}
-
-	public boolean supportsBatchUpdates() throws SQLException { logger.info("supportsBatchUpdates");
-		return meta.supportsBatchUpdates();
-	}
-
-	public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
-			throws SQLException { logger.info("getUDTs");
-		return meta.getUDTs(catalog, schemaPattern, typeNamePattern, types);
-	}
-
-	public Connection getConnection() throws SQLException { logger.info("getConnection");
-		return meta.getConnection();
-	}
-
-	public boolean supportsSavepoints() throws SQLException { logger.info("supportsSavepoints");
-		return meta.supportsSavepoints();
-	}
-
-	public boolean supportsNamedParameters() throws SQLException { logger.info("supportsNamedParameters");
-		return meta.supportsNamedParameters();
-	}
-
-	public boolean supportsMultipleOpenResults() throws SQLException { logger.info("supportsMultipleOpenResults");
-		return meta.supportsMultipleOpenResults();
-	}
-
-	public boolean supportsGetGeneratedKeys() throws SQLException { logger.info("supportsGetGeneratedKeys");
-		return meta.supportsGetGeneratedKeys();
-	}
-
-	public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException { logger.info("getSuperTypes");
-		return meta.getSuperTypes(catalog, schemaPattern, typeNamePattern);
-	}
-
-	public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException { logger.info("getSuperTables");
-		return meta.getSuperTables(catalog, schemaPattern, tableNamePattern);
-	}
-
-	public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
-			String attributeNamePattern) throws SQLException { logger.info("getAttributes");
-		return meta.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
-	}
-
-	public boolean supportsResultSetHoldability(int holdability) throws SQLException { logger.info("supportsResultSetHoldability");
-		return meta.supportsResultSetHoldability(holdability);
-	}
-
-	public int getResultSetHoldability() throws SQLException { logger.info("getResultSetHoldability");
-		return meta.getResultSetHoldability();
-	}
-
-	public int getDatabaseMajorVersion() throws SQLException { logger.info("getDatabaseMajorVersion");
-		return meta.getDatabaseMajorVersion();
-	}
-
-	public int getDatabaseMinorVersion() throws SQLException { logger.info("getDatabaseMinorVersion");
-		return meta.getDatabaseMinorVersion();
-	}
-
-	public int getJDBCMajorVersion() throws SQLException { logger.info("getJDBCMajorVersion");
-		return meta.getJDBCMajorVersion();
-	}
-
-	public int getJDBCMinorVersion() throws SQLException { logger.info("getJDBCMinorVersion");
-		return meta.getJDBCMinorVersion();
-	}
-
-	public int getSQLStateType() throws SQLException { logger.info("getSQLStateType");
-		return meta.getSQLStateType();
-	}
-
-	public boolean locatorsUpdateCopy() throws SQLException { logger.info("locatorsUpdateCopy");
-		return meta.locatorsUpdateCopy();
-	}
-
-	public boolean supportsStatementPooling() throws SQLException { logger.info("supportsStatementPooling");
-		return meta.supportsStatementPooling();
-	}
-
-	public RowIdLifetime getRowIdLifetime() throws SQLException { logger.info("getRowIdLifetime");
-		return meta.getRowIdLifetime();
-	}
-
-	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException { logger.info("getSchemas");
-		return meta.getSchemas(catalog, schemaPattern);
-	}
-
-	public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException { logger.info("supportsStoredFunctionsUsingCallSyntax");
-		return meta.supportsStoredFunctionsUsingCallSyntax();
-	}
-
-	public boolean autoCommitFailureClosesAllResultSets() throws SQLException { logger.info("autoCommitFailureClosesAllResultSets");
-		return meta.autoCommitFailureClosesAllResultSets();
-	}
-
-	public ResultSet getClientInfoProperties() throws SQLException { logger.info("getClientInfoProperties");
-		return meta.getClientInfoProperties();
-	}
-
-	public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
-			throws SQLException { logger.info("getFunctions");
-		return meta.getFunctions(catalog, schemaPattern, functionNamePattern);
-	}
-
-	public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern,
-			String columnNamePattern) throws SQLException { logger.info("getFunctionColumns");
-		return meta.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
-	}
-
-	public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
-			String columnNamePattern) throws SQLException { logger.info("getPseudoColumns");
-		return meta.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-	}
-
-	public boolean generatedKeyAlwaysReturned() throws SQLException { logger.info("generatedKeyAlwaysReturned");
-		return meta.generatedKeyAlwaysReturned();
-	}
-
-	public long getMaxLogicalLobSize() throws SQLException { logger.info("getMaxLogicalLobSize");
-		return meta.getMaxLogicalLobSize();
-	}
-
-	public boolean supportsRefCursors() throws SQLException { logger.info("supportsRefCursors");
-		return meta.supportsRefCursors();
-	}
-
-	public boolean supportsSharding() throws SQLException { logger.info("supportsSharding");
-		return meta.supportsSharding();
-	}
-	
 	
 }

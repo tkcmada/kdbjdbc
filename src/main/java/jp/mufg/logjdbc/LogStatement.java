@@ -13,292 +13,377 @@ import jp.mufg.slf4j.FileLogger;
 
 public class LogStatement implements Statement {
 	private static final Logger logger = FileLogger.getLogger(LogStatement.class);
-	private final Statement stmt;
+	private final Statement target;
 
-	public LogStatement(Statement stmt) {
+	public LogStatement(Statement target) {
 		super();
-		this.stmt = stmt;
+		this.target = target;
 	}
 
-	public final ResultSet executeQuery(String sql) throws SQLException {
-		logger.info("executeQuery " + sql);
-		return new LogResultSet(stmt.executeQuery(sql));
-	}
 
-	public final boolean isWrapperFor(Class<?> iface) throws SQLException {
-		logger.info("isWrapperFor");
-		return stmt.isWrapperFor(iface);
-	}
 
-	public final <T> T unwrap(Class<T> iface) throws SQLException {
-		logger.info("unwrap");
-		return stmt.unwrap(iface);
-	}
+public boolean execute(String arg0, String[] arg1) throws java.sql.SQLException {
+	logger.info("execute" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.execute(arg0, arg1);
+	logger.info("execute result is " + result);
+	return result;
+}
 
-	public final int executeUpdate(String sql) throws SQLException {
-		logger.info("executeUpdate " + sql);
-		return stmt.executeUpdate(sql);
-	}
+public boolean execute(String arg0) throws java.sql.SQLException {
+	logger.info("execute" + " , " + arg0 );
+	boolean result = target.execute(arg0);
+	logger.info("execute result is " + result);
+	return result;
+}
 
-	public final void close() throws SQLException {
-		logger.info("close");
-		stmt.close();
-	}
+public boolean execute(String arg0, int[] arg1) throws java.sql.SQLException {
+	logger.info("execute" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.execute(arg0, arg1);
+	logger.info("execute result is " + result);
+	return result;
+}
 
-	public final int getMaxFieldSize() throws SQLException {
-		logger.info("getMaxFieldSize");
-		return stmt.getMaxFieldSize();
-	}
+public boolean execute(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("execute" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.execute(arg0, arg1);
+	logger.info("execute result is " + result);
+	return result;
+}
 
-	public final void setMaxFieldSize(int max) throws SQLException {
-		logger.info("setMaxFieldSize");
-		stmt.setMaxFieldSize(max);
-	}
+public void close() throws java.sql.SQLException {
+	logger.info("close");
+target.close();
+}
 
-	public final int getMaxRows() throws SQLException {
-		logger.info("getMaxRows");
-		return stmt.getMaxRows();
-	}
+public <T> T unwrap(java.lang.Class<T> arg0) throws java.sql.SQLException {
+	logger.info("unwrap" + " , " + arg0 );
+	T result = target.unwrap(arg0);
+	logger.info("unwrap result is " + result);
+	return result;
+}
 
-	public final void setMaxRows(int max) throws SQLException {
-		logger.info("setMaxRows");
-		stmt.setMaxRows(max);
-	}
+public java.sql.ResultSet executeQuery(String arg0) throws java.sql.SQLException {
+	logger.info("executeQuery" + " , " + arg0 );
+	java.sql.ResultSet result = new LogResultSet( target.executeQuery(arg0) );
+	logger.info("executeQuery result is " + result);
+	return result;
+}
 
-	public final void setEscapeProcessing(boolean enable) throws SQLException {
-		logger.info("setEscapeProcessing");
-		stmt.setEscapeProcessing(enable);
-	}
+public boolean isWrapperFor(java.lang.Class<?> arg0) throws java.sql.SQLException {
+	logger.info("isWrapperFor" + " , " + arg0 );
+	boolean result = target.isWrapperFor(arg0);
+	logger.info("isWrapperFor result is " + result);
+	return result;
+}
 
-	public final int getQueryTimeout() throws SQLException {
-		logger.info("getQueryTimeout");
-		return stmt.getQueryTimeout();
-	}
+public int executeUpdate(String arg0) throws java.sql.SQLException {
+	logger.info("executeUpdate" + " , " + arg0 );
+	int result = target.executeUpdate(arg0);
+	logger.info("executeUpdate result is " + result);
+	return result;
+}
 
-	public final void setQueryTimeout(int seconds) throws SQLException {
-		logger.info("setQueryTimeout");
-		stmt.setQueryTimeout(seconds);
-	}
+public int executeUpdate(String arg0, int[] arg1) throws java.sql.SQLException {
+	logger.info("executeUpdate" + " , " + arg0  + " , " + arg1 );
+	int result = target.executeUpdate(arg0, arg1);
+	logger.info("executeUpdate result is " + result);
+	return result;
+}
 
-	public final void cancel() throws SQLException {
-		logger.info("cancel");
-		stmt.cancel();
-	}
+public int executeUpdate(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("executeUpdate" + " , " + arg0  + " , " + arg1 );
+	int result = target.executeUpdate(arg0, arg1);
+	logger.info("executeUpdate result is " + result);
+	return result;
+}
 
-	public final SQLWarning getWarnings() throws SQLException {
-		logger.info("getWarnings");
-		return stmt.getWarnings();
-	}
+public int executeUpdate(String arg0, String[] arg1) throws java.sql.SQLException {
+	logger.info("executeUpdate" + " , " + arg0  + " , " + arg1 );
+	int result = target.executeUpdate(arg0, arg1);
+	logger.info("executeUpdate result is " + result);
+	return result;
+}
 
-	public final void clearWarnings() throws SQLException {
-		logger.info("clearWarnings");
-		stmt.clearWarnings();
-	}
+public int getMaxFieldSize() throws java.sql.SQLException {
+	logger.info("getMaxFieldSize");
+	int result = target.getMaxFieldSize();
+	logger.info("getMaxFieldSize result is " + result);
+	return result;
+}
 
-	public final void setCursorName(String name) throws SQLException {
-		logger.info("setCursorName");
-		stmt.setCursorName(name);
-	}
+public void setMaxFieldSize(int arg0) throws java.sql.SQLException {
+	logger.info("setMaxFieldSize" + " , " + arg0 );
+target.setMaxFieldSize(arg0);
+}
 
-	public final boolean execute(String sql) throws SQLException {
-		logger.info("execute >>>" + sql + "<<<");
-        boolean result = stmt.execute(sql);
-		logger.info("result:" + result);
-        return result;
-	}
+public int getMaxRows() throws java.sql.SQLException {
+	logger.info("getMaxRows");
+	int result = target.getMaxRows();
+	logger.info("getMaxRows result is " + result);
+	return result;
+}
 
-	public final ResultSet getResultSet() throws SQLException {
-		logger.info("getResultSet");
-		return new LogResultSet(stmt.getResultSet());
-	}
+public void setMaxRows(int arg0) throws java.sql.SQLException {
+	logger.info("setMaxRows" + " , " + arg0 );
+target.setMaxRows(arg0);
+}
 
-	public final int getUpdateCount() throws SQLException {
-		logger.info("getUpdateCount");
-		return stmt.getUpdateCount();
-	}
+public void setEscapeProcessing(boolean arg0) throws java.sql.SQLException {
+	logger.info("setEscapeProcessing" + " , " + arg0 );
+target.setEscapeProcessing(arg0);
+}
 
-	public final boolean getMoreResults() throws SQLException {
-		logger.info("getMoreResults");
-		return stmt.getMoreResults();
-	}
+public int getQueryTimeout() throws java.sql.SQLException {
+	logger.info("getQueryTimeout");
+	int result = target.getQueryTimeout();
+	logger.info("getQueryTimeout result is " + result);
+	return result;
+}
 
-	public final void setFetchDirection(int direction) throws SQLException {
-		logger.info("setFetchDirection");
-		stmt.setFetchDirection(direction);
-	}
+public void setQueryTimeout(int arg0) throws java.sql.SQLException {
+	logger.info("setQueryTimeout" + " , " + arg0 );
+target.setQueryTimeout(arg0);
+}
 
-	public final int getFetchDirection() throws SQLException {
-		logger.info("getFetchDirection");
-		return stmt.getFetchDirection();
-	}
+public void cancel() throws java.sql.SQLException {
+	logger.info("cancel");
+target.cancel();
+}
 
-	public final void setFetchSize(int rows) throws SQLException {
-		logger.info("setFetchSize");
-		stmt.setFetchSize(rows);
-	}
+public java.sql.SQLWarning getWarnings() throws java.sql.SQLException {
+	logger.info("getWarnings");
+	java.sql.SQLWarning result = target.getWarnings();
+	logger.info("getWarnings result is " + result);
+	return result;
+}
 
-	public final int getFetchSize() throws SQLException {
-		logger.info("getFetchSize");
-		return stmt.getFetchSize();
-	}
+public void clearWarnings() throws java.sql.SQLException {
+	logger.info("clearWarnings");
+target.clearWarnings();
+}
 
-	public final int getResultSetConcurrency() throws SQLException {
-		logger.info("getResultSetConcurrency");
-		return stmt.getResultSetConcurrency();
-	}
+public void setCursorName(String arg0) throws java.sql.SQLException {
+	logger.info("setCursorName" + " , " + arg0 );
+target.setCursorName(arg0);
+}
 
-	public final int getResultSetType() throws SQLException {
-		logger.info("getResultSetType");
-        return stmt.getResultSetType();
-	}
+public java.sql.ResultSet getResultSet() throws java.sql.SQLException {
+	logger.info("getResultSet");
+	java.sql.ResultSet result = new LogResultSet( target.getResultSet() );
+	logger.info("getResultSet result is " + result);
+	return result;
+}
 
-	public final void addBatch(String sql) throws SQLException {
-		logger.info("addBatch " + sql);
-		stmt.addBatch(sql);
-	}
+public int getUpdateCount() throws java.sql.SQLException {
+	logger.info("getUpdateCount");
+	int result = target.getUpdateCount();
+	logger.info("getUpdateCount result is " + result);
+	return result;
+}
 
-	public final void clearBatch() throws SQLException {
-		logger.info("clearBatch");
-		stmt.clearBatch();
-	}
+public boolean getMoreResults(int arg0) throws java.sql.SQLException {
+	logger.info("getMoreResults" + " , " + arg0 );
+	boolean result = target.getMoreResults(arg0);
+	logger.info("getMoreResults result is " + result);
+	return result;
+}
 
-	public final int[] executeBatch() throws SQLException {
-		logger.info("executeBatch");
-		return stmt.executeBatch();
-	}
+public boolean getMoreResults() throws java.sql.SQLException {
+	logger.info("getMoreResults");
+	boolean result = target.getMoreResults();
+	logger.info("getMoreResults result is " + result);
+	return result;
+}
 
-	public final Connection getConnection() throws SQLException {
-		logger.info("getConnection");
-		return stmt.getConnection();
-	}
+public void setFetchDirection(int arg0) throws java.sql.SQLException {
+	logger.info("setFetchDirection" + " , " + arg0 );
+target.setFetchDirection(arg0);
+}
 
-	public final boolean getMoreResults(int current) throws SQLException {
-		logger.info("getMoreResults");
-		return stmt.getMoreResults(current);
-	}
+public int getFetchDirection() throws java.sql.SQLException {
+	logger.info("getFetchDirection");
+	int result = target.getFetchDirection();
+	logger.info("getFetchDirection result is " + result);
+	return result;
+}
 
-	public final ResultSet getGeneratedKeys() throws SQLException {
-		logger.info("getGeneratedKeys");
-		return new LogResultSet(stmt.getGeneratedKeys());
-	}
+public void setFetchSize(int arg0) throws java.sql.SQLException {
+	logger.info("setFetchSize" + " , " + arg0 );
+target.setFetchSize(arg0);
+}
 
-	public final int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
-		logger.info("executeUpdate " + sql + " " + autoGeneratedKeys);
-		return stmt.executeUpdate(sql, autoGeneratedKeys);
-	}
+public int getFetchSize() throws java.sql.SQLException {
+	logger.info("getFetchSize");
+	int result = target.getFetchSize();
+	logger.info("getFetchSize result is " + result);
+	return result;
+}
 
-	public final int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
-		logger.info("executeUpdate " + sql + " " + Arrays.toString(columnIndexes));
-		return stmt.executeUpdate(sql, columnIndexes);
-	}
+public int getResultSetConcurrency() throws java.sql.SQLException {
+	logger.info("getResultSetConcurrency");
+	int result = target.getResultSetConcurrency();
+	logger.info("getResultSetConcurrency result is " + result);
+	return result;
+}
 
-	public final int executeUpdate(String sql, String[] columnNames) throws SQLException {
-		logger.info("executeUpdate " + sql + " " + Arrays.toString(columnNames));
-		return stmt.executeUpdate(sql, columnNames);
-	}
+public int getResultSetType() throws java.sql.SQLException {
+	logger.info("getResultSetType");
+	int result = target.getResultSetType();
+	logger.info("getResultSetType result is " + result);
+	return result;
+}
 
-	public final boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
-		logger.info("execute " + sql + " " + autoGeneratedKeys);
-		return stmt.execute(sql, autoGeneratedKeys);
-	}
+public void addBatch(String arg0) throws java.sql.SQLException {
+	logger.info("addBatch" + " , " + arg0 );
+target.addBatch(arg0);
+}
 
-	public final boolean execute(String sql, int[] columnIndexes) throws SQLException {
-		logger.info("execute " + sql + " " + Arrays.toString(columnIndexes));
-		return stmt.execute(sql, columnIndexes);
-	}
+public void clearBatch() throws java.sql.SQLException {
+	logger.info("clearBatch");
+target.clearBatch();
+}
 
-	public final boolean execute(String sql, String[] columnNames) throws SQLException {
-		logger.info("execute " + sql + " " + Arrays.toString(columnNames));
-		return stmt.execute(sql, columnNames);
-	}
+public int[] executeBatch() throws java.sql.SQLException {
+	logger.info("executeBatch");
+	int[] result = target.executeBatch();
+	logger.info("executeBatch result is " + result);
+	return result;
+}
 
-	public final int getResultSetHoldability() throws SQLException {
-		logger.info("getResultSetHoldability");
-		return stmt.getResultSetHoldability();
-	}
+public java.sql.Connection getConnection() throws java.sql.SQLException {
+	logger.info("getConnection");
+	java.sql.Connection result = target.getConnection();
+	logger.info("getConnection result is " + result);
+	return result;
+}
 
-	public final boolean isClosed() throws SQLException {
-		logger.info("isClosed");
-		return stmt.isClosed();
-	}
+public java.sql.ResultSet getGeneratedKeys() throws java.sql.SQLException {
+	logger.info("getGeneratedKeys");
+	java.sql.ResultSet result = new LogResultSet( target.getGeneratedKeys() );
+	logger.info("getGeneratedKeys result is " + result);
+	return result;
+}
 
-	public final void setPoolable(boolean poolable) throws SQLException {
-		logger.info("setPoolable");
-		stmt.setPoolable(poolable);
-	}
+public int getResultSetHoldability() throws java.sql.SQLException {
+	logger.info("getResultSetHoldability");
+	int result = target.getResultSetHoldability();
+	logger.info("getResultSetHoldability result is " + result);
+	return result;
+}
 
-	public final boolean isPoolable() throws SQLException {
-		logger.info("isPoolable");
-		return stmt.isPoolable();
-	}
+public boolean isClosed() throws java.sql.SQLException {
+	logger.info("isClosed");
+	boolean result = target.isClosed();
+	logger.info("isClosed result is " + result);
+	return result;
+}
 
-	public final void closeOnCompletion() throws SQLException {
-		logger.info("closeOnCompletion");
-		stmt.closeOnCompletion();
-	}
+public void setPoolable(boolean arg0) throws java.sql.SQLException {
+	logger.info("setPoolable" + " , " + arg0 );
+target.setPoolable(arg0);
+}
 
-	public final boolean isCloseOnCompletion() throws SQLException {
-		logger.info("isCloseOnCompletion");
-		return stmt.isCloseOnCompletion();
-	}
+public boolean isPoolable() throws java.sql.SQLException {
+	logger.info("isPoolable");
+	boolean result = target.isPoolable();
+	logger.info("isPoolable result is " + result);
+	return result;
+}
 
-	public final long getLargeUpdateCount() throws SQLException {
-		logger.info("getLargeUpdateCount");
-		return stmt.getLargeUpdateCount();
-	}
+public void closeOnCompletion() throws java.sql.SQLException {
+	logger.info("closeOnCompletion");
+target.closeOnCompletion();
+}
 
-	public final void setLargeMaxRows(long max) throws SQLException {
-		logger.info("setLargeMaxRows");
-		stmt.setLargeMaxRows(max);
-	}
+public boolean isCloseOnCompletion() throws java.sql.SQLException {
+	logger.info("isCloseOnCompletion");
+	boolean result = target.isCloseOnCompletion();
+	logger.info("isCloseOnCompletion result is " + result);
+	return result;
+}
 
-	public final long getLargeMaxRows() throws SQLException {
-		logger.info("getLargeMaxRows");
-		return stmt.getLargeMaxRows();
-	}
+public long getLargeUpdateCount() throws java.sql.SQLException {
+	logger.info("getLargeUpdateCount");
+	long result = target.getLargeUpdateCount();
+	logger.info("getLargeUpdateCount result is " + result);
+	return result;
+}
 
-	public final long[] executeLargeBatch() throws SQLException {
-		logger.info("executeLargeBatch");
-		return stmt.executeLargeBatch();
-	}
+public void setLargeMaxRows(long arg0) throws java.sql.SQLException {
+	logger.info("setLargeMaxRows" + " , " + arg0 );
+target.setLargeMaxRows(arg0);
+}
 
-	public final long executeLargeUpdate(String sql) throws SQLException {
-		logger.info("executeLargeUpdate " + sql);
-		return stmt.executeLargeUpdate(sql);
-	}
+public long getLargeMaxRows() throws java.sql.SQLException {
+	logger.info("getLargeMaxRows");
+	long result = target.getLargeMaxRows();
+	logger.info("getLargeMaxRows result is " + result);
+	return result;
+}
 
-	public final long executeLargeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
-		logger.info("executeLargeUpdate " + sql + " " + autoGeneratedKeys);
-		return stmt.executeLargeUpdate(sql, autoGeneratedKeys);
-	}
+public long[] executeLargeBatch() throws java.sql.SQLException {
+	logger.info("executeLargeBatch");
+	long[] result = target.executeLargeBatch();
+	logger.info("executeLargeBatch result is " + result);
+	return result;
+}
 
-	public final long executeLargeUpdate(String sql, int[] columnIndexes) throws SQLException {
-		logger.info("executeLargeUpdate " + sql + " " + Arrays.toString(columnIndexes));
-		return stmt.executeLargeUpdate(sql, columnIndexes);
-	}
+public long executeLargeUpdate(String arg0, int[] arg1) throws java.sql.SQLException {
+	logger.info("executeLargeUpdate" + " , " + arg0  + " , " + arg1 );
+	long result = target.executeLargeUpdate(arg0, arg1);
+	logger.info("executeLargeUpdate result is " + result);
+	return result;
+}
 
-	public final long executeLargeUpdate(String sql, String[] columnNames) throws SQLException {
-		logger.info("executeLargeUpdate " + sql + " " + Arrays.toString(columnNames));
-		return stmt.executeLargeUpdate(sql, columnNames);
-	}
+public long executeLargeUpdate(String arg0, String[] arg1) throws java.sql.SQLException {
+	logger.info("executeLargeUpdate" + " , " + arg0  + " , " + arg1 );
+	long result = target.executeLargeUpdate(arg0, arg1);
+	logger.info("executeLargeUpdate result is " + result);
+	return result;
+}
 
-	public final String enquoteLiteral(String val) throws SQLException {
-		logger.info("enquoteLiteral");
-		return stmt.enquoteLiteral(val);
-	}
+public long executeLargeUpdate(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("executeLargeUpdate" + " , " + arg0  + " , " + arg1 );
+	long result = target.executeLargeUpdate(arg0, arg1);
+	logger.info("executeLargeUpdate result is " + result);
+	return result;
+}
 
-	public final String enquoteIdentifier(String identifier, boolean alwaysQuote) throws SQLException {
-		logger.info("enquoteIdentifier");
-		return stmt.enquoteIdentifier(identifier, alwaysQuote);
-	}
+public long executeLargeUpdate(String arg0) throws java.sql.SQLException {
+	logger.info("executeLargeUpdate" + " , " + arg0 );
+	long result = target.executeLargeUpdate(arg0);
+	logger.info("executeLargeUpdate result is " + result);
+	return result;
+}
 
-	public final boolean isSimpleIdentifier(String identifier) throws SQLException {
-		logger.info("isSimpleIdentifier");
-		return stmt.isSimpleIdentifier(identifier);
-	}
+public String enquoteLiteral(String arg0) throws java.sql.SQLException {
+	logger.info("enquoteLiteral" + " , " + arg0 );
+	String result = target.enquoteLiteral(arg0);
+	logger.info("enquoteLiteral result is " + result);
+	return result;
+}
 
-	public final String enquoteNCharLiteral(String val) throws SQLException {
-		logger.info("enquoteNCharLiteral");
-		return stmt.enquoteNCharLiteral(val);
-	}
+public String enquoteIdentifier(String arg0, boolean arg1) throws java.sql.SQLException {
+	logger.info("enquoteIdentifier" + " , " + arg0  + " , " + arg1 );
+	String result = target.enquoteIdentifier(arg0, arg1);
+	logger.info("enquoteIdentifier result is " + result);
+	return result;
+}
+
+public boolean isSimpleIdentifier(String arg0) throws java.sql.SQLException {
+	logger.info("isSimpleIdentifier" + " , " + arg0 );
+	boolean result = target.isSimpleIdentifier(arg0);
+	logger.info("isSimpleIdentifier result is " + result);
+	return result;
+}
+
+public String enquoteNCharLiteral(String arg0) throws java.sql.SQLException {
+	logger.info("enquoteNCharLiteral" + " , " + arg0 );
+	String result = target.enquoteNCharLiteral(arg0);
+	logger.info("enquoteNCharLiteral result is " + result);
+	return result;
+}
+
+
+
 }

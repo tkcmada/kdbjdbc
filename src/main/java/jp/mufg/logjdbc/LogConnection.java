@@ -27,316 +27,391 @@ import jp.mufg.slf4j.FileLogger;
 
 public class LogConnection implements Connection {
 	private static final Logger logger = FileLogger.getLogger(LogConnection.class);
-	private final Connection conn;
+	private final Connection target;
 
-	public LogConnection(Connection conn) {
+	public LogConnection(Connection target) {
 		super();
-		this.conn = conn;
-	}
+		this.target = target;
+    }
+    
 
-	public <T> T unwrap(Class<T> iface) throws SQLException {
-		logger.info("unwrap " + iface);
-		return conn.unwrap(iface);
-	}
+    ///////////////////////////////////////////////
+public void abort(java.util.concurrent.Executor arg0) throws java.sql.SQLException {
+	logger.info("abort" + " , " + arg0 );
+target.abort(arg0);
+}
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		logger.info("isWrapperFor " + iface);
-		return conn.isWrapperFor(iface);
-	}
+public boolean isWrapperFor(java.lang.Class<?> arg0) throws java.sql.SQLException {
+	logger.info("isWrapperFor" + " , " + arg0 );
+	boolean result = target.isWrapperFor(arg0);
+	logger.info("isWrapperFor result is " + result);
+	return result;
+}
 
-	public Statement createStatement() throws SQLException {
-		logger.info("createStatement");
-		return new LogStatement(conn.createStatement());
-	}
+public java.sql.Statement createStatement(int arg0, int arg1, int arg2) throws java.sql.SQLException {
+	logger.info("createStatement" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.Statement result = new LogStatement(target.createStatement(arg0, arg1, arg2));
+	logger.info("createStatement result is " + result);
+	return result;
+}
 
-	public PreparedStatement prepareStatement(String sql) throws SQLException {
-		logger.info("prepareStatement " + sql);
-		return new LogPreparedStatement(conn.prepareStatement(sql));
-	}
+public java.sql.Statement createStatement() throws java.sql.SQLException {
+	logger.info("createStatement");
+	java.sql.Statement result = new LogStatement(target.createStatement());
+	logger.info("createStatement result is " + result);
+	return result;
+}
 
-	public CallableStatement prepareCall(String sql) throws SQLException {
-		logger.info("prepareCall " + sql);
-		return new LogCallableStatement(conn.prepareCall(sql));
-	}
+public java.sql.Statement createStatement(int arg0, int arg1) throws java.sql.SQLException {
+	logger.info("createStatement" + " , " + arg0  + " , " + arg1 );
+	java.sql.Statement result = new LogStatement(target.createStatement(arg0, arg1));
+	logger.info("createStatement result is " + result);
+	return result;
+}
 
-	public String nativeSQL(String sql) throws SQLException {
-		logger.info("nativeSQL " + sql);
-		return conn.nativeSQL(sql);
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0, int arg1, int arg2) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0, arg1, arg2);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public void setAutoCommit(boolean autoCommit) throws SQLException {
-		logger.info("setAutoCommit " + autoCommit);
-		conn.setAutoCommit(autoCommit);
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0, int[] arg1) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0  + " , " + arg1 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0, arg1);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public boolean getAutoCommit() throws SQLException {
-		logger.info("getAutoCommit");
-		return conn.getAutoCommit();
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0, int arg1, int arg2, int arg3) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0, arg1, arg2, arg3);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public void commit() throws SQLException {
-		logger.info("commit");
-		conn.commit();
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0, String[] arg1) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0  + " , " + arg1 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0, arg1);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public void rollback() throws SQLException {
-		logger.info("rollback");
-		conn.rollback();
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public void close() throws SQLException {
-		logger.info("close");
-		conn.close();
-	}
+public java.sql.PreparedStatement prepareStatement(String arg0, int arg1) throws java.sql.SQLException {
+	logger.info("prepareStatement" + " , " + arg0  + " , " + arg1 );
+	java.sql.PreparedStatement result = target.prepareStatement(arg0, arg1);
+	logger.info("prepareStatement result is " + result);
+	return result;
+}
 
-	public boolean isClosed() throws SQLException {
-		logger.info("isClosed");
-		return conn.isClosed();
-	}
+public java.sql.CallableStatement prepareCall(String arg0, int arg1, int arg2) throws java.sql.SQLException {
+	logger.info("prepareCall" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	java.sql.CallableStatement result = target.prepareCall(arg0, arg1, arg2);
+	logger.info("prepareCall result is " + result);
+	return result;
+}
 
-	public DatabaseMetaData getMetaData() throws SQLException {
-		logger.info("getMetaData");
-		return new LogDatabaseMetaData(conn.getMetaData());
-	}
+public java.sql.CallableStatement prepareCall(String arg0) throws java.sql.SQLException {
+	logger.info("prepareCall" + " , " + arg0 );
+	java.sql.CallableStatement result = target.prepareCall(arg0);
+	logger.info("prepareCall result is " + result);
+	return result;
+}
 
-	public void setReadOnly(boolean readOnly) throws SQLException {
-		logger.info("setReadOnly " + readOnly);
-		conn.setReadOnly(readOnly);
-	}
+public java.sql.CallableStatement prepareCall(String arg0, int arg1, int arg2, int arg3) throws java.sql.SQLException {
+	logger.info("prepareCall" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	java.sql.CallableStatement result = target.prepareCall(arg0, arg1, arg2, arg3);
+	logger.info("prepareCall result is " + result);
+	return result;
+}
 
-	public boolean isReadOnly() throws SQLException {
-		logger.info("isReadOnly");
-		return conn.isReadOnly();
-	}
+public String nativeSQL(String arg0) throws java.sql.SQLException {
+	logger.info("nativeSQL" + " , " + arg0 );
+	String result = target.nativeSQL(arg0);
+	logger.info("nativeSQL result is " + result);
+	return result;
+}
 
-	public void setCatalog(String catalog) throws SQLException {
-		logger.info("setCatalog " + catalog);
-		conn.setCatalog(catalog);
-	}
+public void setAutoCommit(boolean arg0) throws java.sql.SQLException {
+	logger.info("setAutoCommit" + " , " + arg0 );
+target.setAutoCommit(arg0);
+}
 
-	public String getCatalog() throws SQLException {
-		logger.info("getCatalog");
-		return conn.getCatalog();
-	}
+public boolean getAutoCommit() throws java.sql.SQLException {
+	logger.info("getAutoCommit");
+	boolean result = target.getAutoCommit();
+	logger.info("getAutoCommit result is " + result);
+	return result;
+}
 
-	public void setTransactionIsolation(int level) throws SQLException {
-		logger.info("setTransactionIsolation " + level);
-		conn.setTransactionIsolation(level);
-	}
+public void commit() throws java.sql.SQLException {
+	logger.info("commit");
+target.commit();
+}
 
-	public int getTransactionIsolation() throws SQLException {
-		logger.info("getTransactionIsolation");
-		return conn.getTransactionIsolation();
-	}
+public void rollback(java.sql.Savepoint arg0) throws java.sql.SQLException {
+	logger.info("rollback" + " , " + arg0 );
+target.rollback(arg0);
+}
 
-	public SQLWarning getWarnings() throws SQLException {
-		logger.info("getWarnings");
-		return conn.getWarnings();
-	}
+public void rollback() throws java.sql.SQLException {
+	logger.info("rollback");
+target.rollback();
+}
 
-	public void clearWarnings() throws SQLException {
-		logger.info("clearWarnings");
-		conn.clearWarnings();
-	}
+public boolean isClosed() throws java.sql.SQLException {
+	logger.info("isClosed");
+	boolean result = target.isClosed();
+	logger.info("isClosed result is " + result);
+	return result;
+}
 
-	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-		logger.info("createStatement" + resultSetType + " " + resultSetConcurrency);
-		return new LogStatement(conn.createStatement(resultSetType, resultSetConcurrency));
-	}
+public java.sql.DatabaseMetaData getMetaData() throws java.sql.SQLException {
+	logger.info("getMetaData");
+	java.sql.DatabaseMetaData result = new LogDatabaseMetaData(target.getMetaData());
+	logger.info("getMetaData result is " + result);
+	return result;
+}
 
-	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
-			throws SQLException {
-		logger.info("prepareStatement" + sql + " " + resultSetType + " " + resultSetConcurrency);
-		return new LogPreparedStatement(conn.prepareStatement(sql, resultSetType, resultSetConcurrency));
-	}
+public void setCatalog(String arg0) throws java.sql.SQLException {
+	logger.info("setCatalog" + " , " + arg0 );
+target.setCatalog(arg0);
+}
 
-	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		logger.info("prepareCall" + sql + " " + resultSetType + " " + resultSetConcurrency);
-		return new LogCallableStatement(conn.prepareCall(sql, resultSetType, resultSetConcurrency));
-	}
+public String getCatalog() throws java.sql.SQLException {
+	logger.info("getCatalog");
+	String result = target.getCatalog();
+	logger.info("getCatalog result is " + result);
+	return result;
+}
 
-	public Map<String, Class<?>> getTypeMap() throws SQLException {
-		logger.info("getTypeMap");
-		return conn.getTypeMap();
-	}
+public void setTransactionIsolation(int arg0) throws java.sql.SQLException {
+	logger.info("setTransactionIsolation" + " , " + arg0 );
+target.setTransactionIsolation(arg0);
+}
 
-	public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-		logger.info("setTypeMap " + map);
-		conn.setTypeMap(map);
-	}
+public int getTransactionIsolation() throws java.sql.SQLException {
+	logger.info("getTransactionIsolation");
+	int result = target.getTransactionIsolation();
+	logger.info("getTransactionIsolation result is " + result);
+	return result;
+}
 
-	public void setHoldability(int holdability) throws SQLException {
-		logger.info("setHoldability " + holdability);
-		conn.setHoldability(holdability);
-	}
+public java.sql.SQLWarning getWarnings() throws java.sql.SQLException {
+	logger.info("getWarnings");
+	java.sql.SQLWarning result = target.getWarnings();
+	logger.info("getWarnings result is " + result);
+	return result;
+}
 
-	public int getHoldability() throws SQLException {
-		logger.info("getHoldability");
-		return conn.getHoldability();
-	}
+public void clearWarnings() throws java.sql.SQLException {
+	logger.info("clearWarnings");
+target.clearWarnings();
+}
 
-	public Savepoint setSavepoint() throws SQLException {
-		logger.info("setSavepoint");
-		return conn.setSavepoint();
-	}
+public java.util.Map<java.lang.String, java.lang.Class<?>> getTypeMap() throws java.sql.SQLException {
+	logger.info("getTypeMap");
+	java.util.Map<java.lang.String, java.lang.Class<?>> result = target.getTypeMap();
+	logger.info("getTypeMap result is " + result);
+	return result;
+}
 
-	public Savepoint setSavepoint(String name) throws SQLException {
-		logger.info("setSavepoint " + name);
-		return conn.setSavepoint(name);
-	}
+public void setTypeMap(java.util.Map<java.lang.String, java.lang.Class<?>> arg0) throws java.sql.SQLException {
+	logger.info("setTypeMap" + " , " + arg0 );
+target.setTypeMap(arg0);
+}
 
-	public void rollback(Savepoint savepoint) throws SQLException {
-		logger.info("rollback " + savepoint);
-		conn.rollback(savepoint);
-	}
+public void setHoldability(int arg0) throws java.sql.SQLException {
+	logger.info("setHoldability" + " , " + arg0 );
+target.setHoldability(arg0);
+}
 
-	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-		logger.info("releaseSavepoint " + savepoint);
-		conn.releaseSavepoint(savepoint);
-	}
+public int getHoldability() throws java.sql.SQLException {
+	logger.info("getHoldability");
+	int result = target.getHoldability();
+	logger.info("getHoldability result is " + result);
+	return result;
+}
 
-	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
-			throws SQLException {
-		logger.info("createStatement " + resultSetType + " " + resultSetConcurrency + " " + resultSetHoldability);
-		return new LogStatement(conn.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
-	}
+public java.sql.Savepoint setSavepoint() throws java.sql.SQLException {
+	logger.info("setSavepoint");
+	java.sql.Savepoint result = target.setSavepoint();
+	logger.info("setSavepoint result is " + result);
+	return result;
+}
 
-	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
-			int resultSetHoldability) throws SQLException {
-		logger.info("prepareStatement " + sql + " " + resultSetType + " " + resultSetConcurrency + " " + resultSetHoldability);
-		return new LogPreparedStatement(conn.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-	}
+public java.sql.Savepoint setSavepoint(String arg0) throws java.sql.SQLException {
+	logger.info("setSavepoint" + " , " + arg0 );
+	java.sql.Savepoint result = target.setSavepoint(arg0);
+	logger.info("setSavepoint result is " + result);
+	return result;
+}
 
-	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
-			int resultSetHoldability) throws SQLException {
-		logger.info("prepareCall " + sql + " " + resultSetType + " " + resultSetConcurrency + " " + resultSetHoldability);
-		return new LogCallableStatement(conn.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
-	}
+public void releaseSavepoint(java.sql.Savepoint arg0) throws java.sql.SQLException {
+	logger.info("releaseSavepoint" + " , " + arg0 );
+target.releaseSavepoint(arg0);
+}
 
-	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-		logger.info("prepareStatement " + sql + " " + autoGeneratedKeys);
-		return new LogPreparedStatement(conn.prepareStatement(sql, autoGeneratedKeys));
-	}
+public java.sql.Clob createClob() throws java.sql.SQLException {
+	logger.info("createClob");
+	java.sql.Clob result = target.createClob();
+	logger.info("createClob result is " + result);
+	return result;
+}
 
-	public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-		logger.info("prepareStatement " + sql + " " + Arrays.toString(columnIndexes));
-		return new LogPreparedStatement(conn.prepareStatement(sql, columnIndexes));
-	}
+public java.sql.Blob createBlob() throws java.sql.SQLException {
+	logger.info("createBlob");
+	java.sql.Blob result = target.createBlob();
+	logger.info("createBlob result is " + result);
+	return result;
+}
 
-	public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-		logger.info("prepareStatement " + sql + " " + Arrays.toString(columnNames));
-		return new LogPreparedStatement(conn.prepareStatement(sql, columnNames));
-	}
+public java.sql.NClob createNClob() throws java.sql.SQLException {
+	logger.info("createNClob");
+	java.sql.NClob result = target.createNClob();
+	logger.info("createNClob result is " + result);
+	return result;
+}
 
-	public Clob createClob() throws SQLException {
-		logger.info("createClob");
-		return conn.createClob();
-	}
+public java.sql.SQLXML createSQLXML() throws java.sql.SQLException {
+	logger.info("createSQLXML");
+	java.sql.SQLXML result = target.createSQLXML();
+	logger.info("createSQLXML result is " + result);
+	return result;
+}
 
-	public Blob createBlob() throws SQLException {
-		logger.info("createBlob");
-		return conn.createBlob();
-	}
+public boolean isValid(int arg0) throws java.sql.SQLException {
+	logger.info("isValid" + " , " + arg0 );
+	boolean result = target.isValid(arg0);
+	logger.info("isValid result is " + result);
+	return result;
+}
 
-	public NClob createNClob() throws SQLException {
-		logger.info("createNClob");
-		return conn.createNClob();
-	}
+public void setClientInfo(java.util.Properties arg0) throws java.sql.SQLClientInfoException {
+	logger.info("setClientInfo" + " , " + arg0 );
+target.setClientInfo(arg0);
+}
 
-	public SQLXML createSQLXML() throws SQLException {
-		logger.info("createSQLXML");
-		return conn.createSQLXML();
-	}
+public void setClientInfo(String arg0, String arg1) throws java.sql.SQLClientInfoException {
+	logger.info("setClientInfo" + " , " + arg0  + " , " + arg1 );
+target.setClientInfo(arg0, arg1);
+}
 
-	public boolean isValid(int timeout) throws SQLException {
-        boolean result = conn.isValid(timeout);
-		logger.info("isValid " + timeout + " -> " + result);
-        return result;
-	}
+public String getClientInfo(String arg0) throws java.sql.SQLException {
+	logger.info("getClientInfo" + " , " + arg0 );
+	String result = target.getClientInfo(arg0);
+	logger.info("getClientInfo result is " + result);
+	return result;
+}
 
-	public void setClientInfo(String name, String value) throws SQLClientInfoException {
-		logger.info("setClientInfo " + name + " " + value);
-		conn.setClientInfo(name, value);
-	}
+public java.util.Properties getClientInfo() throws java.sql.SQLException {
+	logger.info("getClientInfo");
+	java.util.Properties result = target.getClientInfo();
+	logger.info("getClientInfo result is " + result);
+	return result;
+}
 
-	public void setClientInfo(Properties properties) throws SQLClientInfoException {
-		logger.info("setClientInfo " + properties);
-		conn.setClientInfo(properties);
-	}
+public java.sql.Array createArrayOf(String arg0, Object[] arg1) throws java.sql.SQLException {
+	logger.info("createArrayOf" + " , " + arg0  + " , " + arg1 );
+	java.sql.Array result = target.createArrayOf(arg0, arg1);
+	logger.info("createArrayOf result is " + result);
+	return result;
+}
 
-	public String getClientInfo(String name) throws SQLException {
-		logger.info("getClientInfo " + name);
-		return conn.getClientInfo(name);
-	}
+public java.sql.Struct createStruct(String arg0, Object[] arg1) throws java.sql.SQLException {
+	logger.info("createStruct" + " , " + arg0  + " , " + arg1 );
+	java.sql.Struct result = target.createStruct(arg0, arg1);
+	logger.info("createStruct result is " + result);
+	return result;
+}
 
-	public Properties getClientInfo() throws SQLException {
-		logger.info("getClientInfo");
-		return conn.getClientInfo();
-	}
+public void setSchema(String arg0) throws java.sql.SQLException {
+	logger.info("setSchema" + " , " + arg0 );
+target.setSchema(arg0);
+}
 
-	public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-		logger.info("createArrayOf " + typeName + " " + Arrays.toString(elements));
-		return conn.createArrayOf(typeName, elements);
-	}
+public String getSchema() throws java.sql.SQLException {
+	logger.info("getSchema");
+	String result = target.getSchema();
+	logger.info("getSchema result is " + result);
+	return result;
+}
 
-	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-		logger.info("createArrayOf " + typeName + " " + Arrays.toString(attributes));
-		return conn.createStruct(typeName, attributes);
-	}
+public void setNetworkTimeout(java.util.concurrent.Executor arg0, int arg1) throws java.sql.SQLException {
+	logger.info("setNetworkTimeout" + " , " + arg0  + " , " + arg1 );
+target.setNetworkTimeout(arg0, arg1);
+}
 
-	public void setSchema(String schema) throws SQLException {
-		logger.info("setSchema " + schema);
-		conn.setSchema(schema);
-	}
+public int getNetworkTimeout() throws java.sql.SQLException {
+	logger.info("getNetworkTimeout");
+	int result = target.getNetworkTimeout();
+	logger.info("getNetworkTimeout result is " + result);
+	return result;
+}
 
-	public String getSchema() throws SQLException {
-		logger.info("getSchema");
-		return conn.getSchema();
-	}
+public void beginRequest() throws java.sql.SQLException {
+	logger.info("beginRequest");
+target.beginRequest();
+}
 
-	public void abort(Executor executor) throws SQLException {
-		logger.info("abort " + executor);
-		conn.abort(executor);
-	}
+public void endRequest() throws java.sql.SQLException {
+	logger.info("endRequest");
+target.endRequest();
+}
 
-	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-		logger.info("setNetworkTimeout " + executor + " " + milliseconds);
-		conn.setNetworkTimeout(executor, milliseconds);
-	}
+public boolean setShardingKeyIfValid(java.sql.ShardingKey arg0, int arg1) throws java.sql.SQLException {
+	logger.info("setShardingKeyIfValid" + " , " + arg0  + " , " + arg1 );
+	boolean result = target.setShardingKeyIfValid(arg0, arg1);
+	logger.info("setShardingKeyIfValid result is " + result);
+	return result;
+}
 
-	public int getNetworkTimeout() throws SQLException {
-		logger.info("getNetworkTimeout");
-		return conn.getNetworkTimeout();
-	}
+public boolean setShardingKeyIfValid(java.sql.ShardingKey arg0, java.sql.ShardingKey arg1, int arg2) throws java.sql.SQLException {
+	logger.info("setShardingKeyIfValid" + " , " + arg0  + " , " + arg1  + " , " + arg2 );
+	boolean result = target.setShardingKeyIfValid(arg0, arg1, arg2);
+	logger.info("setShardingKeyIfValid result is " + result);
+	return result;
+}
 
-	public void beginRequest() throws SQLException {
-		logger.info("beginRequest");
-		conn.beginRequest();
-	}
+public void setShardingKey(java.sql.ShardingKey arg0, java.sql.ShardingKey arg1) throws java.sql.SQLException {
+	logger.info("setShardingKey" + " , " + arg0  + " , " + arg1 );
+target.setShardingKey(arg0, arg1);
+}
 
-	public void endRequest() throws SQLException {
-		logger.info("endRequest");
-		conn.endRequest();
-	}
+public void setShardingKey(java.sql.ShardingKey arg0) throws java.sql.SQLException {
+	logger.info("setShardingKey" + " , " + arg0 );
+target.setShardingKey(arg0);
+}
 
-	public boolean setShardingKeyIfValid(ShardingKey shardingKey, ShardingKey superShardingKey, int timeout)
-			throws SQLException {
-		logger.info("setShardingKeyIfValid " + shardingKey + " " + superShardingKey + " " + timeout);
-		return conn.setShardingKeyIfValid(shardingKey, superShardingKey, timeout);
-	}
+public void setReadOnly(boolean arg0) throws java.sql.SQLException {
+	logger.info("setReadOnly" + " , " + arg0 );
+target.setReadOnly(arg0);
+}
 
-	public boolean setShardingKeyIfValid(ShardingKey shardingKey, int timeout) throws SQLException {
-		logger.info("setShardingKeyIfValid " + shardingKey + " " + timeout);
-		return conn.setShardingKeyIfValid(shardingKey, timeout);
-	}
+public void close() throws java.sql.SQLException {
+	logger.info("close");
+target.close();
+}
 
-	public void setShardingKey(ShardingKey shardingKey, ShardingKey superShardingKey) throws SQLException {
-		logger.info("setShardingKeyIfValid " + shardingKey + " " + superShardingKey);
-		conn.setShardingKey(shardingKey, superShardingKey);
-	}
+public <T> T unwrap(java.lang.Class<T> arg0) throws java.sql.SQLException {
+	logger.info("unwrap" + " , " + arg0 );
+	T result = target.unwrap(arg0);
+	logger.info("unwrap result is " + result);
+	return result;
+}
 
-	public void setShardingKey(ShardingKey shardingKey) throws SQLException {
-		logger.info("setShardingKeyIfValid " + shardingKey);
-		conn.setShardingKey(shardingKey);
-	}
+public boolean isReadOnly() throws java.sql.SQLException {
+	logger.info("isReadOnly");
+	boolean result = target.isReadOnly();
+	logger.info("isReadOnly result is " + result);
+	return result;
+}
+
 }
