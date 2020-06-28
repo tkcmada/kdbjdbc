@@ -2,7 +2,6 @@ package jp.mufg.logjdbc;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.StringJoiner;
 
 public class Srcgen {
@@ -14,13 +13,8 @@ public class Srcgen {
 		StringBuilder s = new StringBuilder();
 		for(Method m : cls.getMethods()) {
 			int n = m.getParameterCount();
-			s.append(String.format("public %s %s(%s)", type(m.getReturnType()), m.getName(), args(m)));
-			if(m.getExceptionTypes().length > 0) {
-				StringJoiner sj = new StringJoiner(", ");
-				Arrays.stream(m.getExceptionTypes()).forEach((excls)->sj.add(type(excls)));
-				s.append(" throws ");
-				s.append(sj.toString());
-			}
+            s.append(String.format("public %s %s(%s)", type(m.getReturnType()), m.getName(), args(m)));
+            s.append(exstmt(m));
 			s.append("{");
 			System.out.println(s.toString());
 			System.out.println("logger.info(String.format(\"" + m.getName() + "(" + sn(n) + ")\", " + argnames(n) + "));");
@@ -32,7 +26,21 @@ public class Srcgen {
 			System.out.println("}");
 			System.out.println("");
 		}
-	}
+    }
+    
+    private static String exstmt(Method m) {
+        if(m.getExceptionTypes().length == 0)
+            return "";
+        StringBuilder s = new StringBuilder();
+        s.append(" throws ");
+        for(int i = 0; i < m.getExceptionTypes().length; i++) {
+            if(i > 0)
+                s.append(", ");
+            s.append(type(m.getExceptionTypes()[i]));
+        }
+        s.append(" ");
+        return s.toString();
+    }
 
 	private static Object argnames(int n) {
 		StringJoiner sj = new StringJoiner(", ");
