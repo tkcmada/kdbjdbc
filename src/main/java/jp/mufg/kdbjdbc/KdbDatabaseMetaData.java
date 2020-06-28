@@ -20,7 +20,7 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 
     @Override
 	public String getDatabaseProductName() throws SQLException {
-        return "12.3 (Debian 12.3-1.pgdg100+1)";
+        throw new UnsupportedOperationException("getDatabaseProductName is not support");
 	}
 
 	@Override
