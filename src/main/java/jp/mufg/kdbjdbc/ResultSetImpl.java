@@ -32,7 +32,7 @@ public class ResultSetImpl implements ResultSet {
 	private static final Logger logger = FileLogger.getLogger(ResultSetImpl.class);
 	private final ResultSetMetaData meta;
 	private final List<Object[]> rows;
-    private int cursor = 0;
+    private int cursor = -1;
     private boolean wasnull = false;
 
 	public ResultSetImpl(ResultSetMetaData meta, List<Object[]> rows) {
@@ -63,7 +63,7 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public boolean next() throws SQLException {
-        logger.info("next");
+        logger.info("next cursor=" + cursor + " size=" + rows.size());
 		if(cursor >= rows.size())
 			return false;
 		cursor++;
