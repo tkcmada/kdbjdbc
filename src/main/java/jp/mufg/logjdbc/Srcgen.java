@@ -5,24 +5,26 @@ import java.lang.reflect.Type;
 import java.util.StringJoiner;
 
 public class Srcgen {
-	public static void main(String[] args) {
-		srcgen(LogResultSet.class);
+	public static void main(String[] args) throws ClassNotFoundException {
+		srcgen(Class.forName("jp.mufg.logjdbc.LogResultSet"));
 	}
 
 	private static void srcgen(Class<?> cls) {
-		StringBuilder s = new StringBuilder();
 		for(Method m : cls.getMethods()) {
 			int n = m.getParameterCount();
+			StringBuilder s = new StringBuilder();
             s.append(String.format("public %s %s(%s)", type(m.getReturnType()), m.getName(), args(m)));
             s.append(exstmt(m));
 			s.append("{");
 			System.out.println(s.toString());
+			
 			System.out.println("logger.info(String.format(\"" + m.getName() + "(" + sn(n) + ")\", " + argnames(n) + "));");
 			if(m.getReturnType() != void.class)
 				System.out.print("var result = ");
 			System.out.println(String.format("target.%s(%s);", m.getName(), argnames(n)));
 			if(m.getReturnType() != void.class)
 				System.out.print("return result;");
+			
 			System.out.println("}");
 			System.out.println("");
 		}
