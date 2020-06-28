@@ -73,20 +73,20 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 			throws SQLException {                
 //        return conn.createStatement().executeQuery("q) flip ( `TABLE_NAME`TABLE_SCHEM`TABLE_CATALOG`TABLE_TYPE`REMARKS`TYPE_CAT`TYPE_SCHEM`TYPE_NAME`SELF_REFERENCING_COL_NAME`REF_GENERATION ! ( tables[]; (count(tables[]))#(enlist `schema1); (count(tables[]))#(enlist `catalog1); (count(tables[]))#(enlist `TABLE); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `) ) )");
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("table_cat", "text", true),
-				new ColumnInfo("table_schem", "name", false),
-				new ColumnInfo("table_name" , "name", false),
-				new ColumnInfo("table_type"	, "text", true),
-				new ColumnInfo("remarks"	, "text", false),
-				new ColumnInfo("type_cat"	, "text", true),
-				new ColumnInfo("type_schem"	, "text", true),
-				new ColumnInfo("type_name"	, "text", true),
-				new ColumnInfo("self_referencing_col_name"	, "text", true),
-				new ColumnInfo("ref_generation"	, "text", true)
+				new ColumnInfo("table_cat", "text", true),//1
+				new ColumnInfo("table_schem", "name", false),//2
+				new ColumnInfo("table_name" , "name", false),//3
+				new ColumnInfo("table_type"	, "text", true),//4
+				new ColumnInfo("remarks"	, "text", true),//5
+				new ColumnInfo("type_cat"	, "text", true),//6
+				new ColumnInfo("type_schem"	, "text", true),//7
+				new ColumnInfo("type_name"	, "text", true),//8
+				new ColumnInfo("self_referencing_col_name"	, "text", true),//9
+				new ColumnInfo("ref_generation"	, "text", true)//10
 		);
 		List<Object[]> rows = new ArrayList<Object[]>();
-		                       //table_cat   table_schem table_name table_type  remarks  type_cat   type_schem  type_name  selfref refgen
-		rows.add(new Object[] {  null     , "public"     , "t2"     , "TABLE" , null    , ""      , ""        , ""        , ""     , ""   });
+		                       //1table_cat 2table_schem 3table_name 4table_type  5remarks  6type_cat   7type_schem  8type_name  9selfref 10refgen
+		rows.add(new Object[] {  null     , "public"     , "t2"     , "TABLE"    , null    , ""        , ""         , ""         , ""     , ""   });
 		return new ResultSetImpl(meta, rows);
 	}
 
