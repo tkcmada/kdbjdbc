@@ -67,9 +67,9 @@ public boolean isSearchable(int arg0) throws java.sql.SQLException {
 }
 
 public int getColumnCount() throws java.sql.SQLException {
-	logger.info("getColumnCount");
+	// logger.info("getColumnCount");
 	int result = target.getColumnCount();
-	logger.info("getColumnCount result is " + result);
+	// logger.info("getColumnCount result is " + result);
 	return result;
 }
 
@@ -95,16 +95,16 @@ public int getScale(int arg0) throws java.sql.SQLException {
 }
 
 public String getColumnName(int arg0) throws java.sql.SQLException {
-	logger.info("getColumnName" + " , " + arg0 );
+	// logger.info("getColumnName" + " , " + arg0 );
 	String result = target.getColumnName(arg0);
-	logger.info("getColumnName result is " + result);
+	// logger.info("getColumnName result is " + result);
 	return result;
 }
 
 public String getColumnLabel(int arg0) throws java.sql.SQLException {
-	logger.info("getColumnLabel" + " , " + arg0 );
+	// logger.info("getColumnLabel" + " , " + arg0 );
 	String result = target.getColumnLabel(arg0);
-	logger.info("getColumnLabel result is " + result);
+	// logger.info("getColumnLabel result is " + result);
 	return result;
 }
 

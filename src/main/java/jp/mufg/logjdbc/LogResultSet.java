@@ -335,14 +335,14 @@ public boolean previous() throws java.sql.SQLException {
 public java.sql.ResultSetMetaData getMetaData() throws java.sql.SQLException {
 	logger.info("getMetaData");
 	java.sql.ResultSetMetaData result = new LogResultSetMetaData(target.getMetaData());
-	logger.info("result is " + result);
+	logger.info("getMetaData result is " + result);
 	return result;
 }
 
 public boolean wasNull() throws java.sql.SQLException {
 	logger.info("wasNull");
 	boolean result = target.wasNull();
-	logger.info("result is " + result);
+	logger.info("wasNull result is " + result);
 	return result;
 }
 

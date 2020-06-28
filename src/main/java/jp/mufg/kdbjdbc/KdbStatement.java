@@ -12,36 +12,45 @@ public class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
     // private final Statement nativestmt;
     private ResultSet rs;
+    private volatile boolean closed = false;
+
     KdbStatement() {
         // this.nativestmt = nativestmt;
+    }
+
+    private void setDummyResultSet() {
+        ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true));
+        this.rs = new ResultSetImpl(meta);
     }
 
     @Override
     public void close() throws SQLException {
         // nativestmt.close();
+        closed = true;
     }
 
     @Override
     public boolean isClosed() throws SQLException {
         // return nativestmt.isClosed();
-        return false;
+        return closed;
     }
 
     
     @Override
     public boolean execute(String sql) throws SQLException {
         logger.info("execute:" + String.valueOf(sql));
+        setDummyResultSet();
         if(sql.startsWith("q)")) {
             // rs = nativestmt.executeQuery(sql);
             // return true;
-            throw new UnsupportedOperationException("native q is not support " + sql);
+            throw new SQLException("native q is not support " + sql);
         }
         else {
         	if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
                 logger.info("This sql is not supported. " + sql);
                 throw new SQLException("temp table is not supported. " + sql);
         	}
-            throw new UnsupportedOperationException("general SQL is not support " + sql);
+            throw new SQLException("general SQL is not support " + sql);
         }
     }
 
@@ -53,28 +62,28 @@ public class KdbStatement implements Statement {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		logger.info("unwrap");
-		throw new UnsupportedOperationException("KdbStatement.unwrap is not supported");
+		throw new SQLException("KdbStatement.unwrap is not supported");
 		
 	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		logger.info("isWrapperFor");
-		throw new UnsupportedOperationException("KdbStatement.isWrapperFor is not supported");
+		throw new SQLException("KdbStatement.isWrapperFor is not supported");
 		
 	}
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
 		logger.info("executeQuery");
-		throw new UnsupportedOperationException("KdbStatement.executeQuery is not supported");
+		throw new SQLException("KdbStatement.executeQuery is not supported");
 		
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		logger.info("executeUpdate");
-		throw new UnsupportedOperationException("KdbStatement.executeUpdate is not supported");
+		throw new SQLException("KdbStatement.executeUpdate is not supported");
 		
 	}
 

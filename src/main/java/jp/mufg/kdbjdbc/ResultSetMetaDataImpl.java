@@ -90,7 +90,6 @@ public class ResultSetMetaDataImpl implements ResultSetMetaData {
 
 	@Override
 	public String getColumnName(int column) throws SQLException {
-		logger.info("getColumnName");
 		return columns[column-1].getColumnName();
 	}
 

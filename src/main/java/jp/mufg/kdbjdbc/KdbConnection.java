@@ -36,27 +36,27 @@ public class KdbConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        throw new UnsupportedOperationException("prepareStatement " + sql);
+        throw new SQLException("prepareStatement " + sql);
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        throw new UnsupportedOperationException("setAutoCommit");
+        throw new SQLException("setAutoCommit");
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        throw new UnsupportedOperationException("getAutoCommit");
+        throw new SQLException("getAutoCommit");
     }
 
     @Override
     public void commit() throws SQLException {
-        throw new UnsupportedOperationException("commit");
+        throw new SQLException("commit");
     }
 
     @Override
     public void rollback() throws SQLException {
-        throw new UnsupportedOperationException("rollback");
+        throw new SQLException("rollback");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class KdbConnection implements Connection {
 
     @Override
     public boolean isClosed() throws SQLException {
-        throw new UnsupportedOperationException("isClosed");
+        throw new SQLException("isClosed");
     }
 
     @Override
@@ -78,91 +78,91 @@ public class KdbConnection implements Connection {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		logger.info("unwrap");
-		throw new UnsupportedOperationException("KdbConnection.unwrap is not supported");
+		throw new SQLException("KdbConnection.unwrap is not supported");
 		
 	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		logger.info("isWrapperFor");
-		throw new UnsupportedOperationException("KdbConnection.isWrapperFor is not supported");
+		throw new SQLException("KdbConnection.isWrapperFor is not supported");
 		
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
 		logger.info("prepareCall");
-		throw new UnsupportedOperationException("KdbConnection.prepareCall is not supported");
+		throw new SQLException("KdbConnection.prepareCall is not supported");
 		
 	}
 
 	@Override
 	public String nativeSQL(String sql) throws SQLException {
 		logger.info("nativeSQL");
-		throw new UnsupportedOperationException("KdbConnection.nativeSQL is not supported");
+		throw new SQLException("KdbConnection.nativeSQL is not supported");
 		
 	}
 
 	@Override
 	public void setReadOnly(boolean readOnly) throws SQLException {
 		logger.info("setReadOnly");
-		throw new UnsupportedOperationException("KdbConnection.setReadOnly is not supported");
+		throw new SQLException("KdbConnection.setReadOnly is not supported");
 		
 	}
 
 	@Override
 	public boolean isReadOnly() throws SQLException {
 		logger.info("isReadOnly");
-		throw new UnsupportedOperationException("KdbConnection.isReadOnly is not supported");
+		throw new SQLException("KdbConnection.isReadOnly is not supported");
 		
 	}
 
 	@Override
 	public void setCatalog(String catalog) throws SQLException {
 		logger.info("setCatalog");
-		throw new UnsupportedOperationException("KdbConnection.setCatalog is not supported");
+		throw new SQLException("KdbConnection.setCatalog is not supported");
 		
 	}
 
 	@Override
 	public String getCatalog() throws SQLException {
 		logger.info("getCatalog");
-		throw new UnsupportedOperationException("KdbConnection.getCatalog is not supported");
+		throw new SQLException("KdbConnection.getCatalog is not supported");
 		
 	}
 
 	@Override
 	public void setTransactionIsolation(int level) throws SQLException {
 		logger.info("setTransactionIsolation");
-		throw new UnsupportedOperationException("KdbConnection.setTransactionIsolation is not supported");
+		throw new SQLException("KdbConnection.setTransactionIsolation is not supported");
 		
 	}
 
 	@Override
 	public int getTransactionIsolation() throws SQLException {
 		logger.info("getTransactionIsolation");
-		throw new UnsupportedOperationException("KdbConnection.getTransactionIsolation is not supported");
+		throw new SQLException("KdbConnection.getTransactionIsolation is not supported");
 		
 	}
 
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
 		logger.info("getWarnings");
-		throw new UnsupportedOperationException("KdbConnection.getWarnings is not supported");
+		throw new SQLException("KdbConnection.getWarnings is not supported");
 		
 	}
 
 	@Override
 	public void clearWarnings() throws SQLException {
 		logger.info("clearWarnings");
-		throw new UnsupportedOperationException("KdbConnection.clearWarnings is not supported");
+		throw new SQLException("KdbConnection.clearWarnings is not supported");
 		
 	}
 
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
 		logger.info("createStatement");
-		throw new UnsupportedOperationException("KdbConnection.createStatement is not supported");
+		throw new SQLException("KdbConnection.createStatement is not supported");
 		
 	}
 
@@ -170,70 +170,70 @@ public class KdbConnection implements Connection {
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
 			throws SQLException {
 		logger.info("prepareStatement");
-		throw new UnsupportedOperationException("KdbConnection.prepareStatement is not supported");
+		throw new SQLException("KdbConnection.prepareStatement is not supported");
 		
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
 		logger.info("prepareCall");
-		throw new UnsupportedOperationException("KdbConnection.prepareCall is not supported");
+		throw new SQLException("KdbConnection.prepareCall is not supported");
 		
 	}
 
 	@Override
 	public Map<String, Class<?>> getTypeMap() throws SQLException {
 		logger.info("getTypeMap");
-		throw new UnsupportedOperationException("KdbConnection.getTypeMap is not supported");
+		throw new SQLException("KdbConnection.getTypeMap is not supported");
 		
 	}
 
 	@Override
 	public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
 		logger.info("setTypeMap");
-		throw new UnsupportedOperationException("KdbConnection.setTypeMap is not supported");
+		throw new SQLException("KdbConnection.setTypeMap is not supported");
 		
 	}
 
 	@Override
 	public void setHoldability(int holdability) throws SQLException {
 		logger.info("setHoldability");
-		throw new UnsupportedOperationException("KdbConnection.setHoldability is not supported");
+		throw new SQLException("KdbConnection.setHoldability is not supported");
 		
 	}
 
 	@Override
 	public int getHoldability() throws SQLException {
 		logger.info("getHoldability");
-		throw new UnsupportedOperationException("KdbConnection.getHoldability is not supported");
+		throw new SQLException("KdbConnection.getHoldability is not supported");
 		
 	}
 
 	@Override
 	public Savepoint setSavepoint() throws SQLException {
 		logger.info("setSavepoint");
-		throw new UnsupportedOperationException("KdbConnection.setSavepoint is not supported");
+		throw new SQLException("KdbConnection.setSavepoint is not supported");
 		
 	}
 
 	@Override
 	public Savepoint setSavepoint(String name) throws SQLException {
 		logger.info("setSavepoint");
-		throw new UnsupportedOperationException("KdbConnection.setSavepoint is not supported");
+		throw new SQLException("KdbConnection.setSavepoint is not supported");
 		
 	}
 
 	@Override
 	public void rollback(Savepoint savepoint) throws SQLException {
 		logger.info("rollback");
-		throw new UnsupportedOperationException("KdbConnection.rollback is not supported");
+		throw new SQLException("KdbConnection.rollback is not supported");
 		
 	}
 
 	@Override
 	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
 		logger.info("releaseSavepoint");
-		throw new UnsupportedOperationException("KdbConnection.releaseSavepoint is not supported");
+		throw new SQLException("KdbConnection.releaseSavepoint is not supported");
 		
 	}
 
@@ -241,7 +241,7 @@ public class KdbConnection implements Connection {
 	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
 			throws SQLException {
 		logger.info("createStatement");
-		throw new UnsupportedOperationException("KdbConnection.createStatement is not supported");
+		throw new SQLException("KdbConnection.createStatement is not supported");
 		
 	}
 
@@ -249,7 +249,7 @@ public class KdbConnection implements Connection {
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
 		logger.info("prepareStatement");
-		throw new UnsupportedOperationException("KdbConnection.prepareStatement is not supported");
+		throw new SQLException("KdbConnection.prepareStatement is not supported");
 		
 	}
 
@@ -257,56 +257,56 @@ public class KdbConnection implements Connection {
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
 		logger.info("prepareCall");
-		throw new UnsupportedOperationException("KdbConnection.prepareCall is not supported");
+		throw new SQLException("KdbConnection.prepareCall is not supported");
 		
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
 		logger.info("prepareStatement");
-		throw new UnsupportedOperationException("KdbConnection.prepareStatement is not supported");
+		throw new SQLException("KdbConnection.prepareStatement is not supported");
 		
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
 		logger.info("prepareStatement");
-		throw new UnsupportedOperationException("KdbConnection.prepareStatement is not supported");
+		throw new SQLException("KdbConnection.prepareStatement is not supported");
 		
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
 		logger.info("prepareStatement");
-		throw new UnsupportedOperationException("KdbConnection.prepareStatement is not supported");
+		throw new SQLException("KdbConnection.prepareStatement is not supported");
 		
 	}
 
 	@Override
 	public Clob createClob() throws SQLException {
 		logger.info("createClob");
-		throw new UnsupportedOperationException("KdbConnection.createClob is not supported");
+		throw new SQLException("KdbConnection.createClob is not supported");
 		
 	}
 
 	@Override
 	public Blob createBlob() throws SQLException {
 		logger.info("createBlob");
-		throw new UnsupportedOperationException("KdbConnection.createBlob is not supported");
+		throw new SQLException("KdbConnection.createBlob is not supported");
 		
 	}
 
 	@Override
 	public NClob createNClob() throws SQLException {
 		logger.info("createNClob");
-		throw new UnsupportedOperationException("KdbConnection.createNClob is not supported");
+		throw new SQLException("KdbConnection.createNClob is not supported");
 		
 	}
 
 	@Override
 	public SQLXML createSQLXML() throws SQLException {
 		logger.info("createSQLXML");
-		throw new UnsupportedOperationException("KdbConnection.createSQLXML is not supported");
+		throw new SQLException("KdbConnection.createSQLXML is not supported");
 		
 	}
 
@@ -319,77 +319,77 @@ public class KdbConnection implements Connection {
 	@Override
 	public void setClientInfo(String name, String value) throws SQLClientInfoException {
 		logger.info("setClientInfo");
-		throw new UnsupportedOperationException("KdbConnection.setClientInfo is not supported");
+		throw new SQLClientInfoException();
 		
 	}
 
 	@Override
 	public void setClientInfo(Properties properties) throws SQLClientInfoException {
 		logger.info("setClientInfo");
-		throw new UnsupportedOperationException("KdbConnection.setClientInfo is not supported");
+		throw new SQLClientInfoException();
 		
 	}
 
 	@Override
 	public String getClientInfo(String name) throws SQLException {
 		logger.info("getClientInfo");
-		throw new UnsupportedOperationException("KdbConnection.getClientInfo is not supported");
+		throw new SQLException("KdbConnection.getClientInfo is not supported");
 		
 	}
 
 	@Override
 	public Properties getClientInfo() throws SQLException {
 		logger.info("getClientInfo");
-		throw new UnsupportedOperationException("KdbConnection.getClientInfo is not supported");
+		throw new SQLException("KdbConnection.getClientInfo is not supported");
 		
 	}
 
 	@Override
 	public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
 		logger.info("createArrayOf");
-		throw new UnsupportedOperationException("KdbConnection.createArrayOf is not supported");
+		throw new SQLException("KdbConnection.createArrayOf is not supported");
 		
 	}
 
 	@Override
 	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 		logger.info("createStruct");
-		throw new UnsupportedOperationException("KdbConnection.createStruct is not supported");
+		throw new SQLException("KdbConnection.createStruct is not supported");
 		
 	}
 
 	@Override
 	public void setSchema(String schema) throws SQLException {
 		logger.info("setSchema");
-		throw new UnsupportedOperationException("KdbConnection.setSchema is not supported");
+		throw new SQLException("KdbConnection.setSchema is not supported");
 		
 	}
 
 	@Override
 	public String getSchema() throws SQLException {
 		logger.info("getSchema");
-		throw new UnsupportedOperationException("KdbConnection.getSchema is not supported");
+		throw new SQLException("KdbConnection.getSchema is not supported");
 		
 	}
 
 	@Override
 	public void abort(Executor executor) throws SQLException {
 		logger.info("abort");
-		throw new UnsupportedOperationException("KdbConnection.abort is not supported");
+		throw new SQLException("KdbConnection.abort is not supported");
 		
 	}
 
 	@Override
 	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
 		logger.info("setNetworkTimeout");
-		throw new UnsupportedOperationException("KdbConnection.setNetworkTimeout is not supported");
+		throw new SQLException("KdbConnection.setNetworkTimeout is not supported");
 		
 	}
 
 	@Override
 	public int getNetworkTimeout() throws SQLException {
 		logger.info("getNetworkTimeout");
-		throw new UnsupportedOperationException("KdbConnection.getNetworkTimeout is not supported");
+		throw new SQLException("KdbConnection.getNetworkTimeout is not supported");
 		
 	}
 }

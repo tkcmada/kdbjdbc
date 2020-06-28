@@ -35,15 +35,15 @@ public class KdbDriver implements Driver {
             return null;
         }
         logger.info("KdbDriver connect " + url + " " + info);
-        try {
-            Class.forName("jdbc");
-        }
-        catch(ClassNotFoundException ex) {
-            throw new SQLException("Cannot kdb native jdbc driver. jdbc.jar should be downloaded from https://github.com/KxSystems/kdb/tree/master/c/jdbc.jar and located in class path.", ex);
-        }
-        String host_port = url.substring(KdbDriver.URI_PREFIX.length());
-        String qconnstr = "jdbc:q:" + host_port;
-        logger.info("KdbDriver connecting to " + qconnstr + " " + String.valueOf(info));
+        // try {
+        //     Class.forName("jdbc");
+        // }
+        // catch(ClassNotFoundException ex) {
+        //     throw new SQLException("Cannot kdb native jdbc driver. jdbc.jar should be downloaded from https://github.com/KxSystems/kdb/tree/master/c/jdbc.jar and located in class path.", ex);
+        // }
+        // String host_port = url.substring(KdbDriver.URI_PREFIX.length());
+        // String qconnstr = "jdbc:q:" + host_port;
+        // logger.info("KdbDriver connecting to " + qconnstr + " " + String.valueOf(info));
         logger.info("no connect! dummy connection !");
         // Connection conn = DriverManager.getConnection(qconnstr, info);
         return new KdbConnection();
