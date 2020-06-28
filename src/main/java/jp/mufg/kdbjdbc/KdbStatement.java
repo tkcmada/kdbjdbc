@@ -38,9 +38,8 @@ public class KdbStatement implements Statement {
         }
         else {
         	if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
-                logger.info("This sql is ignored.");
-                this.rs = null;
-        		return false;
+                logger.info("This sql is not supported. " + sql);
+                throw new SQLException("temp table is not supported. " + sql);
         	}
             throw new UnsupportedOperationException("general SQL is not support " + sql);
         }
