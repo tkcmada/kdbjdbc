@@ -23,7 +23,7 @@ public class ColumnInfo {
             this.type = Types.SMALLINT;
         else if(typename.equals("j"))
             this.type = Types.BIGINT;
-        else if(typename.equals("r"))
+        else if(typename.equals("e"))
             this.type = Types.REAL;
         else if(typename.equals("f"))
             this.type = Types.FLOAT;

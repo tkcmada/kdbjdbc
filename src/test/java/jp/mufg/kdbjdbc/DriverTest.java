@@ -249,6 +249,7 @@ public class DriverTest {
         p++;
         Assert.assertEquals("r"     , meta.getColumnName(p));
         Assert.assertEquals("e"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.REAL   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("f"     , meta.getColumnName(p));
