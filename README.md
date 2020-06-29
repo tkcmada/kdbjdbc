@@ -22,7 +22,7 @@ q) (and copy and paste following test data)
 
 
 t2:([] name:`symbol$(); bl:`boolean$(); bt:`byte$(); x:`int$(); lg:`long$(); r:`real$(); f:`float$(); d:`date$(); z:`timestamp$(); ts:`timespan$(); c:`char$(); g:`guid$() )
-`t2 insert (`abc; 1b; 0x26; 100; 1000; 1.2e; 1.5; 2015.01.01; 2015.01.01D01:02:03.001002003; 01:02:03.001002000; "a"; (1?0Ng)[0] )
+`t2 insert (`abc; 1b; 0x26; 100; 1000; 1.2e; 1.5; 2015.01.01; 2015.01.01D01:02:03.001002030; 01:02:03.001002000; "a"; (1?0Ng)[0] )
 `t2 insert (`def; 0b; 0x04; 104; 1004; 1.4e; 1.4; 1970.01.04; 1970.01.04D00:00:00.004000000; 05:06:07.005006007; "d"; (1?0Ng)[0] )
 `t2 insert (`   ; 0b; 0x00; 0Ni;  0Nj;  0Ne;  0n;        0Nd;                           0Np; 0Nn               ; " "; 0Ng        )
 meta t2

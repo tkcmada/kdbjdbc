@@ -920,16 +920,14 @@ public class ResultSetImpl implements ResultSet {
 
 	@Override
 	public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-		logger.info("getTimestamp");
-		throw new SQLException("ResultSetImpl.getTimestamp is not supported");
-		
+        logger.info("getTimestamp " + columnIndex + " calendar=" + cal);
+        return (Timestamp) getObject(columnIndex);
 	}
 
 	@Override
 	public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-		logger.info("getTimestamp");
-		throw new SQLException("ResultSetImpl.getTimestamp is not supported");
-		
+        logger.info("getTimestamp " + columnLabel + " calendar=" + cal);
+        return (Timestamp) getObject(columnLabel);
 	}
 
 	@Override

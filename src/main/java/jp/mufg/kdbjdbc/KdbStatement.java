@@ -7,10 +7,13 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import jp.mufg.slf4j.FileLogger;
 
@@ -40,7 +43,24 @@ public class KdbStatement implements Statement {
         return target.isClosed();
     }
 
-    
+    private static final ThreadLocal<Function<Timestamp, String>> TIMESTAMP_FORMAT = new ThreadLocal<Function<Timestamp, String>>()
+    {
+        final SimpleDateFormat datetime_format = new SimpleDateFormat("yyyy.MM.dd'D'HH:mm:ss");
+        final DecimalFormat nano_format = new DecimalFormat("000000000");
+        @Override
+        protected Function<Timestamp, String> initialValue()
+        {
+            return new Function<Timestamp, String>() {
+                @Override
+                public String apply(Timestamp value) {
+                    if(value == null)
+                        return null;
+                    return datetime_format.format(value) + "." + nano_format.format(value.getNanos());
+                }
+            };
+        }
+    };
+
     @Override
     public boolean execute(String sql) throws SQLException {
         logger.info("execute:" + String.valueOf(sql));
@@ -118,7 +138,7 @@ public class KdbStatement implements Statement {
                                 break;
                             case 'p':
                                 Timestamp tsval = (Timestamp)rs.getObject(i);
-                                row[i-1] = tsval;
+                                row[i-1] = TIMESTAMP_FORMAT.get().apply(tsval);
                                 break;
                             default:
                                 Object val = rs.getObject(i);

@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -192,7 +193,7 @@ public class DriverTest {
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("z"             , rs.getString("COLUMN_NAME"));
-        Assert.assertEquals(Types.TIMESTAMP , rs.getInt("DATA_TYPE"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("ts"            , rs.getString("COLUMN_NAME"));
@@ -282,7 +283,8 @@ public class DriverTest {
         Assert.assertEquals(1.2f    , rs.getFloat("r")  , 0.0001f);
         Assert.assertEquals(1.5f    , rs.getDouble("f"), 0.00001);
         Assert.assertEquals("2015-01-01", rs.getObject("d"));
-        Assert.assertEquals(new Timestamp(2015 - 1900, 0, 1, 1, 2, 3, 1002003), rs.getObject("z"));
+        // Assert.assertEquals(new Timestamp(2015 - 1900, 0, 1, 1, 2, 3, 1002003), rs.getTimestamp("z", Calendar.getInstance()));
+        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z"));
         Assert.assertEquals("01:02:03.001002000", rs.getObject("ts"));
         Assert.assertEquals("a"     , rs.getObject("c"));
         Assert.assertNotNull(rs.getObject("g"));
