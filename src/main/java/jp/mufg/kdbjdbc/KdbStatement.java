@@ -2,20 +2,27 @@ package jp.mufg.kdbjdbc;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
     private final Statement target;
+    private final KdbDatabaseMetaData meta;
     private ResultSet rs;
 
-    KdbStatement(Statement target) {
+    KdbStatement(Statement target, KdbDatabaseMetaData meta) {
         this.target = target;
+        this.meta = meta;
     }
 
     private void setDummyResultSet() {
@@ -49,21 +56,78 @@ public class KdbStatement implements Statement {
             }
             else if(sql.startsWith("SELECT ")) {
                 // //always return result of select * from t2.
-                ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-                    new ColumnInfo("id"  , "int4", true),
-                    new ColumnInfo("name", "text", true)
-                );
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
                 // rows.add(new Object[] {1, "abckdb"});
                 // rows.add(new Object[] {2, "defkdb"});
-                String q = "q) select x, name from t2";
+                String tbl = "t2";
+                Map<String, Character> colnametype = this.meta.getColumnAndType(tbl);
+                String q = "q) select from " + tbl;
                 logger.info("execute on kdb+..." + q);
                 ResultSet rs = target.executeQuery(q);
+                ResultSetMetaData kdbmeta = rs.getMetaData();
+                int n = kdbmeta.getColumnCount();
+                Map<String, Character> colnametype2 = new LinkedHashMap<String, Character>();
+                ColumnInfo[] cols = new ColumnInfo[n];
+                for(int i = 1; i <= n; i++) {
+                    String colname = kdbmeta.getColumnName(i);
+                    Character coltypeobj = colnametype.get(colname);
+                    logger.info("column " + i + " " + colname + " -> type " + coltypeobj);
+                    if(coltypeobj == null)
+                        throw new SQLException("coltype is unknown for " + colname);
+                    colnametype2.put(colname, coltypeobj);
+                    cols[i-1] = new ColumnInfo(colname, "" + coltypeobj, true);
+                }
+                ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols);
                 while(rs.next()) {
-                    int id = rs.getInt(1);
-                    String name = rs.getString(2);
-                    rows.add(new Object[] { id , name });
+                    Object[] row = new Object[n];
+                    int i = 1;
+                    for(Entry<String, Character> e : colnametype2.entrySet()) {
+                        // String colname = e.getKey();
+                        char coltype = e.getValue();
+                        Object obj = rs.getObject(i);
+                        logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
+                        switch(coltype) {
+                            case 'b':
+                                boolean blval = rs.getBoolean(i);
+                                row[i-1] = blval;
+                                break;
+                            case 'x':
+                                byte btval = rs.getByte(i);
+                                row[i-1] = btval;
+                                break;
+                            case 'h':
+                                short stval = rs.getShort(i);
+                                row[i-1] = stval;
+                                break;
+                            case 'i':
+                                int ival = rs.getInt(i);
+                                row[i-1] = ival;
+                                break;
+                            case 'j':
+                                long lgval = rs.getLong(i);
+                                row[i-1] = lgval;
+                                break;
+                            case 'e':
+                                float realval = rs.getFloat(i);
+                                row[i-1] = realval;
+                                break;
+                            case 'f':
+                                double dblval = rs.getDouble(i);
+                                row[i-1] = dblval;
+                                break;
+                            case 'p':
+                                Timestamp tsval = (Timestamp)rs.getObject(i);
+                                row[i-1] = tsval;
+                                break;
+                            default:
+                                Object val = rs.getObject(i);
+                                logger.info("getObject " + i + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
+                                row[i-1] = val == null ? null : val.toString();
+                        }
+                        i++;
+                    }
+                    rows.add(row);
                 }
                 this.rs = new ResultSetImpl(meta, rows);
                 return true;

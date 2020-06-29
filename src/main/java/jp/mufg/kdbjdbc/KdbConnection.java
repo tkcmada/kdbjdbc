@@ -24,14 +24,16 @@ import jp.mufg.slf4j.FileLogger;
 public class KdbConnection implements Connection {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbConnection.class); //LoggerFactory.getLogger(KdbConnection.class);
     private final Connection conn;
+    private final KdbDatabaseMetaData meta;
 
     public KdbConnection(Connection conn) {
         this.conn = conn;
+        this.meta = new KdbDatabaseMetaData(conn);
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new KdbStatement(conn.createStatement());
+        return new KdbStatement(conn.createStatement(), meta);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class KdbConnection implements Connection {
 
     @Override
     public void close() throws SQLException {
-        // conn.close();
+        conn.close();
     }
 
     @Override
@@ -72,7 +74,7 @@ public class KdbConnection implements Connection {
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
         logger.info("getMetaData");
-        return new KdbDatabaseMetaData();
+        return meta;
     }
 
 	@Override

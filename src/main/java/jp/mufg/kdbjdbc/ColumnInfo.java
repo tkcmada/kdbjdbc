@@ -1,22 +1,41 @@
 package jp.mufg.kdbjdbc;
 
+import java.sql.Types;
+
 public class ColumnInfo {
 
 	private final String name;
 	private final String typename;
-	private final boolean nullable;
-	
+    private final boolean nullable;
+    private final int type;
+
 	public ColumnInfo(String name, String typename, boolean nullable) {
 		super();
-		this.name = name;
+        this.name = name;
 		this.typename = typename;
+        if(typename.equals("int4") || typename.equals("i"))
+            this.type = Types.INTEGER;
+        else if(typename.equals("b"))
+            this.type = Types.BIT;
+        else if(typename.equals("x"))
+            this.type = Types.TINYINT;
+        else if(typename.equals("h"))
+            this.type = Types.SMALLINT;
+        else if(typename.equals("j"))
+            this.type = Types.BIGINT;
+        else if(typename.equals("r"))
+            this.type = Types.REAL;
+        else if(typename.equals("f"))
+            this.type = Types.FLOAT;
+        else if(typename.equals("p"))
+            this.type = Types.TIMESTAMP;
+        else
+            this.type = Types.VARCHAR;
 		this.nullable = nullable;
 	}
 
 	public int getColumnType() {
-		if(typename.equals("int4"))
-			return 4;
-		return 12;
+        return this.type;
 	}
 
 	/**

@@ -5,17 +5,22 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbDatabaseMetaData implements DatabaseMetaData {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
-    // private final Connection conn;
+    private final Connection conn;
 
-    KdbDatabaseMetaData() {
-    	// this.conn = conn;
+    KdbDatabaseMetaData(Connection conn) {
+    	this.conn = conn;
     }
 
     @Override
@@ -71,7 +76,6 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 	@Override
 	public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern, final String[] types)
 			throws SQLException {                
-//        return conn.createStatement().executeQuery("q) flip ( `TABLE_NAME`TABLE_SCHEM`TABLE_CATALOG`TABLE_TYPE`REMARKS`TYPE_CAT`TYPE_SCHEM`TYPE_NAME`SELF_REFERENCING_COL_NAME`REF_GENERATION ! ( tables[]; (count(tables[]))#(enlist `schema1); (count(tables[]))#(enlist `catalog1); (count(tables[]))#(enlist `TABLE); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `); (count(tables[]))#(enlist `) ) )");
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
 				new ColumnInfo("table_cat", "text", true),//1
 				new ColumnInfo("table_schem", "name", false),//2
@@ -83,12 +87,31 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 				new ColumnInfo("type_name"	, "text", true),//8
 				new ColumnInfo("self_referencing_col_name"	, "text", true),//9
 				new ColumnInfo("ref_generation"	, "text", true)//10
-		);
-		List<Object[]> rows = new ArrayList<Object[]>();
-		                       //1table_cat 2table_schem 3table_name 4table_type  5remarks  6type_cat   7type_schem  8type_name  9selfref 10refgen
-		rows.add(new Object[] {  null     , "public"     , "t2"     , "TABLE"    , null    , ""        , ""         , ""         , ""     , ""   });
+        );
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("q) flip ( `table_name`dummy ! (tables[]; tables[] ) )");
+        List<Object[]> rows = new ArrayList<Object[]>();
+        while(rs.next()) {
+            String tblname = rs.getString(1);
+                                //1table_cat 2table_schem 3table_name 4table_type  5remarks  6type_cat   7type_schem  8type_name  9selfref 10refgen
+            rows.add(new Object[] {  null     , "public"  , tblname   , "TABLE"    , null    , ""        , ""         , ""         , ""     , ""   });
+        }
 		return new ResultSetImpl(meta, rows);
 	}
+
+    public Map<String, Character> getColumnAndType(String table) throws SQLException {
+        LinkedHashMap<String, Character> map = new LinkedHashMap<String,Character>();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("q)flip (`column_name`column_type)!(cols " + table + "; (value meta " + table + ")[;`t])");
+        while(rs.next()) {
+            String colname = rs.getString(1);
+            char ctype = (Character)rs.getObject(2);
+            map.put(colname, ctype);
+        }
+        rs.close();
+        stmt.close();
+        return map;
+    }
 
     @Override
 	public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
@@ -133,13 +156,78 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 				new ColumnInfo("IS_AUTO_INCREMENT"	, "text", true),//23
 				new ColumnInfo("IS_GENERATED_COLUMN", "text", true) //24
 		);
-		
+        
+        String tbl = tableNamePattern;
 		final int MAX = ResultSetMetaDataImpl.MAX;
-		List<Object[]> rows = new ArrayList<Object[]>();
-		int pos = 1;
-		                       //1TABLE_CAT 2TABLE_SCHEM 3TABLE_NAME 4COLUMN_NAME 5DATA_TYPE 6TYPE_NAME  7COLUMN_SIZE  8BUF   9 DECIMAL  10 RADIX  11 NULLABLE  12 REMARKS 13COLUMN_DEF  14SQL_DATA_TYPE  15SQL_DATETIME_SUB  16 CHAR_OCTET_LEN 17 ORDINAL POS  18 IS_NULLABLE 19 SCOPE_CATALOG  20 SCOPE_SCHEMA  21 SCOPE_TABLE  22 SOURCE_DATA_TYPE 23 IS_Autoinc  24 IS_gen
-		rows.add(new Object[] {  null     , "public"     , "t2"     , "id"      , 4       , "int4"       , 10        , null , 0         , 10      , 1           , null     , null        , null           , null              , 10              , pos++        , "YES"         , null            , null           , null         , null                , "NO"        , "" });
-		rows.add(new Object[] {  null     , "public"     , "t2"     , "name"    , 12      , "text"    , MAX       , null , 0      , 10   , 1       , null  , null     , null        , null              , MAX          , pos++        , "YES"      , null          , null        , null    , null            , "NO"     , "" });
+        List<Object[]> rows = new ArrayList<Object[]>();
+        Map<String, Character> colnametype = getColumnAndType(tbl);
+        int pos = 1;
+        for(Entry<String, Character> e : colnametype.entrySet()) {
+            String colname = e.getKey();
+            char ctype = e.getValue();
+            String typename = "text";
+            int colsize = MAX;
+            int sqltype = 12;
+            int octetlen = MAX;
+            switch(ctype) {
+                case 'b':
+                    typename = "bit";
+                    colsize = 10;
+                    sqltype = Types.BIT;
+                    octetlen = 10;
+                    break;
+                case 'x':
+                    typename = "byte";
+                    colsize = 10;
+                    sqltype = Types.TINYINT;
+                    octetlen = 10;
+                    break;
+                case 'h':
+                    typename = "short";
+                    colsize = 10;
+                    sqltype = Types.SMALLINT;
+                    octetlen = 10;
+                    break;
+                case 'i': //int
+                    typename    = "int4";
+                    colsize = 10;
+                    sqltype = Types.INTEGER;
+                    octetlen = 10;
+                    break;
+                case 'j':  
+                    typename = "long";
+                    colsize = 10;
+                    sqltype = Types.BIGINT;
+                    octetlen = 10;
+                    break;
+                case 'e': //real
+                    typename    = "real";
+                    colsize = 10;
+                    sqltype = 4;
+                    sqltype = Types.REAL;
+                    octetlen = 10;
+                    break;
+                case 'f': //float
+                    typename    = "float";
+                    colsize = 10;
+                    sqltype = 4;
+                    sqltype = Types.FLOAT;
+                    octetlen = 10;
+                    break;
+                case 'p': //timestamp
+                    typename    = "timestamp";
+                    colsize = 10;
+                    sqltype = 4;
+                    sqltype = Types.TIMESTAMP;
+                    octetlen = 10;
+                    break;
+            }
+            logger.info("adding column info. column=" + colname + " typename=" + typename);
+                                //1TABLE_CAT 2TABLE_SCHEM 3TABLE_NAME 4COLUMN_NAME 5DATA_TYPE 6TYPE_NAME  7COLUMN_SIZE  8BUF   9 DECIMAL  10 RADIX  11 NULLABLE  12 REMARKS 13COLUMN_DEF  14SQL_DATA_TYPE  15SQL_DATETIME_SUB  16 CHAR_OCTET_LEN 17 ORDINAL POS  18 IS_NULLABLE 19 SCOPE_CATALOG  20 SCOPE_SCHEMA  21 SCOPE_TABLE  22 SOURCE_DATA_TYPE 23 IS_Autoinc  24 IS_gen
+            rows.add(new Object[] {  null     , "public"  , tbl      , colname    , sqltype , typename     , colsize   , null , 0         , 10      , 1           , null     , null        , null           , null              , octetlen        , pos++        , "YES"         , null            , null           , null         , null                , "NO"        , "" });
+//          rows.add(new Object[] {  null     , "public"  , "t2"     , "id"       , 4       , "int4"       , 10        , null , 0         , 10      , 1           , null     , null        , null           , null              , 10              , pos++        , "YES"         , null            , null           , null         , null                , "NO"        , "" });
+//          rows.add(new Object[] {  null     , "public"  , "t2"     , "name"     , 12      , "text"       , MAX       , null , 0         , 10      , 1           , null     , null        , null           , null              , MAX             , pos++        , "YES"         , null            , null           , null         , null                , "NO"        , "" });
+        }
 		return new ResultSetImpl(meta, rows);
 	}
     
