@@ -261,6 +261,7 @@ public class DriverTest {
         p++;
         Assert.assertEquals("z"     , meta.getColumnName(p));
         Assert.assertEquals("p"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("ts"    , meta.getColumnName(p));
