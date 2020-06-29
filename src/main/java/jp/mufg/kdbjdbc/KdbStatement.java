@@ -11,12 +11,11 @@ import jp.mufg.slf4j.FileLogger;
 
 public class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
-    // private final Statement nativestmt;
+    private final Statement target;
     private ResultSet rs;
-    private volatile boolean closed = false;
 
-    KdbStatement() {
-        // this.nativestmt = nativestmt;
+    KdbStatement(Statement target) {
+        this.target = target;
     }
 
     private void setDummyResultSet() {
@@ -26,14 +25,12 @@ public class KdbStatement implements Statement {
 
     @Override
     public void close() throws SQLException {
-        // nativestmt.close();
-        closed = true;
+        target.close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        // return nativestmt.isClosed();
-        return closed;
+        return target.isClosed();
     }
 
     
@@ -42,9 +39,8 @@ public class KdbStatement implements Statement {
         logger.info("execute:" + String.valueOf(sql));
         setDummyResultSet();
         if(sql.startsWith("q)")) {
-            // rs = nativestmt.executeQuery(sql);
-            // return true;
-            throw new SQLException("native q is not support " + sql);
+            rs = target.executeQuery(sql);
+            return true;
         }
         else {
         	if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
@@ -52,14 +48,23 @@ public class KdbStatement implements Statement {
                 throw new SQLException("temp table is not supported. " + sql);
             }
             else if(sql.startsWith("SELECT ")) {
-                //always return result of select * from t2.
+                // //always return result of select * from t2.
                 ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
                     new ColumnInfo("id"  , "int4", true),
                     new ColumnInfo("name", "text", true)
                 );
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
-                rows.add(new Object[] {1, "abckdb"});
-                rows.add(new Object[] {2, "defkdb"});
+
+                // rows.add(new Object[] {1, "abckdb"});
+                // rows.add(new Object[] {2, "defkdb"});
+                String q = "q) select x, name from t2";
+                logger.info("execute on kdb+..." + q);
+                ResultSet rs = target.executeQuery(q);
+                while(rs.next()) {
+                    int id = rs.getInt(1);
+                    String name = rs.getString(2);
+                    rows.add(new Object[] { id , name });
+                }
                 this.rs = new ResultSetImpl(meta, rows);
                 return true;
             }
@@ -88,9 +93,9 @@ public class KdbStatement implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		logger.info("executeQuery");
-		throw new SQLException("KdbStatement.executeQuery is not supported");
-		
+        logger.info("executeQuery");
+        execute(sql);
+        return getResultSet();
 	}
 
 	@Override

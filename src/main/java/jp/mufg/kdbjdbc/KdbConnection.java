@@ -23,15 +23,15 @@ import jp.mufg.slf4j.FileLogger;
 
 public class KdbConnection implements Connection {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbConnection.class); //LoggerFactory.getLogger(KdbConnection.class);
-    // private final Connection conn;
+    private final Connection conn;
 
-    public KdbConnection() {
-        // this.conn = conn;
+    public KdbConnection(Connection conn) {
+        this.conn = conn;
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new KdbStatement(); //conn.createStatement());
+        return new KdbStatement(conn.createStatement());
     }
 
     @Override
