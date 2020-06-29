@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -135,38 +136,81 @@ public class DriverTest {
 //     }
 //     */
 
-//     @Test
-//     public void test_DatabaseMetaData_getTables() throws SQLException {
-//         setup();
+    @Test
+    public void test_DatabaseMetaData_getTables() throws SQLException {
+        setup();
 
-//         DatabaseMetaData meta = conn.getMetaData();
-//         ResultSet rs = meta.getTables("testdb", "public", null, null);
-//         List<String> tables = new ArrayList<String>();
-//         while(rs.next()) {
-//             tables.add(rs.getString("table_name"));
-//         }
-//         rs.close();
-//         Collections.sort(tables);
-//         Assert.assertEquals("[MarketBooks, MarketBooksNoNull, t2, t3, t4]", tables.toString());
-//     }
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = meta.getTables("testdb", "public", null, null);
+        List<String> tables = new ArrayList<String>();
+        while(rs.next()) {
+            tables.add(rs.getString("table_name"));
+        }
+        rs.close();
+        Collections.sort(tables);
+        Assert.assertEquals("[MarketBooks, MarketBooksNoNull, t2, t3, t4]", tables.toString());
+    }
 
-//     @Test
-//     public void test_DatabaseMetaData_getColumns() throws SQLException {
-//         setup();
+    @Test
+    public void test_DatabaseMetaData_getColumns() throws SQLException {
+        setup();
 
-//         DatabaseMetaData meta = conn.getMetaData();
-//         ResultSet rs = meta.getColumns("testdb", "public", "t2", null);
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = meta.getColumns("testdb", "public", "t2", null);
 
-//         Assert.assertTrue(rs.next());
-//         Assert.assertEquals("name"  , rs.getString("COLUMN_NAME"));
-//         Assert.assertEquals("12"    , rs.getString("DATA_TYPE"));
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("name"          , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
 
-//         Assert.assertTrue(rs.next());
-//         Assert.assertEquals("x"     , rs.getString("COLUMN_NAME"));
-//         Assert.assertEquals("4"     , rs.getString("DATA_TYPE"));
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("bl"            , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.BIT       , rs.getInt("DATA_TYPE"));
 
-//         rs.close();
-//     }
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("bt"            , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.TINYINT   , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("x"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.INTEGER   , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("lg"            , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.BIGINT    , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("r"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.REAL      , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("f"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.FLOAT     , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("d"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("z"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.TIMESTAMP , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("ts"            , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("c"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("g"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+
+
+        Assert.assertFalse(rs.next());
+
+        rs.close();
+    }
 
 
     @Test
