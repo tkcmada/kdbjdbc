@@ -10,8 +10,17 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
 
 public class SqlBaseListener implements SqlListener {
+	@Override public void enterArgs(SqlParser.ArgsContext ctx) { }
+	@Override public void exitArgs(SqlParser.ArgsContext ctx) { }
+
+	@Override public void enterColumnExpr(SqlParser.ColumnExprContext ctx) { }
+	@Override public void exitColumnExpr(SqlParser.ColumnExprContext ctx) { }
+
 	@Override public void enterColumnNames(SqlParser.ColumnNamesContext ctx) { }
 	@Override public void exitColumnNames(SqlParser.ColumnNamesContext ctx) { }
+
+	@Override public void enterExpr(SqlParser.ExprContext ctx) { }
+	@Override public void exitExpr(SqlParser.ExprContext ctx) { }
 
 	@Override public void enterSelectStmt(SqlParser.SelectStmtContext ctx) { }
 	@Override public void exitSelectStmt(SqlParser.SelectStmtContext ctx) { }

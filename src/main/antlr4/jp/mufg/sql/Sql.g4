@@ -18,8 +18,21 @@ columnNames
     ;
 
 columnName
-    :   ID ('AS' ID)?
-    |   ID '.' ID ('AS' ID)?
+    :  expr  ('AS' ID)?
+    ;
+
+expr
+    : columnExpr
+    | ID '(' args ')'
+    ;
+
+args
+    : (expr (',' expr)*)?
+    ;
+
+columnExpr
+    :   ID
+    |   ID '.' ID
     ;
 
 WS
@@ -32,5 +45,5 @@ NUMBER
 
 ID
     : ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )*
-    | '"' ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )* '"'
+    | '"' (~('"'))* '"'
     ;
