@@ -7,9 +7,8 @@ import org.antlr.v4.runtime.*;
 import org.junit.Test;
 
 public class SqlParserTest {
-    @Test
-    public void test_select_stmt() throws IOException {
-        CharStream cs = new ANTLRInputStream(new StringReader("SELECT 't2'.'id' AS 'id' , 't2'.'name' AS 'name' FROM 'public'.'t2' 't2' LIMIT 1000$".replace('\'', '"')));
+    private void parse(String sql) throws IOException {
+        CharStream cs = new ANTLRInputStream(new StringReader((sql + "$").replace('\'', '"').replace(" as ", " AS ")));
         SqlLexer lexer = new SqlLexer(cs);        
         lexer.removeErrorListeners();
         lexer.addErrorListener(new LexerErrorListener());
@@ -22,4 +21,18 @@ public class SqlParserTest {
 		if (errors > 0)
             throw new RuntimeException("parse error");
     }
+
+    @Test
+    public void test_select_stmt1() throws IOException {
+        parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
+    }
+
+    @Test
+    public void test_select_stmt2() throws IOException {
+        parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c' FROM 'public'.'t2' 't2' ");
+        //, SUM('t2'.'bt') AS 'sum:bt:ok'
+        //GROUP BY 1, 2
+    }
+
+
 }
