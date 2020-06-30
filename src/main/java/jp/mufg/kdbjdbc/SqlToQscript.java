@@ -26,13 +26,9 @@ public class SqlToQscript {
             ColumnNameContext c = stmt.columnNames().columnName(i);
             if(c == null)
                 break;
-            s.append(toQscript(c.expr()));
+            s.append(c.expr().val.toQscript());
             i++;
         }
         return s.toString();
-    }
-
-    private String toQscript(ExprContext expr) {
-        return expr.toString();
     }
 }

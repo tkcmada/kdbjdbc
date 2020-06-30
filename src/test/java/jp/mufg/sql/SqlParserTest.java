@@ -32,7 +32,7 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt1() throws IOException {
         String qscript = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
-        // Assert.assertEquals("1000#select id, name from t2", qscript);
+        Assert.assertEquals("1000#select id, name from t2", qscript);
     }
 
     @Test
