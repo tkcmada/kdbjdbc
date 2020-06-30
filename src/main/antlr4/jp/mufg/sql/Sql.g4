@@ -1,7 +1,7 @@
 grammar Sql;
 
 @header { 
-//this is header
+import jp.mufg.sqlutil.SqlExprs.*;
 }
 
 selectStmt
@@ -17,8 +17,9 @@ columnNames
     :   columnName (',' columnName)*
     ;
 
-columnName
-    :  expr  ('AS' ID)?
+columnName returns [ColumnExprWithAlias val]
+    :  expr  'AS' ID { $val = new ColumnExprWithAlias($expr.val, $ID.text); }
+    |  expr          { $val = new ColumnExprWithAlias($expr.val, null); }
     ;
 
 groupBy
@@ -30,33 +31,52 @@ having
     ;
 
 limit
-    : ('LIMIT' NUMBER)?
+    : 'LIMIT' NUMBER
     ;
 
-expr
-    : compExpr
+expr returns [Expr val]
+    : compExpr { $val = $compExpr.val; }
     ;
 
-compExpr
-    : primaryExpr '>' primaryExpr
-    | primaryExpr '<' primaryExpr
-    | primaryExpr
+compExpr returns [Expr val]
+    : lhs=primaryExpr '>' rhs=primaryExpr { $val = new BinaryExpr(">", $lhs.val, $rhs.val); }
+    | lhs=primaryExpr '<' rhs=primaryExpr { $val = new BinaryExpr("<", $lhs.val, $rhs.val); }
+    | lhs=primaryExpr { $val = $lhs.val; }
     ;
 
-primaryExpr
-    : columnExpr
-    | ID '(' args ')'
-    | NUMBER
-    | '(' expr ')' 
+primaryExpr returns [Expr val]
+    : e1=columnExpr    { $val = $e1.val; }
+    | functionExpr     { $val = $functionExpr.val; }
+    | numberExpr       { $val = $numberExpr.val; }
+    | '(' expr ')'     { $val = new BranketExpr($expr.val); }
     ;
+
+functionExpr returns [FunctionCallExpr val]
+    : ID '(' args ')' { $val = new FunctionCallExpr($ID.text, null); }
+    ;
+
+numberExpr returns [NumberExpr val]
+    : numtk=NUMBER { $val = new NumberExpr($numtk.text); }
+    ;
+
+//args returns [Arguments rtn]
+//    : args1 {
+//        List<Expr> _args = new ArrayList<Expr>();
+//        int i = 0;
+//        while(arg1.getChild(Args1Context.class, i) != null) {
+//            _args.add(arg1.getChild(ExprContext.class, i))
+//        }
+//        $rtn = new Arguments(_args); 
+//    }
+//    ;
 
 args
     : (expr (',' expr)*)?
     ;
 
-columnExpr
-    :   ID
-    |   ID '.' ID
+columnExpr returns [ColumnExpr val]
+    :   ID                { $val = new ColumnExpr(null,      $ID.text); }
+    |   id1=ID '.' id2=ID { $val = new ColumnExpr($id1.text, $id2.text); }
     ;
 
 WS

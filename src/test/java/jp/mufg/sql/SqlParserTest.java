@@ -3,13 +3,16 @@ package jp.mufg.sql;
 import java.io.IOException;
 import java.io.StringReader;
 import jp.mufg.antlrutil.*;
+import jp.mufg.kdbjdbc.SqlToQscript;
 import jp.mufg.sql.SqlParser.ExprContext;
+import jp.mufg.sql.SqlParser.SelectStmtContext;
 
 import org.antlr.v4.runtime.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SqlParserTest {
-    private void parse(String sql) throws IOException {
+    private String parse(String sql) throws IOException {
         CharStream cs = new ANTLRInputStream(new StringReader((sql + "$").replace('\'', '"').replace(" as ", " AS ")));
         SqlLexer lexer = new SqlLexer(cs);        
         lexer.removeErrorListeners();
@@ -18,17 +21,18 @@ public class SqlParserTest {
         SqlParser parser = new SqlParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
-        parser.selectStmt();
+        SelectStmtContext selectStmt = parser.selectStmt();
 		int errors = parser.getNumberOfSyntaxErrors();
 		if (errors > 0)
             throw new RuntimeException("parse error");
-        // ExprContext expr = parser.expr();
-        // System.out.println(expr.toStringTree());
+        System.out.println(selectStmt.toStringTree());
+        return new SqlToQscript(selectStmt).toQscript();
     }
 
     @Test
     public void test_select_stmt1() throws IOException {
-        parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
+        String qscript = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
+        // Assert.assertEquals("1000#select id, name from t2", qscript);
     }
 
     @Test

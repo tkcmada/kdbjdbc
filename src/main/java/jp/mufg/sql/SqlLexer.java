@@ -1,7 +1,7 @@
 // Generated from jp/mufg/sql/Sql.g4 by ANTLR 4.0
 package jp.mufg.sql;
  
-//this is header
+import jp.mufg.sqlutil.SqlExprs.*;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
