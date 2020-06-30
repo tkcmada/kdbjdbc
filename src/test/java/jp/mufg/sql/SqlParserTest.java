@@ -3,6 +3,8 @@ package jp.mufg.sql;
 import java.io.IOException;
 import java.io.StringReader;
 import jp.mufg.antlrutil.*;
+import jp.mufg.sql.SqlParser.ExprContext;
+
 import org.antlr.v4.runtime.*;
 import org.junit.Test;
 
@@ -20,6 +22,8 @@ public class SqlParserTest {
 		int errors = parser.getNumberOfSyntaxErrors();
 		if (errors > 0)
             throw new RuntimeException("parse error");
+        // ExprContext expr = parser.expr();
+        // System.out.println(expr.toStringTree());
     }
 
     @Test
