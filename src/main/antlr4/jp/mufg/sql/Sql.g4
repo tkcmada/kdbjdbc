@@ -5,9 +5,22 @@ grammar Sql;
 }
 
 selectStmt
-    :   'SELECT' ID
+    :   'SELECT' columnNames 'FROM' tableName ('LIMIT' NUMBER)? '$'
     ;
 
+tableName
+    :   ID ('AS'? ID)?
+    |   ID '.' ID ('AS'? ID)?
+    ;
+
+columnNames
+    :   columnName (',' columnName)*
+    ;
+
+columnName
+    :   ID ('AS' ID)?
+    |   ID '.' ID ('AS' ID)?
+    ;
 
 WS
     : (' ' | '\t') -> skip
@@ -18,5 +31,6 @@ NUMBER
     ;
 
 ID
-    : ([a-z] | [A-Z] | '_') ([a-z] | [A-Z] | '_' | [0-9])*
+    : ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )*
+    | '"' ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )* '"'
     ;
