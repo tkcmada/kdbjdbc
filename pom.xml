@@ -5,8 +5,8 @@
     <artifactId>kdbjdbc</artifactId>
     <groupId>com.dummy</groupId>
     <version>0.1</version>
-
     <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4jVersion>1.7.30</slf4jVersion>
         <log4j2Version>2.13.0</log4j2Version>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -78,6 +78,11 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.8-1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -121,6 +126,31 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>4.0</version>
+				<executions>
+					<execution>
+						<id>antlr4</id>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<outputDirectory>src/main/java</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>study.maven.antlr.plugin.Main</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
     </build>
 </project>
