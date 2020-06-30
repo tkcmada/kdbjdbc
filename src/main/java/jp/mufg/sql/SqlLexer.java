@@ -1,204 +1,85 @@
-// $ANTLR 3.4 jp/mufg/sql/Sql.g 2020-06-30 04:32:47
-
-	package jp.mufg.sql;
-
-
-import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
-
-@SuppressWarnings({"all", "warnings", "unchecked"})
-public class SqlLexer extends Lexer {
-    public static final int EOF=-1;
-    public static final int T__6=6;
-    public static final int T__7=7;
-    public static final int COMMA=4;
-    public static final int WS=5;
-
-    // delegates
-    // delegators
-    public Lexer[] getDelegates() {
-        return new Lexer[] {};
-    }
-
-    public SqlLexer() {} 
-    public SqlLexer(CharStream input) {
-        this(input, new RecognizerSharedState());
-    }
-    public SqlLexer(CharStream input, RecognizerSharedState state) {
-        super(input,state);
-    }
-    public String getGrammarFileName() { return "jp/mufg/sql/Sql.g"; }
-
-    // $ANTLR start "T__6"
-    public final void mT__6() throws RecognitionException {
-        try {
-            int _type = T__6;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // jp/mufg/sql/Sql.g:6:6: ( 'Hello' )
-            // jp/mufg/sql/Sql.g:6:8: 'Hello'
-            {
-            match("Hello"); 
-
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__6"
-
-    // $ANTLR start "T__7"
-    public final void mT__7() throws RecognitionException {
-        try {
-            int _type = T__7;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // jp/mufg/sql/Sql.g:7:6: ( 'World' )
-            // jp/mufg/sql/Sql.g:7:8: 'World'
-            {
-            match("World"); 
-
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "T__7"
-
-    // $ANTLR start "COMMA"
-    public final void mCOMMA() throws RecognitionException {
-        try {
-            int _type = COMMA;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // jp/mufg/sql/Sql.g:16:2: ( ',' )
-            // jp/mufg/sql/Sql.g:16:4: ','
-            {
-            match(','); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "COMMA"
-
-    // $ANTLR start "WS"
-    public final void mWS() throws RecognitionException {
-        try {
-            int _type = WS;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // jp/mufg/sql/Sql.g:19:5: ( ( ' ' | '\\t' ) )
-            // jp/mufg/sql/Sql.g:
-            {
-            if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
-                input.consume();
-            }
-            else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                recover(mse);
-                throw mse;
-            }
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        	// do for sure before leaving
-        }
-    }
-    // $ANTLR end "WS"
-
-    public void mTokens() throws RecognitionException {
-        // jp/mufg/sql/Sql.g:1:8: ( T__6 | T__7 | COMMA | WS )
-        int alt1=4;
-        switch ( input.LA(1) ) {
-        case 'H':
-            {
-            alt1=1;
-            }
-            break;
-        case 'W':
-            {
-            alt1=2;
-            }
-            break;
-        case ',':
-            {
-            alt1=3;
-            }
-            break;
-        case '\t':
-        case ' ':
-            {
-            alt1=4;
-            }
-            break;
-        default:
-            NoViableAltException nvae =
-                new NoViableAltException("", 1, 0, input);
-
-            throw nvae;
-
-        }
-
-        switch (alt1) {
-            case 1 :
-                // jp/mufg/sql/Sql.g:1:10: T__6
-                {
-                mT__6(); 
-
-
-                }
-                break;
-            case 2 :
-                // jp/mufg/sql/Sql.g:1:15: T__7
-                {
-                mT__7(); 
-
-
-                }
-                break;
-            case 3 :
-                // jp/mufg/sql/Sql.g:1:20: COMMA
-                {
-                mCOMMA(); 
-
-
-                }
-                break;
-            case 4 :
-                // jp/mufg/sql/Sql.g:1:26: WS
-                {
-                mWS(); 
-
-
-                }
-                break;
-
-        }
-
-    }
-
-
+// Generated from jp/mufg/sql/Sql.g4 by ANTLR 4.0
+package jp.mufg.sql;
  
+//this is header
 
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.*;
+
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
+public class SqlLexer extends Lexer {
+	protected static final DFA[] _decisionToDFA;
+	protected static final PredictionContextCache _sharedContextCache =
+		new PredictionContextCache();
+	public static final int
+		T__0=1, WS=2, NUMBER=3, ID=4;
+	public static String[] modeNames = {
+		"DEFAULT_MODE"
+	};
+
+	public static final String[] tokenNames = {
+		"<INVALID>",
+		"'SELECT'", "WS", "NUMBER", "ID"
+	};
+	public static final String[] ruleNames = {
+		"T__0", "WS", "NUMBER", "ID"
+	};
+
+
+	public SqlLexer(CharStream input) {
+		super(input);
+		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+	}
+
+	@Override
+	public String getGrammarFileName() { return "Sql.g4"; }
+
+	@Override
+	public String[] getTokenNames() { return tokenNames; }
+
+	@Override
+	public String[] getRuleNames() { return ruleNames; }
+
+	@Override
+	public String[] getModeNames() { return modeNames; }
+
+	@Override
+	public ATN getATN() { return _ATN; }
+
+	@Override
+	public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
+		switch (ruleIndex) {
+		case 1: WS_action((RuleContext)_localctx, actionIndex); break;
+		}
+	}
+	private void WS_action(RuleContext _localctx, int actionIndex) {
+		switch (actionIndex) {
+		case 0: skip();  break;
+		}
+	}
+
+	public static final String _serializedATN =
+		"\2\4\6+\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\3\2\3\2\3\2\3"+
+		"\2\3\3\3\3\3\3\3\3\3\4\5\4\30\n\4\3\4\6\4\33\n\4\r\4\16\4\34\3\4\3\4\5"+
+		"\4!\n\4\3\5\5\5$\n\5\3\5\7\5\'\n\5\f\5\16\5*\13\5\2\6\3\3\1\5\4\2\7\5"+
+		"\1\t\6\1\3\2\7\4\13\13\"\"\3\62;\3\62;\5C\\aac|\6\62;C\\aac|.\2\3\3\2"+
+		"\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\3\13\3\2\2\2\5\22\3\2\2\2\7\27"+
+		"\3\2\2\2\t#\3\2\2\2\13\f\7U\2\2\f\r\7G\2\2\r\16\7N\2\2\16\17\7G\2\2\17"+
+		"\20\7E\2\2\20\21\7V\2\2\21\4\3\2\2\2\22\23\t\2\2\2\23\24\3\2\2\2\24\25"+
+		"\b\3\2\2\25\6\3\2\2\2\26\30\7/\2\2\27\26\3\2\2\2\27\30\3\2\2\2\30\32\3"+
+		"\2\2\2\31\33\t\3\2\2\32\31\3\2\2\2\33\34\3\2\2\2\34\32\3\2\2\2\34\35\3"+
+		"\2\2\2\35 \3\2\2\2\36\37\7\60\2\2\37!\t\4\2\2 \36\3\2\2\2 !\3\2\2\2!\b"+
+		"\3\2\2\2\"$\t\5\2\2#\"\3\2\2\2$(\3\2\2\2%\'\t\6\2\2&%\3\2\2\2\'*\3\2\2"+
+		"\2(&\3\2\2\2()\3\2\2\2)\n\3\2\2\2*(\3\2\2\2\t\2\27\34 #&(";
+	public static final ATN _ATN =
+		ATNSimulator.deserialize(_serializedATN.toCharArray());
+	static {
+		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+	}
 }
