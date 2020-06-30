@@ -28,89 +28,90 @@ public class SqlExprs {
 	// 	{
 	// 		return StringUtils.join(tables, ' ');
 	// 	}
-	// }
-	// public static class Table
-	// {
-	// 	public enum JoinType
-	// 	{
-	// 		left("LEFT OUTER JOIN")
-	// 		, right("RIGHT OUTER JOIN")
-	// 		, inner("INNER JOIN")
-	// 		;
-			
-	// 		private final String sql;
-
-	// 		private JoinType(String sql)
-	// 		{
-	// 			this.sql = sql;
-	// 		}
-	// 	}
-	// 	private final String tableName;
-	// 	private final String aliasName;
-	// 	private JoinType joinType;
-	// 	private Expr joinExpr;
-
-	// 	public Table(@NotNull String tableName, @Nullable String aliasName)
-	// 	{
-	// 		super();
-	// 		//checkNotNull(tableName, "tableName is null");
-	// 		this.tableName = tableName;
-	// 		this.aliasName = aliasName;
-	// 	}
-		
-	// 	public String getTableName()
-	// 	{
-	// 		return tableName;
-	// 	}
-
-	// 	public String getAliasName()
-	// 	{
-	// 		return aliasName;
-	// 	}
-		
-	// 	public JoinType getJoinType()
-	// 	{
-	// 		return joinType;
-	// 	}
-
-	// 	public void setJoinType(JoinType joinType)
-	// 	{
-	// 		this.joinType = joinType;
-	// 	}
-
-	// 	public Expr getJoinExpr()
-	// 	{
-	// 		return joinExpr;
-	// 	}
-
-	// 	public void setJoinExpr(Expr joinExpr)
-	// 	{
-	// 		this.joinExpr = joinExpr;
-	// 	}
-
-	// 	@Override
-	// 	public String toString()
-	// 	{
-	// 		StringBuilder s = new StringBuilder();
-	// 		if(joinType != null)
-	// 		{
-	// 			s.append(joinType.sql);
-	// 			s.append(" ");
-	// 		}
-	// 		s.append(tableName);
-	// 		if(aliasName != null)
-	// 		{
-	// 			s.append(" AS ");
-	// 			s.append(aliasName);
-	// 		}
-	// 		if(joinExpr != null)
-	// 		{
-	// 			s.append(" ON ");
-	// 			s.append(joinExpr.toString());
-	// 		}
-	// 		return s.toString();
-	// 	}
     // }
+    
+	public static class Table
+	{
+		public enum JoinType
+		{
+			left("LEFT OUTER JOIN")
+			, right("RIGHT OUTER JOIN")
+			, inner("INNER JOIN")
+			;
+			
+			private final String sql;
+
+			private JoinType(String sql)
+			{
+				this.sql = sql;
+			}
+		}
+		private final String tableName;
+		private final String aliasName;
+		private JoinType joinType;
+		private Expr joinExpr;
+
+		public Table(@NotNull String tableName, @Nullable String aliasName)
+		{
+			super();
+			//checkNotNull(tableName, "tableName is null");
+			this.tableName = tableName;
+			this.aliasName = aliasName;
+		}
+		
+		public String getTableName()
+		{
+			return tableName;
+		}
+
+		public String getAliasName()
+		{
+			return aliasName;
+		}
+		
+		public JoinType getJoinType()
+		{
+			return joinType;
+		}
+
+		public void setJoinType(JoinType joinType)
+		{
+			this.joinType = joinType;
+		}
+
+		public Expr getJoinExpr()
+		{
+			return joinExpr;
+		}
+
+		public void setJoinExpr(Expr joinExpr)
+		{
+			this.joinExpr = joinExpr;
+		}
+
+		@Override
+		public String toString()
+		{
+			StringBuilder s = new StringBuilder();
+			if(joinType != null)
+			{
+				s.append(joinType.sql);
+				s.append(" ");
+			}
+			s.append(tableName);
+			if(aliasName != null)
+			{
+				s.append(" AS ");
+				s.append(aliasName);
+			}
+			if(joinExpr != null)
+			{
+				s.append(" ON ");
+				s.append(joinExpr.toString());
+			}
+			return s.toString();
+		}
+    }
     
     public static class ColumnExprWithAlias {
         @NotNull

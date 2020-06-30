@@ -21,14 +21,17 @@ public class SqlToQscript {
         s.append("select ");
         int i = 0;
         while(true) {
-            if(i > 0)
-                s.append(", ");
             ColumnNameContext c = stmt.columnNames().columnName(i);
             if(c == null)
                 break;
+            if(i > 0)
+                s.append(", ");
             s.append(c.expr().val.toQscript());
             i++;
         }
+        s.append(" from ");
+        s.append(stmt.table().tbl.getTableName());
+        //ignore alias name
         return s.toString();
     }
 }

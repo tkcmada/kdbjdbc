@@ -5,12 +5,12 @@ import jp.mufg.sqlutil.SqlExprs.*;
 }
 
 selectStmt
-    :   'SELECT' columnNames 'FROM' tableName groupBy? having? limit? '$'
+    :   'SELECT' columnNames 'FROM' table groupBy? having? limit? '$'
     ;
 
-tableName
-    :   ID ('AS'? ID)?
-    |   ID '.' ID ('AS'? ID)?
+table returns [Table tbl]
+    :   t=name ('AS'? a=name)?          { $tbl = new Table($t.text, $a.text); }
+    |   name '.' t=name ('AS'? a=name)? { $tbl = new Table($t.text, $a.text); }
     ;
 
 columnNames
@@ -18,7 +18,7 @@ columnNames
     ;
 
 columnName returns [ColumnExprWithAlias val]
-    :  expr  'AS' ID { $val = new ColumnExprWithAlias($expr.val, $ID.text); }
+    :  expr  'AS' id=name { $val = new ColumnExprWithAlias($expr.val, $id.text); }
     |  expr          { $val = new ColumnExprWithAlias($expr.val, null); }
     ;
 
@@ -52,7 +52,7 @@ primaryExpr returns [Expr val]
     ;
 
 functionExpr returns [FunctionCallExpr val]
-    : ID '(' args ')' { $val = new FunctionCallExpr($ID.text, null); }
+    : id=name '(' args ')' { $val = new FunctionCallExpr($id.text, null); }
     ;
 
 numberExpr returns [NumberExpr val]
@@ -75,9 +75,17 @@ args
     ;
 
 columnExpr returns [ColumnExpr val]
-    :   ID                { $val = new ColumnExpr(null,      $ID.text); }
-    |   id1=ID '.' id2=ID { $val = new ColumnExpr($id1.text, $id2.text); }
+    :              id2=name { $val = new ColumnExpr(null,      $id2.text); }
+    |   id1=name '.' id2=name { $val = new ColumnExpr($id1.text, $id2.text); }
     ;
+
+//https://stackoverflow.com/questions/17897651/antlrv4-how-to-read-double-quote-escaped-double-quotes-in-string
+//https://stackoverflow.com/questions/37525542/changing-text-of-rule-in-antlr4-using-settext
+name returns [String text]
+    :ID1 { $text = $ID1.text; }
+    |ID2 { String s = $ID2.text; $text = s.substring(1, s.length()-1); }
+    ;
+
 
 WS
     : (' ' | '\t') -> skip
@@ -87,8 +95,6 @@ NUMBER
     : '-'? [0-9]+ ('.' [0-9])?
     ;
 
-ID
-    : ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )*
-    | '"' ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )* '"'
-    ;
+ID1 : ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )*;
+ID2 : '"' (~('"'))* '"';
 

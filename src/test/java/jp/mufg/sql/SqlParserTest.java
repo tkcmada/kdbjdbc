@@ -26,7 +26,9 @@ public class SqlParserTest {
 		if (errors > 0)
             throw new RuntimeException("parse error");
         System.out.println(selectStmt.toStringTree());
-        return new SqlToQscript(selectStmt).toQscript();
+        String q = new SqlToQscript(selectStmt).toQscript();
+        System.out.println(q);
+        return q;
     }
 
     @Test

@@ -22,9 +22,6 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterSelectStmt(SqlParser.SelectStmtContext ctx) { }
 	@Override public void exitSelectStmt(SqlParser.SelectStmtContext ctx) { }
 
-	@Override public void enterTableName(SqlParser.TableNameContext ctx) { }
-	@Override public void exitTableName(SqlParser.TableNameContext ctx) { }
-
 	@Override public void enterFunctionExpr(SqlParser.FunctionExprContext ctx) { }
 	@Override public void exitFunctionExpr(SqlParser.FunctionExprContext ctx) { }
 
@@ -46,8 +43,14 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterLimit(SqlParser.LimitContext ctx) { }
 	@Override public void exitLimit(SqlParser.LimitContext ctx) { }
 
+	@Override public void enterName(SqlParser.NameContext ctx) { }
+	@Override public void exitName(SqlParser.NameContext ctx) { }
+
 	@Override public void enterExpr(SqlParser.ExprContext ctx) { }
 	@Override public void exitExpr(SqlParser.ExprContext ctx) { }
+
+	@Override public void enterTable(SqlParser.TableContext ctx) { }
+	@Override public void exitTable(SqlParser.TableContext ctx) { }
 
 	@Override public void enterColumnName(SqlParser.ColumnNameContext ctx) { }
 	@Override public void exitColumnName(SqlParser.ColumnNameContext ctx) { }
