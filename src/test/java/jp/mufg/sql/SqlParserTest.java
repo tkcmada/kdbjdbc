@@ -37,4 +37,9 @@ public class SqlParserTest {
         parse("SELECT 't2'.'bl' AS 'bl' , SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1");
     }
 
+    @Test
+    public void test_select_stmt4() throws IOException {
+        parse("SELECT SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' HAVING (COUNT(1) > 0)");
+    }
+
 }
