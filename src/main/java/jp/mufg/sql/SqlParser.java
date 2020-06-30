@@ -18,18 +18,18 @@ public class SqlParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__8=1, T__7=2, T__6=3, T__5=4, T__4=5, T__3=6, T__2=7, T__1=8, T__0=9, 
-		WS=10, NUMBER=11, ID=12;
+		T__10=1, T__9=2, T__8=3, T__7=4, T__6=5, T__5=6, T__4=7, T__3=8, T__2=9, 
+		T__1=10, T__0=11, WS=12, NUMBER=13, ID=14;
 	public static final String[] tokenNames = {
-		"<INVALID>", "'LIMIT'", "'AS'", "'FROM'", "'$'", "'('", "')'", "'SELECT'", 
-		"','", "'.'", "WS", "NUMBER", "ID"
+		"<INVALID>", "'LIMIT'", "'GROUP'", "'AS'", "'BY'", "'FROM'", "'$'", "'('", 
+		"')'", "'SELECT'", "','", "'.'", "WS", "NUMBER", "ID"
 	};
 	public static final int
 		RULE_selectStmt = 0, RULE_tableName = 1, RULE_columnNames = 2, RULE_columnName = 3, 
-		RULE_expr = 4, RULE_args = 5, RULE_columnExpr = 6;
+		RULE_groupBy = 4, RULE_limit = 5, RULE_expr = 6, RULE_args = 7, RULE_columnExpr = 8;
 	public static final String[] ruleNames = {
-		"selectStmt", "tableName", "columnNames", "columnName", "expr", "args", 
-		"columnExpr"
+		"selectStmt", "tableName", "columnNames", "columnName", "groupBy", "limit", 
+		"expr", "args", "columnExpr"
 	};
 
 	@Override
@@ -49,9 +49,14 @@ public class SqlParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class SelectStmtContext extends ParserRuleContext {
-		public TerminalNode NUMBER() { return getToken(SqlParser.NUMBER, 0); }
 		public ColumnNamesContext columnNames() {
 			return getRuleContext(ColumnNamesContext.class,0);
+		}
+		public LimitContext limit() {
+			return getRuleContext(LimitContext.class,0);
+		}
+		public GroupByContext groupBy() {
+			return getRuleContext(GroupByContext.class,0);
 		}
 		public TableNameContext tableName() {
 			return getRuleContext(TableNameContext.class,0);
@@ -77,20 +82,27 @@ public class SqlParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(14); match(7);
-			setState(15); columnNames();
-			setState(16); match(3);
-			setState(17); tableName();
-			setState(20);
+			setState(18); match(9);
+			setState(19); columnNames();
+			setState(20); match(5);
+			setState(21); tableName();
+			setState(23);
 			_la = _input.LA(1);
-			if (_la==1) {
+			if (_la==2) {
 				{
-				setState(18); match(1);
-				setState(19); match(NUMBER);
+				setState(22); groupBy();
 				}
 			}
 
-			setState(22); match(4);
+			setState(26);
+			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+			case 1:
+				{
+				setState(25); limit();
+				}
+				break;
+			}
+			setState(28); match(6);
 			}
 		}
 		catch (RecognitionException re) {
@@ -128,25 +140,25 @@ public class SqlParser extends Parser {
 		enterRule(_localctx, 2, RULE_tableName);
 		int _la;
 		try {
-			setState(40);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			setState(46);
+			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(24); match(ID);
-				setState(29);
+				setState(30); match(ID);
+				setState(35);
 				_la = _input.LA(1);
-				if (_la==2 || _la==ID) {
+				if (_la==3 || _la==ID) {
 					{
-					setState(26);
+					setState(32);
 					_la = _input.LA(1);
-					if (_la==2) {
+					if (_la==3) {
 						{
-						setState(25); match(2);
+						setState(31); match(3);
 						}
 					}
 
-					setState(28); match(ID);
+					setState(34); match(ID);
 					}
 				}
 
@@ -156,22 +168,22 @@ public class SqlParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(31); match(ID);
-				setState(32); match(9);
-				setState(33); match(ID);
-				setState(38);
+				setState(37); match(ID);
+				setState(38); match(11);
+				setState(39); match(ID);
+				setState(44);
 				_la = _input.LA(1);
-				if (_la==2 || _la==ID) {
+				if (_la==3 || _la==ID) {
 					{
-					setState(35);
+					setState(41);
 					_la = _input.LA(1);
-					if (_la==2) {
+					if (_la==3) {
 						{
-						setState(34); match(2);
+						setState(40); match(3);
 						}
 					}
 
-					setState(37); match(ID);
+					setState(43); match(ID);
 					}
 				}
 
@@ -218,18 +230,18 @@ public class SqlParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(42); columnName();
-			setState(47);
+			setState(48); columnName();
+			setState(53);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==8) {
+			while (_la==10) {
 				{
 				{
-				setState(43); match(8);
-				setState(44); columnName();
+				setState(49); match(10);
+				setState(50); columnName();
 				}
 				}
-				setState(49);
+				setState(55);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -272,13 +284,98 @@ public class SqlParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50); expr();
-			setState(53);
+			setState(56); expr();
+			setState(59);
 			_la = _input.LA(1);
-			if (_la==2) {
+			if (_la==3) {
 				{
-				setState(51); match(2);
-				setState(52); match(ID);
+				setState(57); match(3);
+				setState(58); match(ID);
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class GroupByContext extends ParserRuleContext {
+		public ArgsContext args() {
+			return getRuleContext(ArgsContext.class,0);
+		}
+		public GroupByContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_groupBy; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterGroupBy(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitGroupBy(this);
+		}
+	}
+
+	public final GroupByContext groupBy() throws RecognitionException {
+		GroupByContext _localctx = new GroupByContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_groupBy);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(61); match(2);
+			setState(62); match(4);
+			setState(63); args();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class LimitContext extends ParserRuleContext {
+		public TerminalNode NUMBER() { return getToken(SqlParser.NUMBER, 0); }
+		public LimitContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_limit; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterLimit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitLimit(this);
+		}
+	}
+
+	public final LimitContext limit() throws RecognitionException {
+		LimitContext _localctx = new LimitContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_limit);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(67);
+			_la = _input.LA(1);
+			if (_la==1) {
+				{
+				setState(65); match(1);
+				setState(66); match(NUMBER);
 				}
 			}
 
@@ -302,6 +399,7 @@ public class SqlParser extends Parser {
 		public ColumnExprContext columnExpr() {
 			return getRuleContext(ColumnExprContext.class,0);
 		}
+		public TerminalNode NUMBER() { return getToken(SqlParser.NUMBER, 0); }
 		public TerminalNode ID() { return getToken(SqlParser.ID, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -319,24 +417,31 @@ public class SqlParser extends Parser {
 
 	public final ExprContext expr() throws RecognitionException {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_expr);
+		enterRule(_localctx, 12, RULE_expr);
 		try {
-			setState(61);
-			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
+			setState(76);
+			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(55); columnExpr();
+				setState(69); columnExpr();
 				}
 				break;
 
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(56); match(ID);
-				setState(57); match(5);
-				setState(58); args();
-				setState(59); match(6);
+				setState(70); match(ID);
+				setState(71); match(7);
+				setState(72); args();
+				setState(73); match(8);
+				}
+				break;
+
+			case 3:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(75); match(NUMBER);
 				}
 				break;
 			}
@@ -375,27 +480,27 @@ public class SqlParser extends Parser {
 
 	public final ArgsContext args() throws RecognitionException {
 		ArgsContext _localctx = new ArgsContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_args);
+		enterRule(_localctx, 14, RULE_args);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(71);
+			setState(86);
 			_la = _input.LA(1);
-			if (_la==ID) {
+			if (_la==NUMBER || _la==ID) {
 				{
-				setState(63); expr();
-				setState(68);
+				setState(78); expr();
+				setState(83);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (_la==8) {
+				while (_la==10) {
 					{
 					{
-					setState(64); match(8);
-					setState(65); expr();
+					setState(79); match(10);
+					setState(80); expr();
 					}
 					}
-					setState(70);
+					setState(85);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -436,23 +541,23 @@ public class SqlParser extends Parser {
 
 	public final ColumnExprContext columnExpr() throws RecognitionException {
 		ColumnExprContext _localctx = new ColumnExprContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_columnExpr);
+		enterRule(_localctx, 16, RULE_columnExpr);
 		try {
-			setState(77);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			setState(92);
+			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(73); match(ID);
+				setState(88); match(ID);
 				}
 				break;
 
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(74); match(ID);
-				setState(75); match(9);
-				setState(76); match(ID);
+				setState(89); match(ID);
+				setState(90); match(11);
+				setState(91); match(ID);
 				}
 				break;
 			}
@@ -469,26 +574,30 @@ public class SqlParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3\16R\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3"+
-		"\2\3\2\3\2\3\2\3\2\5\2\27\n\2\3\2\3\2\3\3\3\3\5\3\35\n\3\3\3\5\3 \n\3"+
-		"\3\3\3\3\3\3\3\3\5\3&\n\3\3\3\5\3)\n\3\5\3+\n\3\3\4\3\4\3\4\7\4\60\n\4"+
-		"\f\4\16\4\63\13\4\3\5\3\5\3\5\5\58\n\5\3\6\3\6\3\6\3\6\3\6\3\6\5\6@\n"+
-		"\6\3\7\3\7\3\7\7\7E\n\7\f\7\16\7H\13\7\5\7J\n\7\3\b\3\b\3\b\3\b\5\bP\n"+
-		"\b\3\b\2\t\2\4\6\b\n\f\16\2\2V\2\20\3\2\2\2\4*\3\2\2\2\6,\3\2\2\2\b\64"+
-		"\3\2\2\2\n?\3\2\2\2\fI\3\2\2\2\16O\3\2\2\2\20\21\7\t\2\2\21\22\5\6\4\2"+
-		"\22\23\7\5\2\2\23\26\5\4\3\2\24\25\7\3\2\2\25\27\7\r\2\2\26\24\3\2\2\2"+
-		"\26\27\3\2\2\2\27\30\3\2\2\2\30\31\7\6\2\2\31\3\3\2\2\2\32\37\7\16\2\2"+
-		"\33\35\7\4\2\2\34\33\3\2\2\2\34\35\3\2\2\2\35\36\3\2\2\2\36 \7\16\2\2"+
-		"\37\34\3\2\2\2\37 \3\2\2\2 +\3\2\2\2!\"\7\16\2\2\"#\7\13\2\2#(\7\16\2"+
-		"\2$&\7\4\2\2%$\3\2\2\2%&\3\2\2\2&\'\3\2\2\2\')\7\16\2\2(%\3\2\2\2()\3"+
-		"\2\2\2)+\3\2\2\2*\32\3\2\2\2*!\3\2\2\2+\5\3\2\2\2,\61\5\b\5\2-.\7\n\2"+
-		"\2.\60\5\b\5\2/-\3\2\2\2\60\63\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\7"+
-		"\3\2\2\2\63\61\3\2\2\2\64\67\5\n\6\2\65\66\7\4\2\2\668\7\16\2\2\67\65"+
-		"\3\2\2\2\678\3\2\2\28\t\3\2\2\29@\5\16\b\2:;\7\16\2\2;<\7\7\2\2<=\5\f"+
-		"\7\2=>\7\b\2\2>@\3\2\2\2?9\3\2\2\2?:\3\2\2\2@\13\3\2\2\2AF\5\n\6\2BC\7"+
-		"\n\2\2CE\5\n\6\2DB\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2\2GJ\3\2\2\2HF\3"+
-		"\2\2\2IA\3\2\2\2IJ\3\2\2\2J\r\3\2\2\2KP\7\16\2\2LM\7\16\2\2MN\7\13\2\2"+
-		"NP\7\16\2\2OK\3\2\2\2OL\3\2\2\2P\17\3\2\2\2\16\26\34\37%(*\61\67?FIO";
+		"\2\3\20a\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t"+
+		"\t\4\n\t\n\3\2\3\2\3\2\3\2\3\2\5\2\32\n\2\3\2\5\2\35\n\2\3\2\3\2\3\3\3"+
+		"\3\5\3#\n\3\3\3\5\3&\n\3\3\3\3\3\3\3\3\3\5\3,\n\3\3\3\5\3/\n\3\5\3\61"+
+		"\n\3\3\4\3\4\3\4\7\4\66\n\4\f\4\16\49\13\4\3\5\3\5\3\5\5\5>\n\5\3\6\3"+
+		"\6\3\6\3\6\3\7\3\7\5\7F\n\7\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\bO\n\b\3\t\3"+
+		"\t\3\t\7\tT\n\t\f\t\16\tW\13\t\5\tY\n\t\3\n\3\n\3\n\3\n\5\n_\n\n\3\n\2"+
+		"\13\2\4\6\b\n\f\16\20\22\2\2f\2\24\3\2\2\2\4\60\3\2\2\2\6\62\3\2\2\2\b"+
+		":\3\2\2\2\n?\3\2\2\2\fE\3\2\2\2\16N\3\2\2\2\20X\3\2\2\2\22^\3\2\2\2\24"+
+		"\25\7\13\2\2\25\26\5\6\4\2\26\27\7\7\2\2\27\31\5\4\3\2\30\32\5\n\6\2\31"+
+		"\30\3\2\2\2\31\32\3\2\2\2\32\34\3\2\2\2\33\35\5\f\7\2\34\33\3\2\2\2\34"+
+		"\35\3\2\2\2\35\36\3\2\2\2\36\37\7\b\2\2\37\3\3\2\2\2 %\7\20\2\2!#\7\5"+
+		"\2\2\"!\3\2\2\2\"#\3\2\2\2#$\3\2\2\2$&\7\20\2\2%\"\3\2\2\2%&\3\2\2\2&"+
+		"\61\3\2\2\2\'(\7\20\2\2()\7\r\2\2).\7\20\2\2*,\7\5\2\2+*\3\2\2\2+,\3\2"+
+		"\2\2,-\3\2\2\2-/\7\20\2\2.+\3\2\2\2./\3\2\2\2/\61\3\2\2\2\60 \3\2\2\2"+
+		"\60\'\3\2\2\2\61\5\3\2\2\2\62\67\5\b\5\2\63\64\7\f\2\2\64\66\5\b\5\2\65"+
+		"\63\3\2\2\2\669\3\2\2\2\67\65\3\2\2\2\678\3\2\2\28\7\3\2\2\29\67\3\2\2"+
+		"\2:=\5\16\b\2;<\7\5\2\2<>\7\20\2\2=;\3\2\2\2=>\3\2\2\2>\t\3\2\2\2?@\7"+
+		"\4\2\2@A\7\6\2\2AB\5\20\t\2B\13\3\2\2\2CD\7\3\2\2DF\7\17\2\2EC\3\2\2\2"+
+		"EF\3\2\2\2F\r\3\2\2\2GO\5\22\n\2HI\7\20\2\2IJ\7\t\2\2JK\5\20\t\2KL\7\n"+
+		"\2\2LO\3\2\2\2MO\7\17\2\2NG\3\2\2\2NH\3\2\2\2NM\3\2\2\2O\17\3\2\2\2PU"+
+		"\5\16\b\2QR\7\f\2\2RT\5\16\b\2SQ\3\2\2\2TW\3\2\2\2US\3\2\2\2UV\3\2\2\2"+
+		"VY\3\2\2\2WU\3\2\2\2XP\3\2\2\2XY\3\2\2\2Y\21\3\2\2\2Z_\7\20\2\2[\\\7\20"+
+		"\2\2\\]\7\r\2\2]_\7\20\2\2^Z\3\2\2\2^[\3\2\2\2_\23\3\2\2\2\20\31\34\""+
+		"%+.\60\67=ENUX^";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {

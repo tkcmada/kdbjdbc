@@ -29,9 +29,7 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt2() throws IOException {
-        parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' ");
-        //
-        //GROUP BY 1, 2
+        parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
     }
 
 

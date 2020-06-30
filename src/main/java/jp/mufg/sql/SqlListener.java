@@ -16,8 +16,14 @@ public interface SqlListener extends ParseTreeListener {
 	void enterColumnNames(SqlParser.ColumnNamesContext ctx);
 	void exitColumnNames(SqlParser.ColumnNamesContext ctx);
 
+	void enterLimit(SqlParser.LimitContext ctx);
+	void exitLimit(SqlParser.LimitContext ctx);
+
 	void enterExpr(SqlParser.ExprContext ctx);
 	void exitExpr(SqlParser.ExprContext ctx);
+
+	void enterGroupBy(SqlParser.GroupByContext ctx);
+	void exitGroupBy(SqlParser.GroupByContext ctx);
 
 	void enterSelectStmt(SqlParser.SelectStmtContext ctx);
 	void exitSelectStmt(SqlParser.SelectStmtContext ctx);

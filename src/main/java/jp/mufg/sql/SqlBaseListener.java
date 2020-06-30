@@ -19,8 +19,14 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterColumnNames(SqlParser.ColumnNamesContext ctx) { }
 	@Override public void exitColumnNames(SqlParser.ColumnNamesContext ctx) { }
 
+	@Override public void enterLimit(SqlParser.LimitContext ctx) { }
+	@Override public void exitLimit(SqlParser.LimitContext ctx) { }
+
 	@Override public void enterExpr(SqlParser.ExprContext ctx) { }
 	@Override public void exitExpr(SqlParser.ExprContext ctx) { }
+
+	@Override public void enterGroupBy(SqlParser.GroupByContext ctx) { }
+	@Override public void exitGroupBy(SqlParser.GroupByContext ctx) { }
 
 	@Override public void enterSelectStmt(SqlParser.SelectStmtContext ctx) { }
 	@Override public void exitSelectStmt(SqlParser.SelectStmtContext ctx) { }

@@ -5,7 +5,7 @@ grammar Sql;
 }
 
 selectStmt
-    :   'SELECT' columnNames 'FROM' tableName ('LIMIT' NUMBER)? '$'
+    :   'SELECT' columnNames 'FROM' tableName groupBy? limit? '$'
     ;
 
 tableName
@@ -21,9 +21,18 @@ columnName
     :  expr  ('AS' ID)?
     ;
 
+groupBy
+    : 'GROUP' 'BY' args
+    ;
+
+limit
+    : ('LIMIT' NUMBER)?
+    ;
+
 expr
     : columnExpr
     | ID '(' args ')'
+    | NUMBER
     ;
 
 args
