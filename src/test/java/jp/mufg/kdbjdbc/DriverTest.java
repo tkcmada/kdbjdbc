@@ -219,7 +219,7 @@ public class DriverTest {
         setup();
 
         Statement e = conn.createStatement();
-        e.executeQuery("SELECT t2.name AS name , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
+        e.executeQuery("SELECT t2.name AS \"sum:name:ok\" , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
         ResultSet rs = e.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(12, meta.getColumnCount());
@@ -227,7 +227,7 @@ public class DriverTest {
         int p = 0;
 
         p++;
-        Assert.assertEquals("name"  , meta.getColumnName(p));
+        Assert.assertEquals("sum:name:ok"  , meta.getColumnName(p));
         Assert.assertEquals("s"     , meta.getColumnTypeName(p));
 
         p++;
@@ -277,7 +277,7 @@ public class DriverTest {
         Assert.assertEquals("g"     , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("abc"   , rs.getString("name"));
+        Assert.assertEquals("abc"   , rs.getString("sum:name:ok"));
         Assert.assertTrue(rs.getBoolean("bl"));
         Assert.assertEquals(0x26    , rs.getByte("bt"));
         Assert.assertEquals(100     , rs.getInt("x"));

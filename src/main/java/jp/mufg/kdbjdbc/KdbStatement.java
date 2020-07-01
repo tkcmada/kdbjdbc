@@ -93,7 +93,7 @@ public class KdbStatement implements Statement {
                 {
                 int i = 1;
                 for(Entry<String, Character> e : colnametype2.entrySet()) {
-                    String colname = e.getKey(); //kdbmeta.getColumnName(i);
+                    String colname = sqltoq.getColumnAliasName(i); //kdbmeta.getColumnName(i);
                     Character coltypeobj = e.getValue(); //tbl_colnametype.get(colname);
                 //     logger.info("column " + i + " " + colname + " -> type " + coltypeobj);
                 //     if(coltypeobj == null)

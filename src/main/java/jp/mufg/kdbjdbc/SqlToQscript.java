@@ -58,9 +58,9 @@ public class SqlToQscript {
     //     return stmt.table().tbl.getTableName();
     // }
 
-    // public String getColumnAliasName(int i) {
-    //     return stmt.columnNames().columns.get(i-1).getAliasName();
-    // }
+    public String getColumnAliasName(int i_starting_1) {
+        return stmt.columnNames().columns.get(i_starting_1-1).getAliasName();
+    }
 
     public String toQscript() {
         StringBuilder s = new StringBuilder();
