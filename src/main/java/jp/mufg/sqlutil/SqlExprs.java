@@ -610,7 +610,9 @@ public class SqlExprs {
 		{
 			super();
             this.exprs = new ArrayList<SqlExprs.Expr>(exprs);
-		}
+        }
+        
+        public List<Expr> getExprs() { return exprs; }
 		
 		@Override
 		public String toString()
@@ -632,7 +634,6 @@ public class SqlExprs {
         public String toQscript()
 		{
 			StringBuilder s = new StringBuilder();
-			s.append("(");
 			for(int i = 0; i < exprs.size(); i++)
 			{
 				if(i > 0)
@@ -640,9 +641,8 @@ public class SqlExprs {
 					s.append(", ");
 				}
 				Expr expr = exprs.get(i);
-				s.append(expr.toString());
+				s.append(expr.toQscript());
 			}
-			s.append(")");
 			return s.toString();
 		}
 	}
@@ -654,9 +654,11 @@ public class SqlExprs {
 		
 		public FunctionCallExpr(String identifiers, Arguments args)
 		{
-			super();
-			//checkNotNull(identifiers, "identifiers is null");
-			//checkNotNull(args       , "args is null");
+            super();
+            if(identifiers == null)
+                throw new NullPointerException("identifiers is null");
+            if(args == null)
+                throw new NullPointerException("args is null");
 			this.identifiers = identifiers;
 			this.arguments = args;
 		}
@@ -683,7 +685,12 @@ public class SqlExprs {
 		@Override
         public String toQscript()
 		{
-            return toString();
+            String qfunc = identifiers.toLowerCase(); //TODO
+			StringBuilder s = new StringBuilder();
+            s.append(qfunc);
+            s.append(" ");
+            s.append(arguments.toQscript());
+            return s.toString();
         }
 	}
 	
@@ -700,7 +707,11 @@ public class SqlExprs {
 		{
 			super();
 			this.numberString = numberString;
-		}
+        }
+        
+        public int intValue() {
+            return Integer.parseInt(numberString);
+        }
 
 		@Override
 		public String toString()

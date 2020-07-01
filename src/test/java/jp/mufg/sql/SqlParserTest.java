@@ -33,18 +33,20 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt1() throws IOException {
-        String qscript = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
-        Assert.assertEquals("1000#select id, name from t2", qscript);
+        String q = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
+        Assert.assertEquals("1000#select id, name from t2", q);
     }
 
     @Test
     public void test_select_stmt2() throws IOException {
-        parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
+        String q = parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
+        // Assert.assertEquals("select sum bt by bl, c from t2", q);
     }
 
     @Test
     public void test_select_stmt3() throws IOException {
-        parse("SELECT 't2'.'bl' AS 'bl' , SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1");
+        String q = parse("SELECT 't2'.'bl' AS 'bl' , SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1");
+        Assert.assertEquals("select sum bt by bl from t2", q);
     }
 
     @Test

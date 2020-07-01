@@ -21,7 +21,7 @@ columnNames returns [List<ColumnExprWithAlias> columns]
 
 columnName returns [ColumnExprWithAlias val]
     :  expr  'AS' id=name { $val = new ColumnExprWithAlias($expr.val, $id.text); }
-    |  expr          { $val = new ColumnExprWithAlias($expr.val, null); }
+    |  expr               { $val = new ColumnExprWithAlias($expr.val, null); }
     ;
 
 groupBy
@@ -53,26 +53,17 @@ primaryExpr returns [Expr val]
     ;
 
 functionExpr returns [FunctionCallExpr val]
-    : id=name '(' args ')' { $val = new FunctionCallExpr($id.text, null); }
+    : id=name '(' args ')' { $val = new FunctionCallExpr($id.text, $args.val); }
     ;
 
 numberExpr returns [NumberExpr val]
     : numtk=NUMBER { $val = new NumberExpr($numtk.text); }
     ;
 
-//args returns [Arguments rtn]
-//    : args1 {
-//        List<Expr> _args = new ArrayList<Expr>();
-//        int i = 0;
-//        while(arg1.getChild(Args1Context.class, i) != null) {
-//            _args.add(arg1.getChild(ExprContext.class, i))
-//        }
-//        $rtn = new Arguments(_args); 
-//    }
-//    ;
-
-args
-    : (expr (',' expr)*)?
+args returns [Arguments val]
+    : { List<Expr> _args = new ArrayList<Expr>(); }
+      (e1=expr { _args.add($e1.val); } (',' expr { _args.add($e1.val); } )*)?
+      { $val = new Arguments(_args); }
     ;
 
 columnExpr returns [ColumnExpr val]
@@ -89,7 +80,7 @@ name returns [String text]
 
 
 WS
-    : (' ' | '\t') -> skip
+    : ( ' ' | '\t' | '\r' | '\n' ) -> skip
     ;
 
 NUMBER
