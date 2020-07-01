@@ -2,6 +2,7 @@ grammar Sql;
 
 @header { 
 import jp.mufg.sqlutil.SqlExprs.*;
+import java.util.*;
 }
 
 selectStmt
@@ -13,8 +14,9 @@ table returns [Table tbl]
     |   name '.' t=name ('AS'? a=name)? { $tbl = new Table($t.text, $a.text); }
     ;
 
-columnNames
-    :   columnName (',' columnName)*
+columnNames returns [List<ColumnExprWithAlias> columns]
+    :   c1=columnName { $columns = new LinkedList<ColumnExprWithAlias>(); $columns.add($c1.val); }
+        (',' c2=columnName { $columns.add($c2.val); })*
     ;
 
 columnName returns [ColumnExprWithAlias val]
@@ -39,8 +41,7 @@ expr returns [Expr val]
     ;
 
 compExpr returns [Expr val]
-    : lhs=primaryExpr '>' rhs=primaryExpr { $val = new BinaryExpr(">", $lhs.val, $rhs.val); }
-    | lhs=primaryExpr '<' rhs=primaryExpr { $val = new BinaryExpr("<", $lhs.val, $rhs.val); }
+    : lhs=primaryExpr op=('>'|'<') rhs=primaryExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
     | lhs=primaryExpr { $val = $lhs.val; }
     ;
 
