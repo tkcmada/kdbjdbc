@@ -46,30 +46,22 @@ public class DriverTest {
         }
     }
 
+
     @Test
     public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
-        Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-        Class.forName("jp.mufg.logjdbc.LogDriver");
-        Properties props = new Properties();
-        props.put("user", "user_dummy");
-        props.put("password", "password_dummy");
-        props.put("logdir", ".");
-        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001", props);
-        DatabaseMetaData meta = h.getMetaData();
+        setup();
+        DatabaseMetaData meta = conn.getMetaData();
         ResultSet rs = meta.getColumns(null, "public", "t2", null);
         while(rs.next()) {
             logger.info("column:{}", rs.getString("COLUMN_NAME")); //need to wrap result to offer getString(String)
         }
         rs.close();
-        h.close();
     }
 
 //     @Test
 //     public void test_arithmatic() throws ClassNotFoundException, SQLException {
-//         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-//         Class.forName("jp.mufg.logjdbc.LogDriver");
-//         Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001","user_dummy","password_dummy");
-//         Statement e = h.createStatement();
+//          setup();
+//         Statement e = conn.createStatement();
 //         e.execute("q) flip ( `name`lg ! (`abc`def; 1 2) )");
 //         ResultSet rs = e.getResultSet();
 //         Assert.assertTrue(rs.next());
@@ -83,7 +75,6 @@ public class DriverTest {
 //         Assert.assertFalse(rs.next());
 //         rs.close();
 //         e.close();;
-//         h.close();
 //     }
 // /*
 //     @Test
@@ -298,6 +289,37 @@ public class DriverTest {
         // Assert.assertEquals(0L, rs.getLong(3)); // 0Nj -> 0
 
         // Assert.assertFalse(rs.next());
+
+        rs.close();
+        e.close();;
+    }
+
+    @Test
+    public void test_Statement_q_t2_group_by_d() throws SQLException, ClassNotFoundException {
+        setup();
+
+        Statement e = conn.createStatement();
+        e.executeQuery("SELECT t2.d AS d FROM 'public'.'t2' 't2' GROUP BY 1".replace("'", "\""));
+        ResultSet rs = e.getResultSet();
+        ResultSetMetaData meta = rs.getMetaData();
+        Assert.assertEquals(1, meta.getColumnCount());
+
+        int p = 0;
+
+        p++;
+        Assert.assertEquals("d"     , meta.getColumnName(p));
+        Assert.assertEquals("d"     , meta.getColumnTypeName(p));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertNull(rs.getObject("d"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("1970-01-04", rs.getObject("d"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("2015-01-01", rs.getObject("d"));
+
+        Assert.assertFalse(rs.next());
 
         rs.close();
         e.close();;

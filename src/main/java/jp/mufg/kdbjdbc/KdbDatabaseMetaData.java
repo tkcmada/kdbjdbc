@@ -97,42 +97,37 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
             rows.add(new Object[] {  null     , "public"  , tblname   , "TABLE"    , null    , ""        , ""         , ""         , ""     , ""   });
         }
 		return new ResultSetImpl(meta, rows);
-	}
+    }
+    
+    public static class ColumnAndType {
+        public final String name;
+        public final char type;
 
-    public Map<String, Character> getColumnAndType(String table) throws SQLException {
-        LinkedHashMap<String, Character> map = new LinkedHashMap<String,Character>();
+        ColumnAndType(String name, char type) {
+            this.name = name;
+            this.type = type;
+        }
+    }
+
+    public List<ColumnAndType> getColumnAndType(String table) throws SQLException {
         String q = "q)flip (`column_name`column_type)!(cols " + table + "; (value meta " + table + ")[;`t])";
         logger.info("getColumnAndType..." + q);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(q);
+        List<ColumnAndType> cols = new ArrayList<ColumnAndType>();
         while(rs.next()) {
             String colname = rs.getString(1);
             char ctype = (Character)rs.getObject(2);
-            map.put(colname, ctype);
+            cols.add(new ColumnAndType(colname, ctype));
             logger.info("column->coltype:" + colname + "->" + ctype);
         }
         rs.close();
         stmt.close();
-        return map;
+        return cols;
     }
 
     @Override
 	public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
-//        final StringBuilder sql = new StringBuilder();
-//        sql.append("q) ");
-//        final ResultSet rs = getTables(catalog, schemaPattern, tableNamePattern, null);
-//        int i = 0;
-//        while(rs.next()) {
-//            if(i > 0)
-//                sql.append(" union ");
-//            final String tblname = rs.getString("TABLE_NAME");
-//            sql.append("flip `TABLE_CAT`TABLE_SCHEM`TABLE_NAME`COLUMN_NAME`COLUMN_TYPE!( (count(cols " + tblname + "))#(enlist `catalog1); (count(cols " + tblname + "))#(enlist `schema1); (count(cols " + tblname + "))#(enlist `" + tblname + "); cols " + tblname + "; (value meta " + tblname + ")[;`t] )");
-//            i++;
-//            break;
-//        }
-//        rs.close();
-//        logger.info("getColumns: " + sql);
-//        return conn.createStatement().executeQuery(sql.toString());
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
 				new ColumnInfo("TABLE_CAT"		, "text", true), //1
 				new ColumnInfo("TABLE_SCHEM"	, "name", false), //2
@@ -163,11 +158,11 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
         String tbl = tableNamePattern;
 		final int MAX = ResultSetMetaDataImpl.MAX;
         List<Object[]> rows = new ArrayList<Object[]>();
-        Map<String, Character> colnametype = getColumnAndType(tbl);
+        List<ColumnAndType> colnametype = getColumnAndType(tbl);
         int pos = 1;
-        for(Entry<String, Character> e : colnametype.entrySet()) {
-            String colname = e.getKey();
-            char ctype = e.getValue();
+        for(ColumnAndType e : colnametype) {
+            String colname = e.name;
+            char ctype = e.type;
             String typename = "text";
             int colsize = MAX;
             int sqltype = 12;

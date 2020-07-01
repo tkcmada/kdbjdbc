@@ -47,8 +47,8 @@ public class SqlToQscript {
             int errors = parser.getNumberOfSyntaxErrors();
             if (errors > 0)
                 throw new IOException("parse error");
-            logger.info("parsed result:>>>" + stmt.toStringTree() + "<<<");
-            logger.info("parsed result tree:" + stmt.toStringTree());
+            // logger.info("parsed result:>>>" + stmt.toString() + "<<<");
+            // logger.info("parsed result tree:" + stmt.toStringTree());
         } catch(Exception ex) {
             throw new IllegalArgumentException("SQL parse error:" + sql, ex);
         }
@@ -62,11 +62,15 @@ public class SqlToQscript {
         return stmt.columnNames().columns.get(i_starting_1-1).getAliasName();
     }
 
+    public boolean isOnlyGroupByColumn() {
+        return stmt.groupBy() != null && stmt.groupBy().args().val.getExprs().size() == stmt.columnNames().columns.size();
+    }
+
     public String toQscript() {
         StringBuilder s = new StringBuilder();
 
         //groupby
-        boolean[] excludedColumn = new boolean[stmt.columnNames().columns.size()];
+        Boolean[] excludedColumn = new Boolean[stmt.columnNames().columns.size()];
         StringBuilder gs = new StringBuilder();
         if(stmt.groupBy() != null) {
             gs.append(" by ");
@@ -78,9 +82,20 @@ public class SqlToQscript {
                 if(expr instanceof NumberExpr) {
                     int colnum = ((NumberExpr)expr).intValue();
                     expr = stmt.columnNames().columns.get(colnum - 1).expr;
-                    excludedColumn[colnum - 1] = true;
+                    if(isOnlyGroupByColumn()) {
+                        excludedColumn[colnum - 1] = Boolean.FALSE;
+                    }
+                    else {
+                        excludedColumn[colnum - 1] = Boolean.TRUE;
+                    }
+                    gs.append(stmt.columnNames().columns.get(colnum - 1).getAliasName().replace(":", "__"));
+                    gs.append(":");
+                    gs.append(expr.toQscript());
                 }
-                gs.append(expr.toQscript());
+                else
+                {
+                    throw new UnsupportedOperationException();
+                }
                 gi++;
             }
         }
@@ -92,9 +107,14 @@ public class SqlToQscript {
         int i = 0;
         boolean coloutput = false;
         for(ColumnExprWithAlias c : stmt.columnNames().columns) {
-            if(! excludedColumn[i]) {
+            if(excludedColumn[i] == null || excludedColumn[i] == Boolean.FALSE) {
                 if(coloutput)
                     s.append(", ");
+                String aliasname = c.getAliasName();
+                if(excludedColumn[i] == Boolean.FALSE)
+                    aliasname = "dummy_" + aliasname;
+                s.append(aliasname.replace(":", "__"));
+                s.append(":");
                 s.append(c.expr.toQscript());
                 coloutput = true;
             }

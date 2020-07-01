@@ -11,10 +11,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import jp.mufg.kdbjdbc.KdbDatabaseMetaData.ColumnAndType;
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbStatement implements Statement {
@@ -80,76 +82,73 @@ public class KdbStatement implements Statement {
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
                 String pure_q = sqltoq.toQscript();
-                final Map<String, Character> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
+                final List<ColumnAndType> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
 
                 final String q = "q) " + pure_q;
                 logger.info("execute on kdb+...>>>" + q + "<<<");
                 ResultSet rs = target.executeQuery(q);
-                ResultSetMetaData kdbmeta = rs.getMetaData();
-                final int n = kdbmeta.getColumnCount();
-                ColumnInfo[] cols = new ColumnInfo[n];
-                // Map<String, Character> colnametype2 = new LinkedHashMap<String, Character>();
-                // for(int i = 1; i <= n; i++) {
-                {
-                int i = 1;
-                for(Entry<String, Character> e : colnametype2.entrySet()) {
-                    String colname = sqltoq.getColumnAliasName(i); //kdbmeta.getColumnName(i);
-                    Character coltypeobj = e.getValue(); //tbl_colnametype.get(colname);
-                //     logger.info("column " + i + " " + colname + " -> type " + coltypeobj);
-                //     if(coltypeobj == null)
-                //         throw new SQLException("coltype is unknown for " + colname);
-                //     colname = sqltoq.getColumnAliasName(i-1);
-                //     colnametype2.put(colname, coltypeobj);
-                    cols[i-1] = new ColumnInfo(colname, coltypeobj.toString(), true);
-                    i++;
+                List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
+                for(ColumnAndType e : colnametype2) {
+                    String colname = e.name.replace("__", ":");
+                    Character coltypeobj = e.type;
+                    if(colname.startsWith("dummy_"))
+                        continue;
+                    cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
                 }
-                }
-                ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols);
+                ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols.toArray(new ColumnInfo[cols.size()]));
                 while(rs.next()) {
-                    Object[] row = new Object[n];
+                    Object[] row = new Object[cols.size()];
+                    int rsidx = 1;
                     int i = 1;
-                    for(Entry<String, Character> e : colnametype2.entrySet()) {
-                        char coltype = e.getValue();
-                        Object obj = rs.getObject(i);
-                        logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
+                    for(ColumnAndType e : colnametype2) {
+                        String name = e.name;
+                        if(name.startsWith("dummy_"))
+                        {
+                            rsidx++;
+                            continue;
+                        }
+                        char coltype = e.type;
+                        Object obj = rs.getObject(rsidx);
+                        logger.info("ResultSet get value..." + rsidx + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
                         switch(coltype) {
                             case 'b':
-                                boolean blval = rs.getBoolean(i);
+                                boolean blval = rs.getBoolean(rsidx);
                                 row[i-1] = blval;
                                 break;
                             case 'x':
-                                byte btval = rs.getByte(i);
+                                byte btval = rs.getByte(rsidx);
                                 row[i-1] = btval;
                                 break;
                             case 'h':
-                                short stval = rs.getShort(i);
+                                short stval = rs.getShort(rsidx);
                                 row[i-1] = stval;
                                 break;
                             case 'i':
-                                int ival = rs.getInt(i);
+                                int ival = rs.getInt(rsidx);
                                 row[i-1] = ival;
                                 break;
                             case 'j':
-                                long lgval = rs.getLong(i);
+                                long lgval = rs.getLong(rsidx);
                                 row[i-1] = lgval;
                                 break;
                             case 'e':
-                                float realval = rs.getFloat(i);
+                                float realval = rs.getFloat(rsidx);
                                 row[i-1] = realval;
                                 break;
                             case 'f':
-                                double dblval = rs.getDouble(i);
+                                double dblval = rs.getDouble(rsidx);
                                 row[i-1] = dblval;
                                 break;
                             case 'p':
-                                Timestamp tsval = (Timestamp)rs.getObject(i);
+                                Timestamp tsval = (Timestamp)rs.getObject(rsidx);
                                 row[i-1] = TIMESTAMP_FORMAT.get().apply(tsval);
                                 break;
                             default:
-                                Object val = rs.getObject(i);
-                                logger.info("getObject " + i + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
+                                Object val = rs.getObject(rsidx);
+                                logger.info("getObject " + rsidx + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
                                 row[i-1] = val == null ? null : val.toString();
                         }
+                        rsidx++;
                         i++;
                     }
                     rows.add(row);
