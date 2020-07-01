@@ -75,6 +75,7 @@ public class KdbStatement implements Statement {
                 throw new SQLException("temp table is not supported. " + sql);
             }
             else if(sql.startsWith("SELECT ")) {
+                logger.info("converting sql..." + sql);
                 SqlToQscript sqltoq = new SqlToQscript(sql);
                 String tbl = sqltoq.getTableName();
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
