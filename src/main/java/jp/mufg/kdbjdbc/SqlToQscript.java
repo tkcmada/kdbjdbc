@@ -42,7 +42,6 @@ public class SqlToQscript {
                 gi++;
             }
         }
-        System.out.println("excludedColumn:" + Arrays.toString(excludedColumn));
 
         if(stmt.limit() != null) {
             s.append(stmt.limit().NUMBER().toString() + "#");
@@ -64,6 +63,7 @@ public class SqlToQscript {
         s.append(" from ");
         s.append(stmt.table().tbl.getTableName());
         //ignore alias name
+        //HAVING is ignored
         return s.toString();
     }
 }

@@ -51,6 +51,7 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt4() throws IOException {
-        parse("SELECT SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' HAVING (COUNT(1) > 0)");
+        String q = parse("SELECT SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' HAVING (COUNT(1) > 0)");
+        Assert.assertEquals("select sum bt from t2", q);
     }
 }
