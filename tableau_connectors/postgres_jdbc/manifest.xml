@@ -15,7 +15,8 @@
       <customization name="CAP_JDBC_METADATA_READ_PRIMARYKEYS" value="no"/>
       <customization name="CAP_JDBC_SUPPRESS_ENUMERATE_SCHEMAS"   value="yes"/>
       <customization name="CAP_JDBC_SUPPRESS_ENUMERATE_DATABASES" value="yes"/>
-      <customization name="CAP_QUERY_HAVING_UNSUPPORTED"          value="yes"/>
+      <customization name="CAP_QUERY_HAVING_REQUIRES_GROUP_BY"    value="yes"/>
+      <customization name="CAP_QUERY_HAVING_UNSUPPORTED"          value="no"/><!-- set 'yes' causes sub queries -->
       <!-- end -->
 
       <customization name="CAP_SELECT_INTO" value="yes"/>
