@@ -10,6 +10,14 @@
     <vendor name="vendor"/>
     <driver name="driver"/>
     <customizations>
+      <!-- adding for kdb -->      
+      <customization name="CAP_JDBC_METADATA_READ_FOREIGNKEYS" value="no"/>
+      <customization name="CAP_JDBC_METADATA_READ_PRIMARYKEYS" value="no"/>
+      <customization name="CAP_JDBC_SUPPRESS_ENUMERATE_SCHEMAS"   value="yes"/>
+      <customization name="CAP_JDBC_SUPPRESS_ENUMERATE_DATABASES" value="yes"/>
+      <customization name="CAP_QUERY_HAVING_UNSUPPORTED"          value="yes"/>
+      <!-- end -->
+
       <customization name="CAP_SELECT_INTO" value="yes"/>
       <customization name="CAP_SELECT_TOP_INTO" value="yes"/>
       <customization name="CAP_CREATE_TEMP_TABLES" value="no"/>
