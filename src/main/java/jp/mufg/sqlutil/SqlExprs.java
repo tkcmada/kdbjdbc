@@ -53,8 +53,9 @@ public class SqlExprs {
 
 		public Table(@NotNull String tableName, @Nullable String aliasName)
 		{
-			super();
-			//checkNotNull(tableName, "tableName is null");
+            super();
+            if(tableName == null)
+                throw new NullPointerException("tableName is null");
 			this.tableName = tableName;
 			this.aliasName = aliasName;
 		}

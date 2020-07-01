@@ -10,8 +10,12 @@ selectStmt
     ;
 
 table returns [Table tbl]
-    :   t=name ('AS'? a=name)?          { $tbl = new Table($t.text, $a.text); }
-    |   name '.' t=name ('AS'? a=name)? { $tbl = new Table($t.text, $a.text); }
+    :            t=name 'AS' a=name { $tbl = new Table($t.text, $a.text); }
+    |            t=name      a=name { $tbl = new Table($t.text, $a.text); }
+    |            t=name             { $tbl = new Table($t.text, null   ); }
+    |   name '.' t=name 'AS' a=name { $tbl = new Table($t.text, $a.text); }
+    |   name '.' t=name      a=name { $tbl = new Table($t.text, $a.text); }
+    |   name '.' t=name             { $tbl = new Table($t.text, null   ); }
     ;
 
 columnNames returns [List<ColumnExprWithAlias> columns]
@@ -69,7 +73,7 @@ args returns [Arguments val]
     ;
 
 columnExpr returns [ColumnExpr val]
-    :              id2=name { $val = new ColumnExpr(null,      $id2.text); }
+    :                id2=name { $val = new ColumnExpr(null,      $id2.text); }
     |   id1=name '.' id2=name { $val = new ColumnExpr($id1.text, $id2.text); }
     ;
 

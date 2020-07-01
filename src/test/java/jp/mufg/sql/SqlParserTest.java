@@ -1,32 +1,13 @@
 package jp.mufg.sql;
 
 import java.io.IOException;
-import java.io.StringReader;
-import jp.mufg.antlrutil.*;
 import jp.mufg.kdbjdbc.SqlToQscript;
-import jp.mufg.sql.SqlParser.ExprContext;
-import jp.mufg.sql.SqlParser.SelectStmtContext;
-
-import org.antlr.v4.runtime.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class SqlParserTest {
     private String parse(String sql) throws IOException {
-        CharStream cs = new ANTLRInputStream(new StringReader((sql + "$").replace('\'', '"').replace(" as ", " AS ")));
-        SqlLexer lexer = new SqlLexer(cs);        
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(new LexerErrorListener());
-		TokenStream tokens = new CommonTokenStream(lexer);
-        SqlParser parser = new SqlParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(ThrowingErrorListener.INSTANCE);
-        SelectStmtContext selectStmt = parser.selectStmt();
-		int errors = parser.getNumberOfSyntaxErrors();
-		if (errors > 0)
-            throw new RuntimeException("parse error");
-        System.out.println(selectStmt.toStringTree());
-        String q = new SqlToQscript(selectStmt).toQscript();
+        String q = new SqlToQscript(sql.replace('\'', '"')).toQscript();
         System.out.println(q);
         return q;
     }
@@ -54,4 +35,22 @@ public class SqlParserTest {
         String q = parse("SELECT SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' HAVING (COUNT(1) > 0)");
         Assert.assertEquals("select sum bt from t2", q);
     }
+
+    @Test
+    public void test_select_stmt5() throws IOException {
+        String q = parse("SELECT 't2'.'name' AS 'name' , 't2'.'bl' as 'bl', 't2'.'bt' as 'bt', 't2'.'x' as 'x', 't2'.'lg' as 'lg', 't2'.'r' as 'r', 't2'.'f' as 'f', 't2'.'d' as 'd', 't2'.'z' as 'z', 't2'.'ts' as 'ts', 't2'.'c' as 'c', 't2'.'g' as 'g' FROM 'public'.'t2' 't2'");
+        Assert.assertEquals("select name, bl, bt, x, lg, r, f, d, z, ts, c, g from t2", q);
+    }
+
+    @Test
+    public void test_select_stmt5_noquote_col() throws IOException {
+        String q = parse("SELECT t2.name AS name , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'");
+        Assert.assertEquals("select name, bl, bt, x, lg, r, f, d, z, ts, c, g from t2", q);
+    }    
+
+    // @Test
+    // public void test_select_stmt5_noquote_col_tbl() throws IOException {
+    //     String q = parse("SELECT t2.name AS name , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM public.t2 AS t2");
+    //     Assert.assertEquals("select name, bl, bt, x, lg, r, f, d, z, ts, c, g from t2", q);
+    // }    
 }

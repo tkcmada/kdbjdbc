@@ -75,15 +75,13 @@ public class KdbStatement implements Statement {
                 throw new SQLException("temp table is not supported. " + sql);
             }
             else if(sql.startsWith("SELECT ")) {
-                // //always return result of select * from t2.
+                SqlToQscript sqltoq = new SqlToQscript(sql);
+                String tbl = sqltoq.getTableName();
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
-                // rows.add(new Object[] {1, "abckdb"});
-                // rows.add(new Object[] {2, "defkdb"});
-                String tbl = "t2";
                 Map<String, Character> colnametype = this.meta.getColumnAndType(tbl);
-                String q = "q) select from " + tbl;
-                logger.info("execute on kdb+..." + q);
+                String q = "q) " + sqltoq.toQscript();
+                logger.info("execute on kdb+...>>>" + q + "<<<");
                 ResultSet rs = target.executeQuery(q);
                 ResultSetMetaData kdbmeta = rs.getMetaData();
                 int n = kdbmeta.getColumnCount();

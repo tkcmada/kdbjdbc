@@ -219,7 +219,7 @@ public class DriverTest {
         setup();
 
         Statement e = conn.createStatement();
-        e.executeQuery("SELECT ");
+        e.executeQuery("SELECT t2.name AS name , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
         ResultSet rs = e.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(12, meta.getColumnCount());
