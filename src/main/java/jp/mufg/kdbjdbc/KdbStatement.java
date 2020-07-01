@@ -100,7 +100,7 @@ public class KdbStatement implements Statement {
                 //         throw new SQLException("coltype is unknown for " + colname);
                 //     colname = sqltoq.getColumnAliasName(i-1);
                 //     colnametype2.put(colname, coltypeobj);
-                    cols[i-1] = new ColumnInfo(colname, "" + coltypeobj, true);
+                    cols[i-1] = new ColumnInfo(colname, coltypeobj.toString(), true);
                     i++;
                 }
                 }

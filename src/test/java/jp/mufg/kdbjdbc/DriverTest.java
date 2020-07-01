@@ -46,23 +46,23 @@ public class DriverTest {
         }
     }
 
-//     @Test
-//     public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
-//         Class.forName("jp.mufg.kdbjdbc.KdbDriver");
-//         Class.forName("jp.mufg.logjdbc.LogDriver");
-//         Properties props = new Properties();
-//         props.put("user", "user_dummy");
-//         props.put("password", "password_dummy");
-//         props.put("logdir", ".");
-//         Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001", props);
-//         DatabaseMetaData meta = h.getMetaData();
-//         ResultSet rs = meta.getColumns(null, "public", "t2", null);
-//         while(rs.next()) {
-//             logger.info("column:{}", rs.getString("COLUMN_NAME")); //need to wrap result to offer getString(String)
-//         }
-//         rs.close();
-//         h.close();
-//     }
+    @Test
+    public void test_DatabaseMetadata_columns() throws ClassNotFoundException, SQLException {
+        Class.forName("jp.mufg.kdbjdbc.KdbDriver");
+        Class.forName("jp.mufg.logjdbc.LogDriver");
+        Properties props = new Properties();
+        props.put("user", "user_dummy");
+        props.put("password", "password_dummy");
+        props.put("logdir", ".");
+        Connection h = DriverManager.getConnection("jdbc:log:jdbc:kdb:localhost:5001", props);
+        DatabaseMetaData meta = h.getMetaData();
+        ResultSet rs = meta.getColumns(null, "public", "t2", null);
+        while(rs.next()) {
+            logger.info("column:{}", rs.getString("COLUMN_NAME")); //need to wrap result to offer getString(String)
+        }
+        rs.close();
+        h.close();
+    }
 
 //     @Test
 //     public void test_arithmatic() throws ClassNotFoundException, SQLException {
