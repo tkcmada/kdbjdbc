@@ -78,7 +78,7 @@ public class KdbStatement implements Statement {
             }
             else if(sql.startsWith("SELECT ")) {
                 logger.info("converting sql..." + sql);
-                SqlToQscript sqltoq = new SqlToQscript(sql);
+                SqlSelectToQscriptTranslator sqltoq = new SqlSelectToQscriptTranslator(sql);
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
                 String pure_q = sqltoq.toQscript();
@@ -89,9 +89,9 @@ public class KdbStatement implements Statement {
                 ResultSet rs = target.executeQuery(q);
                 List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
                 for(ColumnAndType e : colnametype2) {
-                    String colname = SqlToQscript.dequoteColumnName(e.name);
+                    String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
                     Character coltypeobj = e.type;
-                    if(SqlToQscript.isDummyColumn(colname))
+                    if(SqlSelectToQscriptTranslator.isDummyColumn(colname))
                         continue;
                     cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
                 }

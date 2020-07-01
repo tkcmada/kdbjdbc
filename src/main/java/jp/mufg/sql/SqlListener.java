@@ -17,6 +17,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterGroupBy(SqlParser.GroupByContext ctx);
 	void exitGroupBy(SqlParser.GroupByContext ctx);
 
+	void enterPint(SqlParser.PintContext ctx);
+	void exitPint(SqlParser.PintContext ctx);
+
 	void enterSelectStmt(SqlParser.SelectStmtContext ctx);
 	void exitSelectStmt(SqlParser.SelectStmtContext ctx);
 
@@ -46,6 +49,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterExpr(SqlParser.ExprContext ctx);
 	void exitExpr(SqlParser.ExprContext ctx);
+
+	void enterGroupargs(SqlParser.GroupargsContext ctx);
+	void exitGroupargs(SqlParser.GroupargsContext ctx);
 
 	void enterTable(SqlParser.TableContext ctx);
 	void exitTable(SqlParser.TableContext ctx);

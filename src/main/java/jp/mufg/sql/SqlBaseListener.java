@@ -20,6 +20,9 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterGroupBy(SqlParser.GroupByContext ctx) { }
 	@Override public void exitGroupBy(SqlParser.GroupByContext ctx) { }
 
+	@Override public void enterPint(SqlParser.PintContext ctx) { }
+	@Override public void exitPint(SqlParser.PintContext ctx) { }
+
 	@Override public void enterSelectStmt(SqlParser.SelectStmtContext ctx) { }
 	@Override public void exitSelectStmt(SqlParser.SelectStmtContext ctx) { }
 
@@ -49,6 +52,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterExpr(SqlParser.ExprContext ctx) { }
 	@Override public void exitExpr(SqlParser.ExprContext ctx) { }
+
+	@Override public void enterGroupargs(SqlParser.GroupargsContext ctx) { }
+	@Override public void exitGroupargs(SqlParser.GroupargsContext ctx) { }
 
 	@Override public void enterTable(SqlParser.TableContext ctx) { }
 	@Override public void exitTable(SqlParser.TableContext ctx) { }

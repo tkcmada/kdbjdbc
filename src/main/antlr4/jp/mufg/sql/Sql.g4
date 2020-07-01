@@ -29,7 +29,7 @@ columnName returns [ColumnExprWithAlias val]
     ;
 
 groupBy
-    : 'GROUP' 'BY' args
+    : 'GROUP' 'BY' groupargs
     ;
 
 having
@@ -37,7 +37,7 @@ having
     ;
 
 limit
-    : 'LIMIT' NUMBER
+    : 'LIMIT' pint
     ;
 
 expr returns [Expr val]
@@ -64,6 +64,14 @@ numberExpr returns [NumberExpr val]
     : numtk=NUMBER { $val = new NumberExpr($numtk.text); }
     ;
 
+groupargs returns [List<Integer> val]
+    : { List<Integer> _args = new ArrayList<Integer>(); }
+      (e1=pint { _args.add($e1.val); }
+        (',' e2=pint { _args.add($e2.val); } )*
+      )?
+      { $val = _args; }
+    ;
+
 args returns [Arguments val]
     : { List<Expr> _args = new ArrayList<Expr>(); }
       (e1=expr { _args.add($e1.val); }
@@ -84,6 +92,9 @@ name returns [String text]
     |ID2 { String s = $ID2.text; $text = s.substring(1, s.length()-1); }
     ;
 
+pint returns [int val]
+    : num=NUMBER { $val = Integer.parseInt($num.text); }
+    ;
 
 WS
     : ( ' ' | '\t' | '\r' | '\n' ) -> skip

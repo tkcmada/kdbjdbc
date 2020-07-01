@@ -1,13 +1,13 @@
 package jp.mufg.sql;
 
 import java.io.IOException;
-import jp.mufg.kdbjdbc.SqlToQscript;
+import jp.mufg.kdbjdbc.SqlSelectToQscriptTranslator;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class SqlParserTest {
     private String parse(String sql) throws IOException {
-        String q = new SqlToQscript(sql.replace('\'', '"')).toQscript();
+        String q = new SqlSelectToQscriptTranslator(sql.replace('\'', '"')).toQscript();
         System.out.println(q);
         return q;
     }
