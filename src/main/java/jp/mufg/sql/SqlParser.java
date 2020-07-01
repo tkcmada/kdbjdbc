@@ -746,6 +746,7 @@ public class SqlParser extends Parser {
 	public static class ArgsContext extends ParserRuleContext {
 		public Arguments val;
 		public ExprContext e1;
+		public ExprContext e2;
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
@@ -787,8 +788,8 @@ public class SqlParser extends Parser {
 					{
 					{
 					setState(139); match(13);
-					setState(140); expr();
-					 _args.add(((ArgsContext)_localctx).e1.val); 
+					setState(140); ((ArgsContext)_localctx).e2 = expr();
+					 _args.add(((ArgsContext)_localctx).e2.val); 
 					}
 					}
 					setState(147);

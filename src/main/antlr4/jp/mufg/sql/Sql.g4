@@ -62,7 +62,9 @@ numberExpr returns [NumberExpr val]
 
 args returns [Arguments val]
     : { List<Expr> _args = new ArrayList<Expr>(); }
-      (e1=expr { _args.add($e1.val); } (',' expr { _args.add($e1.val); } )*)?
+      (e1=expr { _args.add($e1.val); }
+        (',' e2=expr { _args.add($e2.val); } )*
+      )?
       { $val = new Arguments(_args); }
     ;
 

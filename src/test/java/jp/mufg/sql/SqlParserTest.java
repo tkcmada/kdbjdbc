@@ -40,7 +40,7 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt2() throws IOException {
         String q = parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
-        // Assert.assertEquals("select sum bt by bl, c from t2", q);
+        Assert.assertEquals("select sum bt by bl, c from t2", q);
     }
 
     @Test
@@ -53,5 +53,4 @@ public class SqlParserTest {
     public void test_select_stmt4() throws IOException {
         parse("SELECT SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' HAVING (COUNT(1) > 0)");
     }
-
 }

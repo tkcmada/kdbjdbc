@@ -705,7 +705,9 @@ public class SqlExprs {
 
 		public NumberExpr(String numberString)
 		{
-			super();
+            super();
+            if(numberString == null)
+                throw new NullPointerException("numberString is null");
 			this.numberString = numberString;
         }
         

@@ -1,5 +1,6 @@
 package jp.mufg.kdbjdbc;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,9 +29,10 @@ public class SqlToQscript {
         if(stmt.groupBy() != null) {
             gs.append(" by ");
             int gi = 0;
-            for(Expr expr : stmt.groupBy().args().val.getExprs()) {
+            for(Expr _expr : stmt.groupBy().args().val.getExprs()) {
                 if(gi > 0)
                     gs.append(", ");
+                Expr expr = _expr;
                 if(expr instanceof NumberExpr) {
                     int colnum = ((NumberExpr)expr).intValue();
                     expr = stmt.columnNames().columns.get(colnum - 1).expr;
@@ -40,6 +42,7 @@ public class SqlToQscript {
                 gi++;
             }
         }
+        System.out.println("excludedColumn:" + Arrays.toString(excludedColumn));
 
         if(stmt.limit() != null) {
             s.append(stmt.limit().NUMBER().toString() + "#");
