@@ -89,9 +89,9 @@ public class KdbStatement implements Statement {
                 ResultSet rs = target.executeQuery(q);
                 List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
                 for(ColumnAndType e : colnametype2) {
-                    String colname = e.name.replace("__", ":");
+                    String colname = SqlToQscript.dequoteColumnName(e.name);
                     Character coltypeobj = e.type;
-                    if(colname.startsWith("dummy_"))
+                    if(SqlToQscript.isDummyColumn(colname))
                         continue;
                     cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
                 }

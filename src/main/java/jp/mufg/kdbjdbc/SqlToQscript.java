@@ -66,11 +66,29 @@ public class SqlToQscript {
         return stmt.groupBy() != null && stmt.groupBy().args().val.getExprs().size() == stmt.columnNames().columns.size();
     }
 
+    public static String escapeColumnName(String s) {
+        return s.replace(":", "__");
+    }
+
+    public static String dequoteColumnName(String s) {
+        return s.replace("__", ":");
+    }
+
+    public static boolean isDummyColumn(String columnName) {
+        return columnName.startsWith("dummy_");
+    }
+
+    private enum ColumnVisibility {
+        Include,
+        Exclude,
+        Dummy
+    }
+
     public String toQscript() {
         StringBuilder s = new StringBuilder();
 
         //groupby
-        Boolean[] excludedColumn = new Boolean[stmt.columnNames().columns.size()];
+        ColumnVisibility[] excludedColumn = new ColumnVisibility[stmt.columnNames().columns.size()];
         StringBuilder gs = new StringBuilder();
         if(stmt.groupBy() != null) {
             gs.append(" by ");
@@ -83,12 +101,12 @@ public class SqlToQscript {
                     int colnum = ((NumberExpr)expr).intValue();
                     expr = stmt.columnNames().columns.get(colnum - 1).expr;
                     if(isOnlyGroupByColumn()) {
-                        excludedColumn[colnum - 1] = Boolean.FALSE;
+                        excludedColumn[colnum - 1] = ColumnVisibility.Dummy;
                     }
                     else {
-                        excludedColumn[colnum - 1] = Boolean.TRUE;
+                        excludedColumn[colnum - 1] = ColumnVisibility.Exclude;
                     }
-                    gs.append(stmt.columnNames().columns.get(colnum - 1).getAliasName().replace(":", "__"));
+                    gs.append(escapeColumnName(stmt.columnNames().columns.get(colnum - 1).getAliasName()));
                     gs.append(":");
                     gs.append(expr.toQscript());
                 }
@@ -107,13 +125,13 @@ public class SqlToQscript {
         int i = 0;
         boolean coloutput = false;
         for(ColumnExprWithAlias c : stmt.columnNames().columns) {
-            if(excludedColumn[i] == null || excludedColumn[i] == Boolean.FALSE) {
+            if(excludedColumn[i] == null/*Include*/ || excludedColumn[i] == ColumnVisibility.Dummy) {
                 if(coloutput)
                     s.append(", ");
                 String aliasname = c.getAliasName();
-                if(excludedColumn[i] == Boolean.FALSE)
+                if(excludedColumn[i] == ColumnVisibility.Dummy)
                     aliasname = "dummy_" + aliasname;
-                s.append(aliasname.replace(":", "__"));
+                s.append(escapeColumnName(aliasname));
                 s.append(":");
                 s.append(c.expr.toQscript());
                 coloutput = true;
