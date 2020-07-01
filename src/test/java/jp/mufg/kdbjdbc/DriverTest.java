@@ -269,18 +269,30 @@ public class DriverTest {
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("abc"   , rs.getString("sum:name:ok"));
+        Assert.assertEquals("abc"   , rs.getString(1));
         Assert.assertTrue(rs.getBoolean("bl"));
+        Assert.assertTrue(rs.getBoolean(2   ));
         Assert.assertEquals(0x26    , rs.getByte("bt"));
+        Assert.assertEquals(0x26    , rs.getByte(3   ));
         Assert.assertEquals(100     , rs.getInt("x"));
+        Assert.assertEquals(100     , rs.getInt(4  ));
         Assert.assertEquals(1000L   , rs.getLong("lg"));
+        Assert.assertEquals(1000L   , rs.getLong(5   ));
         Assert.assertEquals(1.2f    , rs.getFloat("r")  , 0.0001f);
+        Assert.assertEquals(1.2f    , rs.getFloat( 6 )  , 0.0001f);
         Assert.assertEquals(1.5f    , rs.getDouble("f"), 0.00001);
+        Assert.assertEquals(1.5f    , rs.getDouble( 7 ), 0.00001);
         Assert.assertEquals("2015-01-01", rs.getObject("d"));
+        Assert.assertEquals("2015-01-01", rs.getObject( 8 ));
         // Assert.assertEquals(new Timestamp(2015 - 1900, 0, 1, 1, 2, 3, 1002003), rs.getTimestamp("z", Calendar.getInstance()));
         Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z"));
+        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject( 9 ));
         Assert.assertEquals("01:02:03.001002000", rs.getObject("ts"));
+        Assert.assertEquals("01:02:03.001002000", rs.getObject(10  ));
         Assert.assertEquals("a"     , rs.getObject("c"));
+        Assert.assertEquals("a"     , rs.getObject(11 ));
         Assert.assertNotNull(rs.getObject("g"));
+        Assert.assertNotNull(rs.getObject(12 ));
 
 
         // Assert.assertTrue(rs.next());
@@ -311,13 +323,16 @@ public class DriverTest {
         Assert.assertEquals("d"     , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertNull(rs.getObject("d"));
+        Assert.assertEquals("2015-01-01", rs.getObject("d"));
+        Assert.assertEquals("2015-01-01", rs.getObject(1));
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("1970-01-04", rs.getObject("d"));
+        Assert.assertEquals("1970-01-04", rs.getObject(1));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("2015-01-01", rs.getObject("d"));
+        Assert.assertNull(rs.getObject("d"));
+        Assert.assertNull(rs.getObject(1));
 
         Assert.assertFalse(rs.next());
 

@@ -49,7 +49,9 @@ public class SqlSelectToQscriptTranslator {
         return stmt.columnNames().columns.get(i_starting_1-1).getAliasName();
     }
 
-    public boolean isOnlyGroupByColumn() {
+    public boolean isDistinct() {
+        if(stmt.groupBy() == null)
+            return false;
         HashSet<Integer> colnum = new HashSet<Integer>();
         for(int i = 1; i <= stmt.columnNames().columns.size(); i++)
             colnum.add(i);
@@ -68,21 +70,22 @@ public class SqlSelectToQscriptTranslator {
     public String toQscript() {
         StringBuilder s = new StringBuilder();
 
+        final boolean distinct = isDistinct();
         //groupby
         ColumnVisibility[] excludedColumn = new ColumnVisibility[stmt.columnNames().columns.size()];
         for(int i = 0; i < excludedColumn.length; i++) excludedColumn[i] = ColumnVisibility.Include;
         StringBuilder gs = new StringBuilder();
-        if(stmt.groupBy() != null) {
+        if(! distinct && stmt.groupBy() != null) {
             for(Integer colnum : stmt.groupBy().groupargs().val) {
                 if(gs.length() > 0)
                     gs.append(", ");
                 Expr expr = stmt.columnNames().columns.get(colnum - 1).expr;
-                if(isOnlyGroupByColumn()) {
-                    excludedColumn[colnum - 1] = ColumnVisibility.Dummy;
-                }
-                else {
+                // if(isDistinct()) {
+                //     excludedColumn[colnum - 1] = ColumnVisibility.Dummy;
+                // }
+                // else {
                     excludedColumn[colnum - 1] = ColumnVisibility.Exclude;
-                }
+                // }
                 gs.append(escapeColumnName(stmt.columnNames().columns.get(colnum - 1).getAliasName()));
                 gs.append(":");
                 gs.append(expr.toQscript());
@@ -92,6 +95,8 @@ public class SqlSelectToQscriptTranslator {
         if(stmt.limit() != null) {
             s.append(stmt.limit().pint().val + "#");
         }
+        if(distinct)
+            s.append("distinct ");
         s.append("select ");
         int i = 0;
         boolean coloutput = false;
@@ -100,8 +105,8 @@ public class SqlSelectToQscriptTranslator {
                 if(coloutput)
                     s.append(", ");
                 String aliasname = c.getAliasName();
-                if(excludedColumn[i] == ColumnVisibility.Dummy)
-                    aliasname = "dummy_" + aliasname;
+                // if(excludedColumn[i] == ColumnVisibility.Dummy)
+                //     aliasname = "dummy_" + aliasname;
                 s.append(escapeColumnName(aliasname));
                 s.append(":");
                 s.append(c.expr.toQscript());

@@ -57,7 +57,12 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_by_d() throws IOException {
         String q = parse("SELECT t2.d AS d FROM 'public'.'t2' 't2' GROUP BY 1");
-        Assert.assertEquals("select dummy_d:d by d:d from t2", q);
+        Assert.assertEquals("distinct select d:d from t2", q);
     }    
 
+    @Test
+    public void test_select_stmt_by_c_d() throws IOException {
+        String q = parse("SELECT t2.c AS c, t2.d AS d FROM 'public'.'t2' 't2' GROUP BY 1, 2");
+        Assert.assertEquals("distinct select c:c, d:d from t2", q);
+    }    
 }
