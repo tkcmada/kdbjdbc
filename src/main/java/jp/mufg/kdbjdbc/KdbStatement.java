@@ -77,32 +77,38 @@ public class KdbStatement implements Statement {
             else if(sql.startsWith("SELECT ")) {
                 logger.info("converting sql..." + sql);
                 SqlToQscript sqltoq = new SqlToQscript(sql);
-                String tbl = sqltoq.getTableName();
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
-                Map<String, Character> colnametype = this.meta.getColumnAndType(tbl);
-                String q = "q) " + sqltoq.toQscript();
+                String pure_q = sqltoq.toQscript();
+                final Map<String, Character> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
+
+                final String q = "q) " + pure_q;
                 logger.info("execute on kdb+...>>>" + q + "<<<");
                 ResultSet rs = target.executeQuery(q);
                 ResultSetMetaData kdbmeta = rs.getMetaData();
-                int n = kdbmeta.getColumnCount();
-                Map<String, Character> colnametype2 = new LinkedHashMap<String, Character>();
+                final int n = kdbmeta.getColumnCount();
                 ColumnInfo[] cols = new ColumnInfo[n];
-                for(int i = 1; i <= n; i++) {
-                    String colname = kdbmeta.getColumnName(i);
-                    Character coltypeobj = colnametype.get(colname);
-                    logger.info("column " + i + " " + colname + " -> type " + coltypeobj);
-                    if(coltypeobj == null)
-                        throw new SQLException("coltype is unknown for " + colname);
-                    colnametype2.put(colname, coltypeobj);
+                // Map<String, Character> colnametype2 = new LinkedHashMap<String, Character>();
+                // for(int i = 1; i <= n; i++) {
+                {
+                int i = 1;
+                for(Entry<String, Character> e : colnametype2.entrySet()) {
+                    String colname = e.getKey(); //kdbmeta.getColumnName(i);
+                    Character coltypeobj = e.getValue(); //tbl_colnametype.get(colname);
+                //     logger.info("column " + i + " " + colname + " -> type " + coltypeobj);
+                //     if(coltypeobj == null)
+                //         throw new SQLException("coltype is unknown for " + colname);
+                //     colname = sqltoq.getColumnAliasName(i-1);
+                //     colnametype2.put(colname, coltypeobj);
                     cols[i-1] = new ColumnInfo(colname, "" + coltypeobj, true);
+                    i++;
+                }
                 }
                 ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols);
                 while(rs.next()) {
                     Object[] row = new Object[n];
                     int i = 1;
                     for(Entry<String, Character> e : colnametype2.entrySet()) {
-                        // String colname = e.getKey();
                         char coltype = e.getValue();
                         Object obj = rs.getObject(i);
                         logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");

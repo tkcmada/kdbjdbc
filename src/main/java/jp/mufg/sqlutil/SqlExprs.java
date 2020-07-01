@@ -118,11 +118,26 @@ public class SqlExprs {
         @NotNull
         public final Expr expr;
         @Nullable
-        public final String aliasName;
+        private final String aliasName;
 
         public ColumnExprWithAlias(@NotNull Expr expr, @Nullable String aliasName) {
+            if(expr == null)
+                throw new NullPointerException("expr is null");
             this.expr = expr;
             this.aliasName = aliasName;
+        }
+
+        public boolean isAliasSpecified() {
+            return aliasName != null;
+        }
+
+        public String getAliasName() {
+            if(aliasName != null)
+                return aliasName;
+            if(expr instanceof ColumnExpr) {
+                return ((ColumnExpr)expr).columnName;
+            }
+            return expr.toString();
         }
     }
 	

@@ -101,12 +101,15 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
 
     public Map<String, Character> getColumnAndType(String table) throws SQLException {
         LinkedHashMap<String, Character> map = new LinkedHashMap<String,Character>();
+        String q = "q)flip (`column_name`column_type)!(cols " + table + "; (value meta " + table + ")[;`t])";
+        logger.info("getColumnAndType..." + q);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("q)flip (`column_name`column_type)!(cols " + table + "; (value meta " + table + ")[;`t])");
+        ResultSet rs = stmt.executeQuery(q);
         while(rs.next()) {
             String colname = rs.getString(1);
             char ctype = (Character)rs.getObject(2);
             map.put(colname, ctype);
+            logger.info("column->coltype:" + colname + "->" + ctype);
         }
         rs.close();
         stmt.close();

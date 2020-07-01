@@ -1,7 +1,9 @@
 package jp.mufg.kdbjdbc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jp.mufg.sql.SqlLexer;
@@ -52,9 +54,13 @@ public class SqlToQscript {
         }
     }
 
-    public String getTableName() {
-        return stmt.table().tbl.getTableName();
-    }
+    // public String getTableName() {
+    //     return stmt.table().tbl.getTableName();
+    // }
+
+    // public String getColumnAliasName(int i) {
+    //     return stmt.columnNames().columns.get(i-1).getAliasName();
+    // }
 
     public String toQscript() {
         StringBuilder s = new StringBuilder();
