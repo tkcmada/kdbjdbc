@@ -65,6 +65,7 @@ public class KdbStatement implements Statement {
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
                 String pure_q = sqltoq.toQscript();
+                logger.info("converted q-script>>>" + pure_q + "<<<");
                 final List<ColumnAndType> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
 
                 // if(! pure_q.contains(" where date ")) {

@@ -83,10 +83,10 @@ public class SqlSelectToQscriptTranslator {
         if(distinct) {
             s.append("distinct ");
         }
-        s.append("select ");
         if(stmt.limit() != null) {
-            s.append("[" + stmt.limit().pint().val + "] ");
+            s.append(stmt.limit().pint().val + "#");
         }
+        s.append("select ");
         {
             int i = 0;
             StringBuilder cs = new StringBuilder();
