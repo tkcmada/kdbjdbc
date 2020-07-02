@@ -13,9 +13,9 @@ public class SqlParserTest {
     }
 
     @Test
-    public void test_select_stmt1() throws IOException {
+    public void test_select_stmt1_limit() throws IOException {
         String q = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000");
-        Assert.assertEquals("1000#select id:id, name:name from t2", q);
+        Assert.assertEquals("select [1000] id:id, name:name from t2", q);
     }
 
     @Test

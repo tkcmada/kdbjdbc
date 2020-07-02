@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,24 +46,6 @@ public class KdbStatement implements Statement {
         return target.isClosed();
     }
 
-    private static final ThreadLocal<Function<Timestamp, String>> TIMESTAMP_FORMAT = new ThreadLocal<Function<Timestamp, String>>()
-    {
-        final SimpleDateFormat datetime_format = new SimpleDateFormat("yyyy.MM.dd'D'HH:mm:ss");
-        final DecimalFormat nano_format = new DecimalFormat("000000000");
-        @Override
-        protected Function<Timestamp, String> initialValue()
-        {
-            return new Function<Timestamp, String>() {
-                @Override
-                public String apply(Timestamp value) {
-                    if(value == null)
-                        return null;
-                    return datetime_format.format(value) + "." + nano_format.format(value.getNanos());
-                }
-            };
-        }
-    };
-
     @Override
     public boolean execute(String sql) throws SQLException {
         logger.info("execute:" + String.valueOf(sql));
@@ -91,64 +74,99 @@ public class KdbStatement implements Statement {
                 for(ColumnAndType e : colnametype2) {
                     String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
                     Character coltypeobj = e.type;
-                    if(SqlSelectToQscriptTranslator.isDummyColumn(colname))
-                        continue;
+                    // if(SqlSelectToQscriptTranslator.isDummyColumn(colname))
+                    //     continue;
                     cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
                 }
                 ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols.toArray(new ColumnInfo[cols.size()]));
                 while(rs.next()) {
                     Object[] row = new Object[cols.size()];
-                    int rsidx = 1;
                     int i = 1;
                     for(ColumnAndType e : colnametype2) {
-                        String name = e.name;
-                        if(name.startsWith("dummy_"))
-                        {
-                            rsidx++;
-                            continue;
-                        }
                         char coltype = e.type;
-                        Object obj = rs.getObject(rsidx);
-                        logger.info("ResultSet get value..." + rsidx + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
+                        Object obj = rs.getObject(i);
+                        logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
                         switch(coltype) {
                             case 'b':
-                                boolean blval = rs.getBoolean(rsidx);
+                                boolean blval = rs.getBoolean(i);
                                 row[i-1] = blval;
                                 break;
                             case 'x':
-                                byte btval = rs.getByte(rsidx);
+                                byte btval = rs.getByte(i);
                                 row[i-1] = btval;
                                 break;
                             case 'h':
-                                short stval = rs.getShort(rsidx);
+                                short stval = rs.getShort(i);
                                 row[i-1] = stval;
                                 break;
                             case 'i':
-                                int ival = rs.getInt(rsidx);
+                                int ival = rs.getInt(i);
                                 row[i-1] = ival;
                                 break;
                             case 'j':
-                                long lgval = rs.getLong(rsidx);
+                                long lgval = rs.getLong(i);
                                 row[i-1] = lgval;
                                 break;
                             case 'e':
-                                float realval = rs.getFloat(rsidx);
+                                float realval = rs.getFloat(i);
                                 row[i-1] = realval;
                                 break;
                             case 'f':
-                                double dblval = rs.getDouble(rsidx);
+                                double dblval = rs.getDouble(i);
                                 row[i-1] = dblval;
                                 break;
                             case 'p':
-                                Timestamp tsval = (Timestamp)rs.getObject(rsidx);
-                                row[i-1] = TIMESTAMP_FORMAT.get().apply(tsval);
+                                Timestamp tsval = (Timestamp)rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(tsval);
                                 break;
+                            case 'C':
+                                row[i-1] = rs.getString(i);
+                                break;
+                            // case 'B':
+                            //     boolean[] abl = (boolean[]) rs.getObject(i);
+                            //     row[i-1] = KdbUtil.toVarChar(abl);
+                            //     break;
+                            case 'X':
+                                byte[] ab = (byte[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(ab);
+                                break;
+                            // case 'H':
+                            //     short[] as = (short[]) rs.getObject(i);
+                            //     row[i-1] = KdbUtil.toVarChar(as);
+                            //     break;
+                            case 'I':
+                                int[] ai = (int[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(ai);
+                                break;
+                            case 'J':
+                                long[] al = (long[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(al);
+                                break;
+                            // case 'E':
+                            //     float[] ae = (float[]) rs.getObject(i);
+                            //     row[i-1] = KdbUtil.toVarChar(ae);
+                            //     break;
+                            case 'F':
+                                double[] ad = (double[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(ad);
+                                break;
+                            case 'S': //list of symbol
+                                String[] as = (String[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(as);
+                                break;
+                            case 'P': //list of timestamp
+                                Timestamp[] ats = (Timestamp[]) rs.getObject(i);
+                                row[i-1] = KdbUtil.toVarChar(ats);
+                                break;
+                            // case 'G':
+                            //     Object[] ag = (Object[]) rs.getObject(i);
+                            //     row[i-1] = Arrays.toString(ag);
+                            //     break;
                             default:
-                                Object val = rs.getObject(rsidx);
-                                logger.info("getObject " + rsidx + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
+                                Object val = rs.getObject(i);
+                                logger.info("getObject " + i + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
                                 row[i-1] = val == null ? null : val.toString();
                         }
-                        rsidx++;
                         i++;
                     }
                     rows.add(row);

@@ -61,58 +61,47 @@ public class SqlSelectToQscriptTranslator {
         return colnum.size() == 0;
     }
 
-    private enum ColumnVisibility {
-        Include,
-        Exclude,
-        Dummy
-    }
-
     public String toQscript() {
         StringBuilder s = new StringBuilder();
 
         final boolean distinct = isDistinct();
         //groupby
-        ColumnVisibility[] excludedColumn = new ColumnVisibility[stmt.columnNames().columns.size()];
-        for(int i = 0; i < excludedColumn.length; i++) excludedColumn[i] = ColumnVisibility.Include;
+        boolean[] excludedColumn = new boolean[stmt.columnNames().columns.size()];
         StringBuilder gs = new StringBuilder();
         if(! distinct && stmt.groupBy() != null) {
             for(Integer colnum : stmt.groupBy().groupargs().val) {
                 if(gs.length() > 0)
                     gs.append(", ");
                 Expr expr = stmt.columnNames().columns.get(colnum - 1).expr;
-                // if(isDistinct()) {
-                //     excludedColumn[colnum - 1] = ColumnVisibility.Dummy;
-                // }
-                // else {
-                    excludedColumn[colnum - 1] = ColumnVisibility.Exclude;
-                // }
+                excludedColumn[colnum - 1] = true;
                 gs.append(escapeColumnName(stmt.columnNames().columns.get(colnum - 1).getAliasName()));
                 gs.append(":");
                 gs.append(expr.toQscript());
             }
         }
 
-        if(stmt.limit() != null) {
-            s.append(stmt.limit().pint().val + "#");
-        }
-        if(distinct)
+        if(distinct) {
             s.append("distinct ");
+        }
         s.append("select ");
-        int i = 0;
-        boolean coloutput = false;
-        for(ColumnExprWithAlias c : stmt.columnNames().columns) {
-            if(excludedColumn[i] != ColumnVisibility.Exclude) {
-                if(coloutput)
-                    s.append(", ");
-                String aliasname = c.getAliasName();
-                // if(excludedColumn[i] == ColumnVisibility.Dummy)
-                //     aliasname = "dummy_" + aliasname;
-                s.append(escapeColumnName(aliasname));
-                s.append(":");
-                s.append(c.expr.toQscript());
-                coloutput = true;
+        if(stmt.limit() != null) {
+            s.append("[" + stmt.limit().pint().val + "] ");
+        }
+        {
+            int i = 0;
+            StringBuilder cs = new StringBuilder();
+            for(ColumnExprWithAlias c : stmt.columnNames().columns) {
+                if(! excludedColumn[i]) {
+                    if(cs.length() > 0)
+                        cs.append(", ");
+                    String aliasname = c.getAliasName();
+                    cs.append(escapeColumnName(aliasname));
+                    cs.append(":");
+                    cs.append(c.expr.toQscript());
+                }
+                i++;
             }
-            i++;
+            s.append(cs.toString());
         }
         if(gs.length() > 0) {
             s.append(" by ");
@@ -134,9 +123,4 @@ public class SqlSelectToQscriptTranslator {
     public static String dequoteColumnName(String s) {
         return s.replace("__", ":");
     }
-
-    public static boolean isDummyColumn(String columnName) {
-        return columnName.startsWith("dummy_");
-    }
-
 }

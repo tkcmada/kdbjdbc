@@ -210,7 +210,7 @@ public class DriverTest {
         setup();
 
         Statement e = conn.createStatement();
-        e.executeQuery("SELECT t2.name AS \"sum:name:ok\" , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
+        e.executeQuery("SELECT t2.name AS \"name:xxx\" , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
         ResultSet rs = e.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(12, meta.getColumnCount());
@@ -218,7 +218,7 @@ public class DriverTest {
         int p = 0;
 
         p++;
-        Assert.assertEquals("sum:name:ok"  , meta.getColumnName(p));
+        Assert.assertEquals("name:xxx"  , meta.getColumnName(p));
         Assert.assertEquals("s"     , meta.getColumnTypeName(p));
 
         p++;
@@ -268,7 +268,7 @@ public class DriverTest {
         Assert.assertEquals("g"     , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("abc"   , rs.getString("sum:name:ok"));
+        Assert.assertEquals("abc"   , rs.getString("name:xxx"));
         Assert.assertEquals("abc"   , rs.getString(1));
         Assert.assertTrue(rs.getBoolean("bl"));
         Assert.assertTrue(rs.getBoolean(2   ));
@@ -301,6 +301,66 @@ public class DriverTest {
         // Assert.assertEquals(0L, rs.getLong(3)); // 0Nj -> 0
 
         // Assert.assertFalse(rs.next());
+
+        rs.close();
+        e.close();;
+    }
+
+    @Test
+    public void test_Statement_q_t4() throws SQLException, ClassNotFoundException {
+        setup();
+
+        Statement e = conn.createStatement();
+        e.executeQuery("SELECT t4.c1 AS 'c1', t4.ll AS 'll', t4.lb AS 'lb', t4.li AS 'li', t4.ls AS 'ls', t4.lf AS 'lf', t4.lz AS 'lz' FROM 'public'.'t4' 't4'".replace("'", "\""));
+        ResultSet rs = e.getResultSet();
+        ResultSetMetaData meta = rs.getMetaData();
+        Assert.assertEquals(7, meta.getColumnCount());
+
+        int p = 0;
+
+        p++;
+        Assert.assertEquals("c1"    , meta.getColumnName(p));
+        Assert.assertEquals("j"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.BIGINT   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("ll"    , meta.getColumnName(p));
+        Assert.assertEquals("J"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("lb"    , meta.getColumnName(p));
+        Assert.assertEquals("X"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("li"    , meta.getColumnName(p));
+        Assert.assertEquals("I"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("ls"    , meta.getColumnName(p));
+        Assert.assertEquals("S"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("lf"    , meta.getColumnName(p));
+        Assert.assertEquals("F"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("lz"     , meta.getColumnName(p));
+        Assert.assertEquals("P"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals(0L       , rs.getObject("c1"));
+        Assert.assertEquals("10 20"  , rs.getString("ll"));
+        Assert.assertEquals("0x0001" , rs.getString("lb"));
+        Assert.assertEquals("0 1"    , rs.getString("li"));
+        Assert.assertEquals("`abc`def", rs.getString("ls"));
+        Assert.assertEquals("1.0 1.1" , rs.getString("lf"));
+        Assert.assertEquals("1970.01.04D00:00:00.001002003 1970.01.04D00:00:00.001002003", rs.getObject("lz"));
 
         rs.close();
         e.close();;
