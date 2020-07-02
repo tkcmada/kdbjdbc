@@ -179,7 +179,7 @@ public class DriverTest {
         Assert.assertEquals(Types.FLOAT     , rs.getInt("DATA_TYPE"));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("d"             , rs.getString("COLUMN_NAME"));
+        Assert.assertEquals("date"          , rs.getString("COLUMN_NAME"));
         Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
 
         Assert.assertTrue(rs.next());
@@ -210,7 +210,7 @@ public class DriverTest {
         setup();
 
         Statement e = conn.createStatement();
-        e.executeQuery("SELECT t2.name AS \"name:xxx\" , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
+        e.executeQuery("SELECT t2.name AS \"name:xxx\" , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.date as date, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM 'public'.'t2' 't2'".replace("'", "\""));
         ResultSet rs = e.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(12, meta.getColumnCount());
@@ -247,7 +247,7 @@ public class DriverTest {
         Assert.assertEquals("f"     , meta.getColumnTypeName(p));
 
         p++;
-        Assert.assertEquals("d"     , meta.getColumnName(p));
+        Assert.assertEquals("date"  , meta.getColumnName(p));
         Assert.assertEquals("d"     , meta.getColumnTypeName(p));
 
         p++;
@@ -282,7 +282,7 @@ public class DriverTest {
         Assert.assertEquals(1.2f    , rs.getFloat( 6 )  , 0.0001f);
         Assert.assertEquals(1.5f    , rs.getDouble("f"), 0.00001);
         Assert.assertEquals(1.5f    , rs.getDouble( 7 ), 0.00001);
-        Assert.assertEquals("2015-01-01", rs.getObject("d"));
+        Assert.assertEquals("2015-01-01", rs.getObject("date"));
         Assert.assertEquals("2015-01-01", rs.getObject( 8 ));
         // Assert.assertEquals(new Timestamp(2015 - 1900, 0, 1, 1, 2, 3, 1002003), rs.getTimestamp("z", Calendar.getInstance()));
         Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z"));
@@ -371,7 +371,7 @@ public class DriverTest {
         setup();
 
         Statement e = conn.createStatement();
-        e.executeQuery("SELECT t2.d AS d FROM 'public'.'t2' 't2' GROUP BY 1".replace("'", "\""));
+        e.executeQuery("SELECT t2.date AS date FROM 'public'.'t2' 't2' GROUP BY 1".replace("'", "\""));
         ResultSet rs = e.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(1, meta.getColumnCount());
@@ -379,19 +379,19 @@ public class DriverTest {
         int p = 0;
 
         p++;
-        Assert.assertEquals("d"     , meta.getColumnName(p));
+        Assert.assertEquals("date"  , meta.getColumnName(p));
         Assert.assertEquals("d"     , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("2015-01-01", rs.getObject("d"));
+        Assert.assertEquals("2015-01-01", rs.getObject("date"));
         Assert.assertEquals("2015-01-01", rs.getObject(1));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("1970-01-04", rs.getObject("d"));
+        Assert.assertEquals("1970-01-04", rs.getObject("date"));
         Assert.assertEquals("1970-01-04", rs.getObject(1));
 
         Assert.assertTrue(rs.next());
-        Assert.assertNull(rs.getObject("d"));
+        Assert.assertNull(rs.getObject("date"));
         Assert.assertNull(rs.getObject(1));
 
         Assert.assertFalse(rs.next());

@@ -67,6 +67,9 @@ public class KdbStatement implements Statement {
                 String pure_q = sqltoq.toQscript();
                 final List<ColumnAndType> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
 
+                // if(! pure_q.contains(" where date ")) {
+                //     throw new SQLException("date condition should be required. sql=" + sql + " q=" + pure_q);
+                // }
                 final String q = "q) " + pure_q;
                 logger.info("execute on kdb+...>>>" + q + "<<<");
                 ResultSet rs = target.executeQuery(q);
