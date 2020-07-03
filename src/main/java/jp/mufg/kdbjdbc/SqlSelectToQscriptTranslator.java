@@ -124,7 +124,8 @@ public class SqlSelectToQscriptTranslator {
         //HAVING is ignored
         if(stmt.where() != null) {
             s.append(" where ");
-            s.append(stmt.where().val.toQscript());
+            Expr wexpr = stmt.where().val;
+            s.append(wexpr.toQscript());
         }
         return s.toString();
     }

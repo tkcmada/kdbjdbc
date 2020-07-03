@@ -295,7 +295,7 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-            return toString();
+			return lhs.toQscript() + " " + op + " " + rhs.toQscript();
         }
     }
     
