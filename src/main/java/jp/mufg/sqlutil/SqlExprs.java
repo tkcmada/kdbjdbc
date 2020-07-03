@@ -308,17 +308,20 @@ public class SqlExprs {
         public void checkType(TypeContext ctxt) {
             List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
             rhs.collectStringExpr(strs);
-            for(StringExpr se : strs) {
-                char lhstype = lhs.getType(ctxt);
-                String s = se.string;
-                switch(lhstype) {
-                    // case 's':
-                    //     this.rhs = new SymbolLiteral(s);
-                    case 'd':
-                        se.replacePlainString(s.replace("-", "."), 'd');
-                }
+            fixStringType(strs, lhs.getType(ctxt));
+        }
+    }
 
+    private static void fixStringType(List<StringExpr> strs, char targetType) {
+        for(StringExpr se : strs) {
+            String s = se.string;
+            switch(targetType) {
+                // case 's':
+                //     this.rhs = new SymbolLiteral(s);
+                case 'd':
+                    se.replacePlainString(s.replace("-", "."), 'd');
             }
+
         }
     }
 
@@ -398,95 +401,74 @@ public class SqlExprs {
 	// 	}
 	// }
 
-	// public static class InExpr extends Expr
-	// {
-	// 	private final Expr lhs;
-	// 	private final Arguments arguments;
-	// 	private final boolean not;
+	public static class InExpr extends Expr
+	{
+		private final Expr lhs;
+		private final Arguments arguments;
+		private final boolean not;
 
-	// 	public InExpr(Expr lhs, Arguments arguments, boolean not)
-	// 	{
-	// 		super();
-	// 		this.lhs = lhs;
-	// 		this.arguments = arguments;
-	// 		this.not = not;
-	// 	}
+		public InExpr(Expr lhs, Arguments arguments, boolean not)
+		{
+			super();
+			this.lhs = lhs;
+			this.arguments = arguments;
+			this.not = not;
+		}
 		
-	// 	public Expr getLhs()
-	// 	{
-	// 		return lhs;
-	// 	}
+		public Expr getLhs()
+		{
+			return lhs;
+        }
 
-	// 	public Arguments getArguments()
-	// 	{
-	// 		return arguments;
-	// 	}
+		public Arguments getArguments()
+		{
+			return arguments;
+		}
 
-	// 	public boolean isNot()
-	// 	{
-	// 		return not;
-	// 	}
+		public boolean isNot()
+		{
+			return not;
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'b'; //boolean
+        }
 
-	// 	@Override
-	// 	public String toString()
-	// 	{
-	// 		return lhs + (not ? " NOT IN " : " IN ") + arguments;
-	// 	}
-		
-	// 	@Override
-	// 	public String toJxpath()
-	// 	{
-	// 		//INをORで書き換える
-	// 		final StringBuilder s = new StringBuilder();
-	// 		for(Expr arg : arguments.exprs)
-	// 		{
-	// 			if(s.length() > 0)
-	// 			{
-	// 				if(not)
-	// 					s.append(" and ");
-	// 				else
-	// 					s.append(" or ");
-	// 			}
-	// 			s.append("(");
-	// 			s.append(lhs.toJxpath());
-	// 			if(not)
-	// 				s.append(" != ");
-	// 			else
-	// 				s.append(" = ");
-	// 			s.append(arg.toJxpath());
-	// 			s.append(")");
-	// 		}
-	// 		return s.toString();
-	// 	}
-		
-	// 	@Override
-	// 	public String toJavaExprSrc()
-	// 	{
-	// 		//INをORで置き換える
-	// 		//INをORで書き換える
-	// 		final StringBuilder s = new StringBuilder();
-	// 		for(Expr arg : arguments.exprs)
-	// 		{
-	// 			if(s.length() > 0)
-	// 			{
-	// 				if(not)
-	// 					s.append(" && ");
-	// 				else
-	// 					s.append(" || ");
-	// 			}
-	// 			if(not)
-	// 			{
-	// 				s.append("!");
-	// 			}
-	// 			s.append(TypeSafeSqlFunctions.class.getName() + ".eq(");
-	// 			s.append(lhs.toJavaExprSrc());
-	// 			s.append(", ");
-	// 			s.append(arg.toJavaExprSrc());
-	// 			s.append(")");
-	// 		}
-	// 		return s.toString();
-	// 	}
-	// }
+        @Override
+        public void checkType(TypeContext ctxt) {
+            List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
+            arguments.collectStringExpr(strs);
+            fixStringType(strs, lhs.getType(ctxt));
+        }
+
+		@Override
+		public String toString()
+		{
+			return lhs + (not ? " NOT IN " : " IN ") + arguments;
+		}
+
+        @Override
+        public String toQscript() {
+            StringBuilder s = new StringBuilder();
+            if(not)
+                s.append("not (");
+            s.append(lhs.toQscript());
+            s.append(" in ");
+            s.append("(");
+            int i = 0;
+            for(Expr e : arguments.exprs) {
+                if(i > 0)
+                    s.append("; ");
+                s.append(e.toQscript());
+                i++;
+            }
+            s.append(")");
+            if(not)
+                s.append(")");
+            return s.toString();
+        }
+	}
 
 	public static class WhenThen
 	{
@@ -579,20 +561,29 @@ public class SqlExprs {
 
         @Override
         public String toQscript() {
-            StringBuilder s = new StringBuilder();
+            //assuming all when expression is ColExpr = <expr> and THEN is false and ELSE is true 
+            List<Expr> inlist = new LinkedList<SqlExprs.Expr>();
+            ColumnExpr colexpr = null;
             for(WhenThen wt : whenThens) {
-                if(s.length() > 0)
-                    s.append(" and ");
-                s.append("(");
+                Expr e = wt.whenExpr;
+                if(e instanceof CurryExpr)
+                    e = ((CurryExpr) e).expr;
+                EqExpr eq = (EqExpr) e;
                 boolean thenval = ((BooleanLiteral)wt.thenExpr).getValue();
-                if(! thenval)
-                    s.append("! ");
-                s.append("(");
-                s.append(wt.whenExpr.toQscript());
-                s.append(")");
-                s.append(")");
+                if(thenval)
+                    throw new UnsupportedOperationException("not support true in WHEN THEN");
+                if(colexpr != null) {
+                    if(! colexpr.toQscript().equals(eq.getLhs().toQscript()))
+                        throw new UnsupportedOperationException("unmatch column");
+                }
+                else {
+                    colexpr = (ColumnExpr) eq.getLhs();
+                }
+                inlist.add(eq.getRhs());
             }            
-            return s.toString();
+            if(! ((BooleanLiteral)elseExpr).getValue())
+                throw new UnsupportedOperationException("else should be TRUE");
+            return new InExpr(colexpr, new Arguments(inlist), true).toQscript();
         }
 	}
 

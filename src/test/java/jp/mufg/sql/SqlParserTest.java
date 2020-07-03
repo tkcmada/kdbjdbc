@@ -89,8 +89,8 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt_group_by_where_date_not_in() throws IOException {
-        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04') THEN FALSE ELSE TRUE END) GROUP BY 1");
-        // Assert.assertEquals("select sum__lg__ok:sum lg, sum__f__ok:sum f by date:date from t2 where ( t2.date in (2019.08.01, 2019.08.02) )", q);
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04') THEN FALSE WHEN (t2.date = '1970-01-05') THEN FALSE ELSE TRUE END) GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where ( not (date in (1970.01.04; 1970.01.05)) )", q);
     }    
 
     //SELECT "t2"."date" AS "date" FROM "public"."t2" "t2" GROUP BY 1 ORDER BY 1 ASC NULLS FIRST
