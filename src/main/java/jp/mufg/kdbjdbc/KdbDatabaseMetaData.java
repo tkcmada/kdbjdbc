@@ -235,13 +235,13 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
                     sqltype = Types.FLOAT;
                     octetlen = 10;
                     break;
-                // case 'p': //timestamp as varchar
-                //     typename    = "timestamp";
-                //     colsize = 10;
-                //     sqltype = 4;
-                //     sqltype = Types.TIMESTAMP;
-                //     octetlen = 10;
-                //     break;
+                case 'p': //timestamp
+                    typename    = "timestamp";
+                    colsize = 10;
+                    sqltype = 4;
+                    sqltype = Types.TIMESTAMP;
+                    octetlen = 10;
+                    break;
             }
             logger.info("adding column info. column=" + colname + " typename=" + typename);
                                 //1TABLE_CAT 2TABLE_SCHEM 3TABLE_NAME 4COLUMN_NAME 5DATA_TYPE 6TYPE_NAME  7COLUMN_SIZE  8BUF   9 DECIMAL  10 RADIX  11 NULLABLE  12 REMARKS 13COLUMN_DEF  14SQL_DATA_TYPE  15SQL_DATETIME_SUB  16 CHAR_OCTET_LEN 17 ORDINAL POS  18 IS_NULLABLE 19 SCOPE_CATALOG  20 SCOPE_SCHEMA  21 SCOPE_TABLE  22 SOURCE_DATA_TYPE 23 IS_Autoinc  24 IS_gen

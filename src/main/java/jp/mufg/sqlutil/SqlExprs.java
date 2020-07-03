@@ -316,10 +316,20 @@ public class SqlExprs {
         for(StringExpr se : strs) {
             String s = se.string;
             switch(targetType) {
-                // case 's':
-                //     this.rhs = new SymbolLiteral(s);
                 case 'd':
                     se.replacePlainString(s.replace("-", "."), 'd');
+                    break;
+                case 'c':
+                    se.replacePlainString("\"" + s + "\"", 'c');
+                    break;
+                case 'g':
+                    se.replacePlainString("\"G\"$\"" + s + "\"", 'g');
+                    break;
+                case 's':
+                    se.replacePlainString("`" + s, 's');
+                    break;
+                default:
+                    //do nothing
             }
 
         }

@@ -124,7 +124,7 @@ public class KdbStatement implements Statement {
                                     break;
                                 case 'p':
                                     Timestamp tsval = (Timestamp)rs.getObject(i);
-                                    row[i-1] = KdbUtil.toVarChar(tsval);
+                                    row[i-1] = tsval; //KdbUtil.toVarChar(tsval);
                                     break;
                                 case 'C':
                                     row[i-1] = rs.getString(i);

@@ -184,7 +184,7 @@ public class DriverTest {
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("z"             , rs.getString("COLUMN_NAME"));
-        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+        Assert.assertEquals(Types.TIMESTAMP , rs.getInt("DATA_TYPE"));
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("ts"            , rs.getString("COLUMN_NAME"));
@@ -284,9 +284,9 @@ public class DriverTest {
         Assert.assertEquals(1.5f    , rs.getDouble( 7 ), 0.00001);
         Assert.assertEquals("2015-01-01", rs.getObject("date"));
         Assert.assertEquals("2015-01-01", rs.getObject( 8 ));
-        // Assert.assertEquals(new Timestamp(2015 - 1900, 0, 1, 1, 2, 3, 1002003), rs.getTimestamp("z", Calendar.getInstance()));
-        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z"));
-        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject( 9 ));
+        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getTimestamp("z", Calendar.getInstance()));
+        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getObject("z"));
+//        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z")); //varchar version
         Assert.assertEquals("01:02:03.001002000", rs.getObject("ts"));
         Assert.assertEquals("01:02:03.001002000", rs.getObject(10  ));
         Assert.assertEquals("a"     , rs.getObject("c"));
