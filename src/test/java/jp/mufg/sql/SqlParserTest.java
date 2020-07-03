@@ -152,4 +152,11 @@ public class SqlParserTest {
         String q = parse("SELECT CAST(TRUNC(EXTRACT(YEAR FROM t2.z)) AS INTEGER) AS \"yr:z:ok\" FROM \"public\".\"t2\" \"t2\" GROUP BY 1");
         Assert.assertEquals("distinct select yr__z__ok:`int$(`year$(z)) from t2", q);
     }
+
+    @Test
+    public void test_select_stmt_timestamp_year_month() throws IOException {
+        String q = parse("SELECT CAST(TRUNC(EXTRACT(MONTH FROM t2.z)) AS INTEGER) AS 'mn:z:ok', CAST(TRUNC(EXTRACT(YEAR FROM t2.z)) AS INTEGER) AS 'yr:z:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
+        Assert.assertEquals("distinct select mn__z__ok:`int$(`mm$(z)), yr__z__ok:`int$(`year$(z)) from t2", q);
+    }
+
 }
