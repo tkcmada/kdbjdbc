@@ -827,10 +827,10 @@ public class SqlExprs {
                 return arguments.exprs.get(0).toQscript(); //do nthing
             }
             if(identifiers.equals("VARIANCE")) {
-                return "(" + new FunctionCallExpr("STDEV", arguments).toQscript() + ") xexp 2";
+                return "(" + new FunctionCallExpr("STDDEV", arguments).toQscript() + ") xexp 2";
             }
             String qfunc;
-            if(identifiers.equals("STDEV"))
+            if(identifiers.equals("STDDEV"))
                 qfunc = "dev";
             else
                 qfunc = identifiers.toLowerCase();

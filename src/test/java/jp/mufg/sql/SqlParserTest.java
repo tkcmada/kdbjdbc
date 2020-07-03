@@ -82,7 +82,7 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt_group_by_stddev() throws IOException {
-        String q = parse("SELECT STDEV('t2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
+        String q = parse("SELECT STDDEV('t2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
         Assert.assertEquals("select ctd__bl__ok:dev bl by bl:bl from t2", q);
     }    
 
