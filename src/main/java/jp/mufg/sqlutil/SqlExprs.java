@@ -166,6 +166,10 @@ public class SqlExprs {
         public abstract String toQscript();
         
         public abstract char getType(TypeContext ctxt);
+
+        public void checkType(TypeContext ctxt) {}
+
+        public void collectStringExpr(List<StringExpr> result) {}
     }
     
     public static class TypeContext {
@@ -182,11 +186,11 @@ public class SqlExprs {
         }
     }
 	
-	public static class BranketExpr extends Expr //カッコを出力するためにわざわざクラスを作成
+	public static class CurryExpr extends Expr //カッコを出力するためにわざわざクラスを作成
 	{
 		private final Expr expr;
 
-		public BranketExpr(Expr expr)
+		public CurryExpr(Expr expr)
 		{
 			super();
 			this.expr = expr;
@@ -209,22 +213,15 @@ public class SqlExprs {
             return expr.getType(ctxt);
         }
 
+        @Override
+        public void checkType(TypeContext ctxt) {
+            expr.checkType(ctxt);
+        }
+
 		public Expr getExpr()
 		{
 			return expr;
 		}
-
-		// @Override
-		// public String toJxpath()
-		// {
-		// 	return "(" + expr.toJxpath() + ")";
-		// }
-		
-		// @Override
-		// public String toJavaExprSrc()
-		// {
-		// 	throw new UnsupportedOperationException(getClass().getSimpleName() +  ".toJavaExprSrc is not supported " + toString());
-		// }
 	}
 	
 	// public static class NullExpr extends Expr
@@ -295,28 +292,6 @@ public class SqlExprs {
 		{
             return toString();
         }
-		
-		// @Override
-		// public String toJxpath()
-		// {
-		// 	return lhs.toJxpath() + " " + op + " " + rhs.toJxpath();
-		// }
-		
-		// @Override
-		// public String toJavaExprSrc()
-		// {
-		// 	if(op.equals("="))
-		// 	{
-		// 		return "TypeSafeSqlFunctions.eq(" + lhs.toJavaExprSrc() + ", " + rhs.toJavaExprSrc() + ")";
-		// 	}
-		// 	else
-		// 	{
-		// 		String javaop = op;
-		// 		if(op.equals("and")) javaop = "&&";
-		// 		if(op.equals("or"))  javaop = "||";
-		// 		return lhs.toJavaExprSrc() + " " + javaop + " " + rhs.toJavaExprSrc();
-		// 	}
-		// }
     }
     
     public static class EqExpr extends BinaryExpr {
@@ -324,9 +299,11 @@ public class SqlExprs {
             super(op, lhs, rhs);
         }
 
+        @Override
         public void checkType(TypeContext ctxt) {
-            if(rhs instanceof StringExpr) {
-                StringExpr se = (StringExpr) rhs;
+            List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
+            rhs.collectStringExpr(strs);
+            for(StringExpr se : strs) {
                 char lhstype = lhs.getType(ctxt);
                 String s = se.string;
                 switch(lhstype) {
@@ -675,12 +652,22 @@ public class SqlExprs {
 
 	public static class Arguments extends Expr
 	{
-		private final List<Expr> exprs;
+        private final List<Expr> exprs;
+        private boolean withCurry;
 
-		public Arguments(List<Expr> exprs)
+    	public Arguments(List<Expr> exprs) {
+            this(exprs, false);
+        }
+
+		public Arguments(List<Expr> exprs, boolean withCurry)
 		{
 			super();
             this.exprs = new ArrayList<SqlExprs.Expr>(exprs);
+            this.withCurry = withCurry;
+        }
+
+        public void setWithCurry(boolean v) {
+            this.withCurry = v;
         }
         
         public List<Expr> getExprs() { return exprs; }
@@ -688,6 +675,18 @@ public class SqlExprs {
         @Override
         public char getType(TypeContext ctxt) {
             return exprs.size() > 0 ? exprs.get(0).getType(ctxt) : ' '; //return unknown if size == 0
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            for(Expr e : exprs)
+                e.collectStringExpr(result);
+        }
+
+        @Override
+        public void checkType(TypeContext ctxt) {
+            for(Expr e : exprs)
+                e.checkType(ctxt);
         }
 
 		@Override
@@ -710,7 +709,9 @@ public class SqlExprs {
         @Override
         public String toQscript()
 		{
-			StringBuilder s = new StringBuilder();
+            StringBuilder s = new StringBuilder();
+            if(withCurry)
+                s.append("(");
 			for(int i = 0; i < exprs.size(); i++)
 			{
 				if(i > 0)
@@ -720,6 +721,8 @@ public class SqlExprs {
 				Expr expr = exprs.get(i);
 				s.append(expr.toQscript());
 			}
+            if(withCurry)
+                s.append(")");
 			return s.toString();
         }
 	}
@@ -834,6 +837,11 @@ public class SqlExprs {
         public void replacePlainString(String newstr, char newtype) {
             this.replacedPlainString = newstr;
             this.replacedType = newtype;
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            result.add(this);
         }
 
 		@Override

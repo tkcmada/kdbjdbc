@@ -4,6 +4,7 @@ import java.util.HashSet;
 import jp.mufg.sql.SqlLexer;
 import jp.mufg.sql.SqlParser;
 import jp.mufg.sql.SqlParser.SelectStmtContext;
+import jp.mufg.sqlutil.SqlExprs.Arguments;
 import jp.mufg.sqlutil.SqlExprs.ColumnExprWithAlias;
 import jp.mufg.sqlutil.SqlExprs.EqExpr;
 import jp.mufg.sqlutil.SqlExprs.Expr;
@@ -46,9 +47,8 @@ public class SqlSelectToQscriptTranslator {
 
     public void convertLiteralType(TypeContext ctxt) {
         if(stmt.where() != null) {
-            if(stmt.where().val instanceof EqExpr) {
-                ((EqExpr) stmt.where().val).checkType(ctxt); //TODO : add checkType to Expr
-            }
+            Expr e = stmt.where().val;
+            e.checkType(ctxt);
         }
     }
 

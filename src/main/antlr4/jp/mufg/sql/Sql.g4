@@ -60,7 +60,7 @@ andExpr returns [Expr val]
 
 eqExpr returns [Expr val]
     : lhs=compExpr op='=' rhs=compExpr    { $val = new EqExpr($op.text, $lhs.val, $rhs.val);  }
-    | lhs=compExpr op=('in'|'IN') a=args  { $val = new EqExpr($op.text, $lhs.val, $a.val); }
+    | lhs=compExpr op=('in'|'IN') '(' a=args ')'   { $a.val.setWithCurry(true); $val = new EqExpr($op.text, $lhs.val, $a.val);  }
     | lhs=compExpr op='!=' rhs=compExpr   { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val);  }
     | lhs=compExpr { $val = $lhs.val; }
     ;
@@ -75,7 +75,7 @@ primaryExpr returns [Expr val]
     | functionExpr     { $val = $functionExpr.val; }
     | numberExpr       { $val = $numberExpr.val; }
     | stringExpr       { $val = $stringExpr.val; }
-    | '(' expr ')'     { $val = new BranketExpr($expr.val); }
+    | '(' expr ')'     { $val = new CurryExpr($expr.val); }
     ;
 
 functionExpr returns [FunctionCallExpr val]

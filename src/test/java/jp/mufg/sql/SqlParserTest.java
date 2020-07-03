@@ -81,11 +81,11 @@ public class SqlParserTest {
         Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where t2.date = 2019.08.01", q);
     }    
 
-    // @Test
-    // public void test_select_stmt_group_by_where_date_in() throws IOException {
-    //     String q = parse("SELECT t2.ECNVenue AS ECNVenue, SUM(1) AS 'cnt:xxx:ok', t2.date AS date, SUM(t2.f) AS 'sum:f:ok', SUM(t2.f2) AS 'sum:f2:ok' FROM 'public'.'t2' 't2' WHERE (t2.date in ('2019-08-01', '2019-08-02')) GROUP BY 1, 3");
-    //     Assert.assertEquals("select sum 1, sum f, sum f2 by ECNVenue, date from t2 where date in (2019.08.01, 2019.08.02)", q);
-    // }    
+    @Test
+    public void test_select_stmt_group_by_where_date_in_with_curry() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date in ('2019-08-01', '2019-08-02')) GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where ( t2.date in (2019.08.01, 2019.08.02) )", q);
+    }    
 
     @Test
     public void test_select_stmt_by_d() throws IOException {
