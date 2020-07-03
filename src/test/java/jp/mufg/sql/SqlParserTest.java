@@ -28,7 +28,8 @@ public class SqlParserTest {
         type_by_col.put("c"   , 'c');
         type_by_col.put("g"   , 'g');
         type_by_col.put("name", 's');
-        type_by_col.put("ts"  , 'p');
+        // type_by_col.put("ts"  , 'p');
+        type_by_col.put("z"   , 'p');
         Map<String, Map<String, Character>> type_by_col_tbl = new HashMap<String, Map<String, Character>>();
         type_by_col_tbl.put("t2", type_by_col);
         t.convertLiteralType(new SqlExprs.TypeContextImpl(type_by_col_tbl));
@@ -95,6 +96,12 @@ public class SqlParserTest {
     public void test_select_stmt_group_by_where_symbol_equals() throws IOException {
         String q = parse2("SELECT t2.name AS name, SUM(t2.r) AS \"sum:r:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.name = 'def') GROUP BY 1");
         Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where ( t2.name = `def )", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_timestamp_equals() throws IOException {
+        String q = parse2("SELECT SUM(t2.f) AS \"sum:f:ok\", t2.z AS z FROM \"public\".\"t2\" \"t2\" WHERE (t2.z = '2015.01.01D01:02:03.001002030') GROUP BY 2");
+        Assert.assertEquals("select sum__f__ok:sum f by z:z from t2 where ( t2.z = 2015.01.01D01:02:03.001002030 )", q);
     }    
 
     // @Test

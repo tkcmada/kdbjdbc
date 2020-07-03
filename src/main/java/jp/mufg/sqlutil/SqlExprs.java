@@ -319,6 +319,9 @@ public class SqlExprs {
                 case 'd':
                     se.replacePlainString(s.replace("-", "."), 'd');
                     break;
+                case 'p':
+                    se.replacePlainString(s, 'p');
+                    break;
                 case 'c':
                     se.replacePlainString("\"" + s + "\"", 'c');
                     break;

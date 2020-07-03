@@ -185,8 +185,8 @@ public class KdbStatement implements Statement {
             }
         }
         catch(SQLException ex) {
-            logger.info("Q execution error:" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
-            throw new SQLException("Q execution error:" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
+            logger.info("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
+            throw new SQLException("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
         }
     }
 
