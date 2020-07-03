@@ -5,7 +5,10 @@ import jp.mufg.sql.SqlLexer;
 import jp.mufg.sql.SqlParser;
 import jp.mufg.sql.SqlParser.SelectStmtContext;
 import jp.mufg.sqlutil.SqlExprs.ColumnExprWithAlias;
+import jp.mufg.sqlutil.SqlExprs.EqExpr;
 import jp.mufg.sqlutil.SqlExprs.Expr;
+import jp.mufg.sqlutil.SqlExprs.TypeContext;
+
 import java.io.IOException;
 import java.io.StringReader;
 import jp.mufg.antlrutil.*;
@@ -38,6 +41,14 @@ public class SqlSelectToQscriptTranslator {
             // logger.info("parsed result tree:" + stmt.toStringTree());
         } catch(Exception ex) {
             throw new IllegalArgumentException("SQL parse error:" + sql, ex);
+        }
+    }
+
+    public void convertLiteralType(TypeContext ctxt) {
+        if(stmt.where() != null) {
+            if(stmt.where().val instanceof EqExpr) {
+                ((EqExpr) stmt.where().val).checkType(ctxt); //TODO : add checkType to Expr
+            }
         }
     }
 
@@ -111,6 +122,10 @@ public class SqlSelectToQscriptTranslator {
         s.append(stmt.table().tbl.getTableName());
         //ignore alias name
         //HAVING is ignored
+        if(stmt.where() != null) {
+            s.append(" where ");
+            s.append(stmt.where().val.toQscript());
+        }
         return s.toString();
     }
     //------------------------------------------------

@@ -1,12 +1,19 @@
 package jp.mufg.sqlutil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.text.DateFormatter;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
 import org.apache.commons.lang3.StringUtils;
+
+import jp.mufg.kdbjdbc.KdbUtil;
 
 public class SqlExprs {
 	// public static class Tables
@@ -156,8 +163,24 @@ public class SqlExprs {
 		/**
 		 * SQL表現をq-scriptのソースコードに変換する
 		 */
-		public abstract String toQscript();
-	}
+        public abstract String toQscript();
+        
+        public abstract char getType(TypeContext ctxt);
+    }
+    
+    public static class TypeContext {
+        private final Map<String, Map<String, Character>> type_by_col_by_tbl;
+        
+        public TypeContext(Map<String, Map<String, Character>> type_by_col_by_tbl) {
+            this.type_by_col_by_tbl = type_by_col_by_tbl;
+        }
+
+        public char getType(String tableName, String columnName) {
+            Map<String, Character> type_by_col = type_by_col_by_tbl.get(tableName);
+            Character typeobj = type_by_col.get(columnName);
+            return (char) typeobj;
+        }
+    }
 	
 	public static class BranketExpr extends Expr //カッコを出力するためにわざわざクラスを作成
 	{
@@ -181,7 +204,10 @@ public class SqlExprs {
 			return "( " + expr.toQscript() + " )";
         }
         
-
+        @Override
+        public char getType(TypeContext ctxt) {
+            return expr.getType(ctxt);
+        }
 
 		public Expr getExpr()
 		{
@@ -224,15 +250,15 @@ public class SqlExprs {
 
 	public static class BinaryExpr extends Expr
 	{
-		private final String op;
-		private final Expr lhs, rhs;
+		protected String op;
+		protected Expr lhs, rhs;
 
 		public BinaryExpr(String op, Expr lhs, Expr rhs)
 		{
 			super();
 			this.lhs = lhs;
 			this.rhs = rhs;
-			this.op  = op;
+			this.op  = op.toLowerCase();
 		}
 		
 		public String getOp()
@@ -248,7 +274,15 @@ public class SqlExprs {
 		public Expr getRhs()
 		{
 			return rhs;
-		}
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            if(op.equals("<=") || op.equals(">=") || op.equals("<") || op.equals(">") || op.equals("=") || op.equals("!=") || op.equals("in") || op.equals("and") || op.equals("or"))
+                return 'b'; //boolean
+            //+ - * /
+            return lhs.getType(ctxt); //TODO
+        }
 
 		@Override
 		public String toString()
@@ -283,7 +317,28 @@ public class SqlExprs {
 		// 		return lhs.toJavaExprSrc() + " " + javaop + " " + rhs.toJavaExprSrc();
 		// 	}
 		// }
-	}
+    }
+    
+    public static class EqExpr extends BinaryExpr {
+        public EqExpr(String op, Expr lhs, Expr rhs) {
+            super(op, lhs, rhs);
+        }
+
+        public void checkType(TypeContext ctxt) {
+            if(rhs instanceof StringExpr) {
+                StringExpr se = (StringExpr) rhs;
+                char lhstype = lhs.getType(ctxt);
+                String s = se.string;
+                switch(lhstype) {
+                    // case 's':
+                    //     this.rhs = new SymbolLiteral(s);
+                    case 'd':
+                        se.replacePlainString(s.replace("-", "."), 'd');
+                }
+
+            }
+        }
+    }
 
 	// public static class UnaryExpr extends Expr
 	// {
@@ -618,7 +673,7 @@ public class SqlExprs {
 	// 	}
 	// }
 
-	public static class Arguments
+	public static class Arguments extends Expr
 	{
 		private final List<Expr> exprs;
 
@@ -629,7 +684,12 @@ public class SqlExprs {
         }
         
         public List<Expr> getExprs() { return exprs; }
-		
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return exprs.size() > 0 ? exprs.get(0).getType(ctxt) : ' '; //return unknown if size == 0
+        }
+
 		@Override
 		public String toString()
 		{
@@ -647,6 +707,7 @@ public class SqlExprs {
 			return s.toString();
         }
         
+        @Override
         public String toQscript()
 		{
 			StringBuilder s = new StringBuilder();
@@ -660,7 +721,7 @@ public class SqlExprs {
 				s.append(expr.toQscript());
 			}
 			return s.toString();
-		}
+        }
 	}
 
 	public static class FunctionCallExpr extends Expr
@@ -688,7 +749,15 @@ public class SqlExprs {
 		{
 			return arguments;
 		}
-		
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            if(identifiers.equals("count"))
+                return 'i';
+            else
+                return getArguments().getType(ctxt);
+        }
+
 		@Override
 		public String toString()
 		{
@@ -741,23 +810,37 @@ public class SqlExprs {
 		public String toQscript()
 		{
 			return numberString;
-		}
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'f';
+        }
 	}
 
 	//@Immutable
 	public static final class StringExpr extends Expr
 	{
-		private final String string;
+        private final String string;
+        private String replacedPlainString;
+        private char replacedType;
 
 		public StringExpr(String string)
 		{
 			super();
 			this.string = string;
-		}
+        }
+        
+        public void replacePlainString(String newstr, char newtype) {
+            this.replacedPlainString = newstr;
+            this.replacedType = newtype;
+        }
 
 		@Override
 		public String toString()
 		{
+            if(replacedPlainString != null)
+                return replacedPlainString; //no quote required
 			return "'" + string + "'";
 		}
 		
@@ -765,9 +848,16 @@ public class SqlExprs {
 		public String toQscript()
 		{
 			return toString();
-		}
-	}
-
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            if(replacedPlainString != null)
+                return replacedType;
+            return 'C'; //list of char
+        }
+    }
+    
 	//@Immutable
 	public static final class ColumnExpr extends Expr
 	{
@@ -798,6 +888,11 @@ public class SqlExprs {
         @Override
         public String toQscript() {
             return columnName;
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return ctxt.getType(tableName, columnName);
         }
 
 		public String getTableName()

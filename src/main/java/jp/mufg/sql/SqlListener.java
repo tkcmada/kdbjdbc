@@ -14,6 +14,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterNumberExpr(SqlParser.NumberExprContext ctx);
 	void exitNumberExpr(SqlParser.NumberExprContext ctx);
 
+	void enterOrExpr(SqlParser.OrExprContext ctx);
+	void exitOrExpr(SqlParser.OrExprContext ctx);
+
 	void enterGroupBy(SqlParser.GroupByContext ctx);
 	void exitGroupBy(SqlParser.GroupByContext ctx);
 
@@ -26,11 +29,20 @@ public interface SqlListener extends ParseTreeListener {
 	void enterFunctionExpr(SqlParser.FunctionExprContext ctx);
 	void exitFunctionExpr(SqlParser.FunctionExprContext ctx);
 
+	void enterStringExpr(SqlParser.StringExprContext ctx);
+	void exitStringExpr(SqlParser.StringExprContext ctx);
+
 	void enterArgs(SqlParser.ArgsContext ctx);
 	void exitArgs(SqlParser.ArgsContext ctx);
 
+	void enterStr(SqlParser.StrContext ctx);
+	void exitStr(SqlParser.StrContext ctx);
+
 	void enterColumnExpr(SqlParser.ColumnExprContext ctx);
 	void exitColumnExpr(SqlParser.ColumnExprContext ctx);
+
+	void enterEqExpr(SqlParser.EqExprContext ctx);
+	void exitEqExpr(SqlParser.EqExprContext ctx);
 
 	void enterColumnNames(SqlParser.ColumnNamesContext ctx);
 	void exitColumnNames(SqlParser.ColumnNamesContext ctx);
@@ -47,6 +59,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterName(SqlParser.NameContext ctx);
 	void exitName(SqlParser.NameContext ctx);
 
+	void enterWhere(SqlParser.WhereContext ctx);
+	void exitWhere(SqlParser.WhereContext ctx);
+
 	void enterExpr(SqlParser.ExprContext ctx);
 	void exitExpr(SqlParser.ExprContext ctx);
 
@@ -58,4 +73,7 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterColumnName(SqlParser.ColumnNameContext ctx);
 	void exitColumnName(SqlParser.ColumnNameContext ctx);
+
+	void enterAndExpr(SqlParser.AndExprContext ctx);
+	void exitAndExpr(SqlParser.AndExprContext ctx);
 }
