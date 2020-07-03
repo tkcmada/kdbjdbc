@@ -726,8 +726,8 @@ public class SqlExprs {
         public String toQscript() {
             if(field.equals("YEAR"))
                 return "`year$(" + expr.toQscript() + ")";
-            if(field.equals("QUATER"))
-                return "`int$floor((2+(" + expr.toQscript() + "))%3)"; //Jan-Mar returns 1, Apr-Jun returns 2, Jul-Sep returns 3, Oct-Dec returns 4
+            if(field.equals("QUARTER"))
+                return "`int$floor((2+(`mm$(" + expr.toQscript() + ")))%3)"; //Jan-Mar returns 1, Apr-Jun returns 2, Jul-Sep returns 3, Oct-Dec returns 4
             if(field.equals("MONTH"))
                 return "`mm$(" + expr.toQscript() + ")";
             if(field.equals("DAY"))

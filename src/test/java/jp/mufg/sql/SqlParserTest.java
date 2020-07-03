@@ -154,6 +154,12 @@ public class SqlParserTest {
     }
 
     @Test
+    public void test_select_stmt_timestamp_year_quater() throws IOException {
+        String q = parse("SELECT CAST(TRUNC(EXTRACT(QUARTER FROM 't2'.'z')) AS INTEGER) AS 'qr:z:ok', CAST(TRUNC(EXTRACT(YEAR FROM 't2'.'z')) AS INTEGER) AS 'yr:z:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
+        Assert.assertEquals("distinct select qr__z__ok:`int$(`int$floor((2+(`mm$(z)))%3)), yr__z__ok:`int$(`year$(z)) from t2", q);
+    }
+
+    @Test
     public void test_select_stmt_timestamp_year_month() throws IOException {
         String q = parse("SELECT CAST(TRUNC(EXTRACT(MONTH FROM t2.z)) AS INTEGER) AS 'mn:z:ok', CAST(TRUNC(EXTRACT(YEAR FROM t2.z)) AS INTEGER) AS 'yr:z:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
         Assert.assertEquals("distinct select mn__z__ok:`int$(`mm$(z)), yr__z__ok:`int$(`year$(z)) from t2", q);
