@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<tdr class='kdb_jdbc'>
+<tdr class='postgres_jdbc'>
 	<connection-resolver>
     <connection-builder>
       <script file='connectionBuilder.js'/>
@@ -10,6 +10,7 @@
         <attribute-list>
           <attr>server</attr>
           <attr>port</attr>
+          <attr>dbname</attr><!-- this is required to run correctly -->
           <attr>username</attr>
           <attr>password</attr>
         </attribute-list>

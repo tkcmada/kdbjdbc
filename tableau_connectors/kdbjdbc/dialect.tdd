@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dialect name='kdb_jdbc_v1'
-         class='kdb_jdbc'
+<dialect name='SimplePostgres'
+         class='postgres_jdbc'
          base='PostgreSQL90Dialect'
          version='18.1'>
    <function-map>
