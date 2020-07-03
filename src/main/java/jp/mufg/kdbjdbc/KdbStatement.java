@@ -64,9 +64,10 @@ public class KdbStatement implements Statement {
                 SqlSelectToQscriptTranslator sqltoq = new SqlSelectToQscriptTranslator(sql);
                 java.util.List<Object[]> rows = new ArrayList<Object[]>();
 
+                sqltoq.convertLiteralType(meta);
                 String pure_q = sqltoq.toQscript();
                 logger.info("converted q-script>>>" + pure_q + "<<<");
-                final List<ColumnAndType> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
+                final LinkedHashMap<String, ColumnAndType> colnametype2 = this.meta.getColumnAndType("(" + pure_q + ")");
 
                 // if(! pure_q.contains(" where date ")) {
                 //     throw new SQLException("date condition should be required. sql=" + sql + " q=" + pure_q);
@@ -75,7 +76,7 @@ public class KdbStatement implements Statement {
                 logger.info("execute on kdb+...>>>" + q + "<<<");
                 ResultSet rs = target.executeQuery(q);
                 List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
-                for(ColumnAndType e : colnametype2) {
+                for(ColumnAndType e : colnametype2.values()) {
                     String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
                     Character coltypeobj = e.type;
                     // if(SqlSelectToQscriptTranslator.isDummyColumn(colname))
@@ -86,7 +87,7 @@ public class KdbStatement implements Statement {
                 while(rs.next()) {
                     Object[] row = new Object[cols.size()];
                     int i = 1;
-                    for(ColumnAndType e : colnametype2) {
+                    for(ColumnAndType e : colnametype2.values()) {
                         char coltype = e.type;
                         Object obj = rs.getObject(i);
                         logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");

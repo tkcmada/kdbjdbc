@@ -172,13 +172,18 @@ public class SqlExprs {
         public void collectStringExpr(List<StringExpr> result) {}
     }
     
-    public static class TypeContext {
+    public static interface TypeContext {
+        public char getType(String tableName, String columnName);
+    }
+
+    public static class TypeContextImpl implements TypeContext {
         private final Map<String, Map<String, Character>> type_by_col_by_tbl;
         
-        public TypeContext(Map<String, Map<String, Character>> type_by_col_by_tbl) {
+        public TypeContextImpl(Map<String, Map<String, Character>> type_by_col_by_tbl) {
             this.type_by_col_by_tbl = type_by_col_by_tbl;
         }
 
+        @Override
         public char getType(String tableName, String columnName) {
             Map<String, Character> type_by_col = type_by_col_by_tbl.get(tableName);
             Character typeobj = type_by_col.get(columnName);

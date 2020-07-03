@@ -8,20 +8,37 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import jp.mufg.slf4j.FileLogger;
+import jp.mufg.sqlutil.SqlExprs.TypeContext;
 
-public class KdbDatabaseMetaData implements DatabaseMetaData {
+public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
     private final Connection conn;
 
     KdbDatabaseMetaData(Connection conn) {
     	this.conn = conn;
     }
+
+    //implementation for TypeContext
+    @Override
+    public char getType(String tableName, String columnName) {
+        try {
+            ColumnAndType c = getColumnAndType(tableName).get(columnName);
+            if(c != null)
+                return c.type;
+            throw new IllegalArgumentException("No type found for " + tableName + "." + columnName);
+        }
+        catch(SQLException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+    //TypeContext
 
     @Override
 	public String getDatabaseProductName() throws SQLException {
@@ -109,21 +126,26 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
         }
     }
 
-    public List<ColumnAndType> getColumnAndType(String table) throws SQLException {
+    private final Map<String, LinkedHashMap<String, ColumnAndType>> coltypecache = new HashMap<String, LinkedHashMap<String, ColumnAndType>>();
+    public LinkedHashMap<String, ColumnAndType> getColumnAndType(String table) throws SQLException {
+        LinkedHashMap<String, ColumnAndType> cols = coltypecache.get(table);
+        if(cols != null)
+            return cols;
         String q = "q)flip (`column_name`column_type)!(cols " + table + "; (value meta " + table + ")[;`t])";
         logger.info("getColumnAndType..." + q);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(q);
-        List<ColumnAndType> cols = new ArrayList<ColumnAndType>();
+        cols = new LinkedHashMap<String, ColumnAndType>();
         while(rs.next()) {
             String colname = rs.getString(1);
             Character ctypeobj = (Character) rs.getObject(2);
             logger.info("column->coltype:" + colname + "->" + ctypeobj + ":" + (ctypeobj == null ? "null" : ctypeobj.getClass().getSimpleName()));
             char ctype = ctypeobj == null ? ' ' : ((char) ctypeobj);
-            cols.add(new ColumnAndType(colname, ctype));
+            cols.put(colname, new ColumnAndType(colname, ctype));
         }
         rs.close();
         stmt.close();
+        coltypecache.put(table, cols);
         return cols;
     }
 
@@ -159,9 +181,9 @@ public class KdbDatabaseMetaData implements DatabaseMetaData {
         String tbl = tableNamePattern;
 		final int MAX = ResultSetMetaDataImpl.MAX;
         List<Object[]> rows = new ArrayList<Object[]>();
-        List<ColumnAndType> colnametype = getColumnAndType(tbl);
+        LinkedHashMap<String, ColumnAndType> colnametype = getColumnAndType(tbl);
         int pos = 1;
-        for(ColumnAndType e : colnametype) {
+        for(ColumnAndType e : colnametype.values()) {
             String colname = e.name;
             char ctype = e.type;
             String typename = "text";

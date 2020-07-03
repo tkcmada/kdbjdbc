@@ -27,7 +27,7 @@ public class SqlParserTest {
         type_by_col.put("date", 'd');
         Map<String, Map<String, Character>> type_by_col_tbl = new HashMap<String, Map<String, Character>>();
         type_by_col_tbl.put("t2", type_by_col);
-        t.convertLiteralType(new SqlExprs.TypeContext(type_by_col_tbl));
+        t.convertLiteralType(new SqlExprs.TypeContextImpl(type_by_col_tbl));
         String q = t.toQscript();
         System.out.println(q);
         return q;

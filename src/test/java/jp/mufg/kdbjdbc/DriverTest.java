@@ -399,4 +399,34 @@ public class DriverTest {
         rs.close();
         e.close();;
     }
+
+    @Test
+    public void test_Statement_q_t2_where_date_equals() throws SQLException, ClassNotFoundException {
+        setup();
+
+        Statement e = conn.createStatement();
+        Assert.assertTrue(e.execute("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date = '1970-01-04') GROUP BY 1"));
+        ResultSet rs = e.getResultSet();
+        ResultSetMetaData meta = rs.getMetaData();
+        Assert.assertEquals(2, meta.getColumnCount());
+
+        int p = 0;
+
+        p++;
+        Assert.assertEquals("date"  , meta.getColumnName(p));
+        Assert.assertEquals("d"     , meta.getColumnTypeName(p));
+
+        p++;
+        Assert.assertEquals("sum:f:ok"  , meta.getColumnName(p));
+        Assert.assertEquals("f"     , meta.getColumnTypeName(p));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("1970-01-04", rs.getObject("date"));
+        Assert.assertEquals(1.4         , rs.getObject("sum:f:ok"));
+
+        // Assert.assertFalse(rs.next());
+
+        rs.close();
+        e.close();;
+    }
 }
