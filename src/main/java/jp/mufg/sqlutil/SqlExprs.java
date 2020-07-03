@@ -167,9 +167,9 @@ public class SqlExprs {
         
         public abstract char getType(TypeContext ctxt);
 
-        public void checkType(TypeContext ctxt) {}
+        public abstract void checkType(TypeContext ctxt);
 
-        public void collectStringExpr(List<StringExpr> result) {}
+        public abstract void collectStringExpr(List<StringExpr> result);
     }
     
     public static interface TypeContext {
@@ -221,6 +221,11 @@ public class SqlExprs {
         @Override
         public void checkType(TypeContext ctxt) {
             expr.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            expr.collectStringExpr(result);
         }
 
 		public Expr getExpr()
@@ -277,7 +282,19 @@ public class SqlExprs {
 		{
 			return rhs;
         }
-        
+
+        @Override
+        public void checkType(TypeContext ctxt) {
+            lhs.checkType(ctxt);
+            rhs.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            lhs.collectStringExpr(result);
+            rhs.collectStringExpr(result);
+        }
+
         @Override
         public char getType(TypeContext ctxt) {
             if(op.equals("<=") || op.equals(">=") || op.equals("<") || op.equals(">") || op.equals("=") || op.equals("!=") || op.equals("in") || op.equals("and") || op.equals("or"))
@@ -455,6 +472,12 @@ public class SqlExprs {
             fixStringType(strs, lhs.getType(ctxt));
         }
 
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            lhs.collectStringExpr(result);
+            arguments.collectStringExpr(result);
+        }
+
 		@Override
 		public String toString()
 		{
@@ -570,6 +593,17 @@ public class SqlExprs {
             if(elseExpr != null) {
                 elseExpr.checkType(ctxt);
             }   
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            for(WhenThen wt : whenThens) {
+                wt.whenExpr.collectStringExpr(result);
+                wt.thenExpr.collectStringExpr(result);
+            }
+            if(elseExpr != null) {
+                elseExpr.collectStringExpr(result);
+            }
         }
 
         @Override
@@ -696,6 +730,11 @@ public class SqlExprs {
         }
 
         @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            expr.collectStringExpr(result);
+        }
+
+        @Override
         public String toQscript() {
             return "distinct " + expr.toQscript();
         }
@@ -724,9 +763,19 @@ public class SqlExprs {
         }
 
         @Override
+        public void checkType(TypeContext ctxt) {
+            expr.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            expr.collectStringExpr(result);
+        }
+
+        @Override
         public String toQscript() {
             if(sqltype.equals("INTEGER"))
-                return "`int$(" + expr.toQscript() + ")";
+                return "(`int$(" + expr.toQscript() + "))";
             throw new UnsupportedOperationException("Not support cast type. " + sqltype);
         }
 
@@ -749,6 +798,16 @@ public class SqlExprs {
         @Override
         public char getType(TypeContext ctxt) {
             return 'i';
+        }
+
+            @Override
+        public void checkType(TypeContext ctxt) {
+            expr.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            expr.collectStringExpr(result);
         }
 
         @Override
@@ -811,6 +870,17 @@ public class SqlExprs {
                 return getArguments().getType(ctxt);
         }
 
+        @Override
+        public void checkType(TypeContext ctxt) {
+            arguments.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            arguments.collectStringExpr(result);
+        }
+
+
 		@Override
 		public String toString()
 		{
@@ -844,6 +914,8 @@ public class SqlExprs {
 	
 	public static abstract class LiteralExpr extends Expr
 	{
+        @Override
+        public final void checkType(TypeContext ctxt) {}
 	}
 
 	//@Immutable
@@ -876,6 +948,10 @@ public class SqlExprs {
         @Override
         public char getType(TypeContext ctxt) {
             return 'b';
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
         }
 	}
 
@@ -912,10 +988,14 @@ public class SqlExprs {
         public char getType(TypeContext ctxt) {
             return 'f';
         }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+        }
 	}
 
 	//@Immutable
-	public static final class StringExpr extends Expr
+	public static final class StringExpr extends LiteralExpr
 	{
         private final String string;
         private String replacedPlainString;
@@ -979,6 +1059,16 @@ public class SqlExprs {
 			this.columnName = columnName;
 		}
 
+        @Override
+        public void checkType(TypeContext ctxt) {
+            //do nothing            
+        }
+
+        @Override
+        public void collectStringExpr(List<StringExpr> result) {
+            //do nothing
+        }
+
 		@Override
 		public String toString()
 		{
@@ -1006,24 +1096,7 @@ public class SqlExprs {
 		public String getColumnName()
 		{
 			return columnName;
-		}
-		
-		// @Override
-		// public String toJxpath()
-		// {
-		// 	if(tableName == null)
-		// 		return "$" + columnName;
-		// 	else
-		// 		return "$" + tableName + "/" + columnName;
-		// }
-
-		// @Override
-		// public String toJavaExprSrc()
-		// {
-		// 	//checkNotNull(tableName, "tableName is null. columnName=" + String.valueOf(columnName));
-		// 	String tblvar = tableName.toLowerCase();
-		// 	return "(" + tblvar + " == null ? null : " + tblvar + ".get" + columnName + "())";
-		// }
+		}		
 	}
 	
 	// /**

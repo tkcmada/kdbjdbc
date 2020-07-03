@@ -129,6 +129,12 @@ public class SqlParserTest {
     }    
 
     @Test
+    public void test_select_stmt_group_by_where_and() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE ((t2.name = 'abc') AND (t2.date = '2019-08-01')) GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where ( ( name = `abc ) and ( date = 2019.08.01 ) )", q);
+    }    
+
+    @Test
     public void test_select_stmt_group_by_where_date_not_in() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04') THEN FALSE WHEN (t2.date = '1970-01-05') THEN FALSE ELSE TRUE END) GROUP BY 1");
         Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where ( not (date in (1970.01.04; 1970.01.05)) )", q);
@@ -149,19 +155,19 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_timestamp_year() throws IOException {
         String q = parse("SELECT CAST(TRUNC(EXTRACT(YEAR FROM t2.z)) AS INTEGER) AS \"yr:z:ok\" FROM \"public\".\"t2\" \"t2\" GROUP BY 1");
-        Assert.assertEquals("distinct select yr__z__ok:`int$(`year$(z)) from t2", q);
+        Assert.assertEquals("distinct select yr__z__ok:(`int$(`year$(z))) from t2", q);
     }
 
     @Test
     public void test_select_stmt_timestamp_year_quater() throws IOException {
         String q = parse("SELECT CAST(TRUNC(EXTRACT(QUARTER FROM 't2'.'z')) AS INTEGER) AS 'qr:z:ok', CAST(TRUNC(EXTRACT(YEAR FROM 't2'.'z')) AS INTEGER) AS 'yr:z:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
-        Assert.assertEquals("distinct select qr__z__ok:`int$(`int$floor((2+(`mm$(z)))%3)), yr__z__ok:`int$(`year$(z)) from t2", q);
+        Assert.assertEquals("distinct select qr__z__ok:(`int$(`int$floor((2+(`mm$(z)))%3))), yr__z__ok:(`int$(`year$(z))) from t2", q);
     }
 
     @Test
     public void test_select_stmt_timestamp_year_month() throws IOException {
         String q = parse("SELECT CAST(TRUNC(EXTRACT(MONTH FROM t2.z)) AS INTEGER) AS 'mn:z:ok', CAST(TRUNC(EXTRACT(YEAR FROM t2.z)) AS INTEGER) AS 'yr:z:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
-        Assert.assertEquals("distinct select mn__z__ok:`int$(`mm$(z)), yr__z__ok:`int$(`year$(z)) from t2", q);
+        Assert.assertEquals("distinct select mn__z__ok:(`int$(`mm$(z))), yr__z__ok:(`int$(`year$(z))) from t2", q);
     }
 
     //remaining issues
