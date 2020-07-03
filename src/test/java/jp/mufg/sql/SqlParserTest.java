@@ -74,11 +74,23 @@ public class SqlParserTest {
         Assert.assertEquals("select name:name, bl:bl, bt:bt, x:x, lg:lg, r:r, f:f, d:d, z:z, ts:ts, c:c, g:g from t2", q);
     }    
 
-    // @Test
-    // public void test_select_stmt5_noquote_col_tbl() throws IOException {
-    //     String q = parse("SELECT t2.name AS name , t2.bl as bl, t2.bt as bt, t2.x as x, t2.lg as lg, t2.r as r, t2.f as f, t2.d as d, t2.z as z, t2.ts as ts, t2.c as c, t2.g as g FROM public.t2 AS t2");
-    //     Assert.assertEquals("select name, bl, bt, x, lg, r, f, d, z, ts, c, g from t2", q);
-    // }    
+    @Test
+    public void test_select_stmt_group_by_count_distinct() throws IOException {
+        String q = parse("SELECT COUNT(DISTINCT 't2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
+        Assert.assertEquals("select ctd__bl__ok:count distinct bl by bl:bl from t2", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_stddev() throws IOException {
+        String q = parse("SELECT STDEV('t2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
+        Assert.assertEquals("select ctd__bl__ok:dev bl by bl:bl from t2", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_variance() throws IOException {
+        String q = parse("SELECT VARIANCE('t2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
+        Assert.assertEquals("select ctd__bl__ok:(dev bl) xexp 2 by bl:bl from t2", q);
+    }    
 
     @Test
     public void test_select_stmt_group_by_where_char_equals() throws IOException {

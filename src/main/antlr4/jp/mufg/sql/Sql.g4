@@ -77,6 +77,7 @@ primaryExpr returns [Expr val]
     | stringExpr       { $val = $stringExpr.val; }
     | booleanLiteral   { $val = $booleanLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
+    | 'DISTINCT' expr  { $val = new DistinctExpr($expr.val); }
     | 'CAST' '(' expr 'AS' type='INTEGER' ')' { $val = new CastExpr($expr.val, $type.text); }
     | 'EXTRACT' '(' type=('YEAR'|'QUARTER'|'MONTH'|'DAY'|'HOUR'|'MINUTE'|'SECOND') 'FROM' expr ')' { $val = new ExtractExpr($expr.val, $type.text); }
     | '(' expr ')'     { $val = new CurryExpr($expr.val); }

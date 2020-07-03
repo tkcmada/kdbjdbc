@@ -677,6 +677,35 @@ public class SqlExprs {
         }
 	}
 
+    public static class DistinctExpr extends Expr
+    {
+        private final Expr expr;
+
+        public DistinctExpr(Expr expr) {
+            this.expr = expr;
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return expr.getType(ctxt);
+        }
+
+        @Override
+        public void checkType(TypeContext ctxt) {
+            expr.checkType(ctxt);
+        }
+
+        @Override
+        public String toQscript() {
+            return "distinct " + expr.toQscript();
+        }
+
+        @Override
+        public String toString() {
+            return toQscript();
+        }
+    }
+
     public static class CastExpr extends Expr
     {
         private final Expr expr;
@@ -794,10 +823,17 @@ public class SqlExprs {
 		@Override
         public String toQscript()
 		{
-            String qfunc = identifiers.toLowerCase(); //TODO
-            if(qfunc.equals("trunc")) {
+            if(identifiers.equals("TRUNC")) {
                 return arguments.exprs.get(0).toQscript(); //do nthing
             }
+            if(identifiers.equals("VARIANCE")) {
+                return "(" + new FunctionCallExpr("STDEV", arguments).toQscript() + ") xexp 2";
+            }
+            String qfunc;
+            if(identifiers.equals("STDEV"))
+                qfunc = "dev";
+            else
+                qfunc = identifiers.toLowerCase();
 			StringBuilder s = new StringBuilder();
             s.append(qfunc);
             s.append(" ");
