@@ -75,11 +75,26 @@ primaryExpr returns [Expr val]
     | functionExpr     { $val = $functionExpr.val; }
     | numberExpr       { $val = $numberExpr.val; }
     | stringExpr       { $val = $stringExpr.val; }
+    | booleanLiteral   { $val = $booleanLiteral.val; }
+    | caseExpr         { $val = $caseExpr.val; }
     | '(' expr ')'     { $val = new CurryExpr($expr.val); }
+    ;
+
+caseExpr returns [CaseExpr val]
+    : 'CASE' wt=whenThenExpr 'ELSE' e=expr 'END' { $val = new CaseExpr(null, $wt.val, $e.val); }
+    ;
+
+whenThenExpr returns [List<WhenThen> val]
+    :  'WHEN' e1=expr 'THEN' e2=expr   { $val = new LinkedList<WhenThen>(); $val.add(new WhenThen($e1.val, $e2.val)); }
+      ('WHEN' e3=expr 'THEN' e4=expr { $val.add(new WhenThen($e3.val, $e4.val)); })*
     ;
 
 functionExpr returns [FunctionCallExpr val]
     : id=name '(' args ')' { $val = new FunctionCallExpr($id.text, $args.val); }
+    ;
+
+booleanLiteral returns [BooleanLiteral val]
+    : tk=('TRUE'|'FALSE') { $val = new BooleanLiteral(Boolean.parseBoolean($tk.text)); }
     ;
 
 numberExpr returns [NumberExpr val]

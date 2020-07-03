@@ -488,172 +488,113 @@ public class SqlExprs {
 	// 	}
 	// }
 
-	// public static class WhenThen
-	// {
-	// 	private final Expr whenExpr;
-	// 	private final Expr thenExpr;
+	public static class WhenThen
+	{
+		private final Expr whenExpr;
+		private final Expr thenExpr;
 		
-	// 	public WhenThen(Expr whenExpr, Expr thenExpr)
-	// 	{
-	// 		super();
-	// 		this.whenExpr = whenExpr;
-	// 		this.thenExpr = thenExpr;
-	// 	}
+		public WhenThen(Expr whenExpr, Expr thenExpr)
+		{
+			super();
+			this.whenExpr = whenExpr;
+			this.thenExpr = thenExpr;
+		}
 		
-	// 	public Expr getWhenExpr()
-	// 	{
-	// 		return whenExpr;
-	// 	}
+		public Expr getWhenExpr()
+		{
+			return whenExpr;
+		}
 		
-	// 	public Expr getThenExpr()
-	// 	{
-	// 		return thenExpr;
-	// 	}
+		public Expr getThenExpr()
+		{
+			return thenExpr;
+		}
 		
-	// 	@Override
-	// 	public String toString()
-	// 	{
-	// 		return "WHEN " + whenExpr + " THEN " + thenExpr;
-	// 	}
-	// }
+		@Override
+		public String toString()
+		{
+			return "WHEN " + whenExpr + " THEN " + thenExpr;
+		}
+	}
 	
-	// public static class CaseExpr extends Expr
-	// {
-	// 	private final List<WhenThen> whenThens;
-	// 	//@Nullable 
-	// 	private final Expr elseExpr;
-	// 	//@Nullable 
-	// 	private final Expr baseExpr;
+	public static class CaseExpr extends Expr
+	{
+		private final List<WhenThen> whenThens;
+		//@Nullable 
+		private final Expr elseExpr;
+		//@Nullable 
+		private final Expr baseExpr;
 		
-	// 	public CaseExpr(
-	// 			//@Nullable Expr baseExpr
-	// 			, List<WhenThen> whenThens
-	// 			, //@Nullable Expr elseExpr
-	// 	)
-	// 	{
-	// 		super();
-	// 		this.baseExpr = baseExpr;
-	// 		this.whenThens = whenThens;
-	// 		this.elseExpr = elseExpr;
-	// 	}
-		
-	// 	public List<WhenThen> getWhenThens()
-	// 	{
-	// 		return Collections.unmodifiableList(whenThens);
-	// 	}
+		public CaseExpr(
+                @Nullable Expr baseExpr
+				, List<WhenThen> whenThens
+				, @Nullable Expr elseExpr
+		)
+		{
+			super();
+			this.baseExpr = baseExpr;
+			this.whenThens = whenThens;
+			this.elseExpr = elseExpr;
+        }
+        
+		@Override
+		public String toString()
+		{
+			StringBuilder s = new StringBuilder();
+			s.append("CASE");
+			// if(baseExpr != null)
+			// {
+			// 	s.append(" ");
+			// 	s.append(baseExpr);
+			// }
+			for(WhenThen wt : whenThens)
+			{
+				s.append(" ");
+				s.append(wt.toString());
+			}
+			if(elseExpr != null)
+			{
+				s.append(" ELSE ");
+				s.append(elseExpr);
+			}
+			s.append(" END");
+			return s.toString();
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return whenThens.get(0).thenExpr.getType(ctxt);
+        }
 
-	// 	//@Nullable
-	// 	public Expr getBaseExpr()
-	// 	{
-	// 		return baseExpr;
-	// 	}
+        @Override
+        public void checkType(TypeContext ctxt) {
+            for(WhenThen wt : whenThens) {
+                wt.whenExpr.checkType(ctxt);
+                wt.thenExpr.checkType(ctxt);
+            }
+            if(elseExpr != null) {
+                elseExpr.checkType(ctxt);
+            }   
+        }
 
-	// 	//@Nullable 
-	// 	public Expr getElseExpr()
-	// 	{
-	// 		return elseExpr;
-	// 	}
-
-	// 	@Override
-	// 	public String toString()
-	// 	{
-	// 		StringBuilder s = new StringBuilder();
-	// 		s.append("CASE");
-	// 		if(baseExpr != null)
-	// 		{
-	// 			s.append(" ");
-	// 			s.append(baseExpr);
-	// 		}
-	// 		for(WhenThen wt : whenThens)
-	// 		{
-	// 			s.append(" ");
-	// 			s.append(wt.toString());
-	// 		}
-	// 		if(elseExpr != null)
-	// 		{
-	// 			s.append(" ELSE ");
-	// 			s.append(elseExpr);
-	// 		}
-	// 		s.append(" END");
-	// 		return s.toString();
-	// 	}
-		
-	// 	@Override
-	// 	public String toJxpath()
-	// 	{
-	// 		//非効率だがCASEをcom.mumss.feit.common.jxpath.LibJx.iifで書き換える
-	// 		StringBuilder s = new StringBuilder();
-	// 		StringBuilder post = new StringBuilder();
-	// 		for(WhenThen wt : whenThens)
-	// 		{
-	// 			s.append("com.mumss.feit.common.jxpath.LibJx.iif(");
-	// 			if(baseExpr != null)
-	// 			{
-	// 				s.append(baseExpr.toJxpath());
-	// 				s.append(" = ");
-	// 				s.append(wt.whenExpr.toJxpath());
-	// 			}
-	// 			else
-	// 			{
-	// 				s.append(wt.whenExpr.toJxpath());
-	// 			}
-	// 			s.append(", ");
-	// 			s.append(wt.thenExpr.toJxpath());
-	// 			s.append(", ");
-	// 			post.append(")");
-	// 		}
-	// 		if(elseExpr != null)
-	// 		{
-	// 			s.append(elseExpr.toJxpath());
-	// 		}
-	// 		else
-	// 		{
-	// 			s.append("com.mumss.feit.common.jxpath.LibJx.NULL");
-	// 		}
-	// 		s.append(post.toString());
-	// 		return s.toString();
-	// 	}
-		
-	// 	@Override
-	// 	public String toJavaExprSrc()
-	// 	{
-	// 		//CASEを三項演算子で書き換える
-	// 		StringBuilder s = new StringBuilder();
-	// 		StringBuilder post = new StringBuilder();
-	// 		s.append("(");
-	// 		for(WhenThen wt : whenThens)
-	// 		{
-	// 			s.append("(");
-	// 			if(baseExpr != null)
-	// 			{
-	// 				s.append(TypeSafeSqlFunctions.class.getName() + ".eq(");
-	// 				s.append(baseExpr.toJavaExprSrc());
-	// 				s.append(", ");
-	// 				s.append(wt.whenExpr.toJavaExprSrc());
-	// 				s.append(")");
-	// 			}
-	// 			else
-	// 			{
-	// 				s.append(wt.whenExpr.toJavaExprSrc());
-	// 			}
-	// 			s.append(" ? ");
-	// 			s.append(wt.thenExpr.toJavaExprSrc());
-	// 			s.append(" : ");
-	// 			post.append(")");
-	// 		}
-	// 		if(elseExpr != null)
-	// 		{
-	// 			s.append(elseExpr.toJavaExprSrc());
-	// 		}
-	// 		else
-	// 		{
-	// 			s.append("null");
-	// 		}
-	// 		s.append(post.toString());
-	// 		s.append(")");
-	// 		return s.toString();
-	// 	}
-	// }
+        @Override
+        public String toQscript() {
+            StringBuilder s = new StringBuilder();
+            for(WhenThen wt : whenThens) {
+                if(s.length() > 0)
+                    s.append(" and ");
+                s.append("(");
+                boolean thenval = ((BooleanLiteral)wt.thenExpr).getValue();
+                if(! thenval)
+                    s.append("! ");
+                s.append("(");
+                s.append(wt.whenExpr.toQscript());
+                s.append(")");
+                s.append(")");
+            }            
+            return s.toString();
+        }
+	}
 
 	public static class Arguments extends Expr
 	{
@@ -790,7 +731,40 @@ public class SqlExprs {
 	public static abstract class LiteralExpr extends Expr
 	{
 	}
-	
+
+	//@Immutable
+	public static final class BooleanLiteral extends LiteralExpr
+	{
+		private final boolean value;
+
+		public BooleanLiteral(boolean value)
+		{
+            super();
+            this.value = value;
+        }
+
+        public boolean getValue() {
+            return value;
+        }
+        
+		@Override
+		public String toString()
+		{
+			return String.valueOf(value).toUpperCase();
+		}
+		
+		@Override
+		public String toQscript()
+		{
+			return String.valueOf(value);
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'b';
+        }
+	}
+
 	//@Immutable
 	public static final class NumberExpr extends LiteralExpr
 	{
