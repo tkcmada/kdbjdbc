@@ -677,6 +677,75 @@ public class SqlExprs {
         }
 	}
 
+    public static class CastExpr extends Expr
+    {
+        private final Expr expr;
+        private final String sqltype;
+
+        public CastExpr(Expr expr, String sqltype) {
+            this.expr = expr;
+            this.sqltype = sqltype;
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            if(sqltype.equals("INTEGER"))
+                return 'i';
+            throw new UnsupportedOperationException("Not support cast type. " + sqltype);
+        }
+
+        @Override
+        public String toQscript() {
+            if(sqltype.equals("INTEGER"))
+                return "`int$(" + expr.toQscript() + ")";
+            throw new UnsupportedOperationException("Not support cast type. " + sqltype);
+        }
+
+        @Override
+        public String toString() {
+            return toQscript();
+        }
+    }
+
+    public static class ExtractExpr extends Expr
+    {
+        private final Expr expr;
+        private final String field;
+
+        public ExtractExpr(Expr expr, String field) {
+            this.expr = expr;
+            this.field = field;
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'i';
+        }
+
+        @Override
+        public String toQscript() {
+            if(field.equals("YEAR"))
+                return "`year$(" + expr.toQscript() + ")";
+            if(field.equals("MONTH"))
+                return "`mm$(" + expr.toQscript() + ")";
+            if(field.equals("DAY"))
+                return "`dd$(" + expr.toQscript() + ")";
+            if(field.equals("HOUR"))
+                return "`hh$(" + expr.toQscript() + ")";
+            if(field.equals("MINUTE"))
+                return "`uu$(" + expr.toQscript() + ")";
+            if(field.equals("SECOND"))
+                return "`ss$(" + expr.toQscript() + ")";
+            throw new UnsupportedOperationException("Not support extract type. " + field);
+        }
+
+        @Override
+        public String toString() {
+            return toQscript();
+        }
+    }
+
+
 	public static class FunctionCallExpr extends Expr
 	{
 		private final String identifiers;
@@ -724,6 +793,9 @@ public class SqlExprs {
         public String toQscript()
 		{
             String qfunc = identifiers.toLowerCase(); //TODO
+            if(qfunc.equals("trunc")) {
+                return arguments.exprs.get(0).toQscript(); //do nthing
+            }
 			StringBuilder s = new StringBuilder();
             s.append(qfunc);
             s.append(" ");
