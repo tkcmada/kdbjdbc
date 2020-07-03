@@ -855,14 +855,16 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-			return toString();
+            if(replacedPlainString != null)
+                return replacedPlainString; //no quote required
+			return "`" + string;
         }
         
         @Override
         public char getType(TypeContext ctxt) {
             if(replacedPlainString != null)
                 return replacedType;
-            return 'C'; //list of char
+            return 's'; //list of char
         }
     }
     
