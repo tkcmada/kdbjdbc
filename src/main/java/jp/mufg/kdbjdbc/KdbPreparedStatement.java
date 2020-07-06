@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import jp.mufg.kdbjdbc.KdbDatabaseMetaData.ColumnAndType;
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbPreparedStatement extends KdbStatement implements PreparedStatement {
@@ -60,13 +61,116 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 
 	@Override
 	public ResultSet executeQuery() throws SQLException {
-        this.execute(sql);
+        this.execute();
         return this.getResultSet();
 	}
 
 	@Override
 	public int executeUpdate() throws SQLException {
         throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean execute() throws SQLException {
+        java.util.List<Object[]> rows = new ArrayList<Object[]>();
+
+        final String qscript = "q) " + q;
+        logger.info("execute on kdb+...>>>" + qscript + "<<<");
+        ResultSet rs = target.executeQuery(qscript);
+        while(rs.next()) {
+            Object[] row = new Object[cols.length];
+            int i = 1;
+            for(ColumnAndType e : colnametype2.values()) {
+                char coltype = e.type;
+                Object obj = rs.getObject(i);
+                logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
+                switch(coltype) {
+                    case 'b':
+                        boolean blval = rs.getBoolean(i);
+                        row[i-1] = blval;
+                        break;
+                    case 'x':
+                        byte btval = rs.getByte(i);
+                        row[i-1] = btval;
+                        break;
+                    case 'h':
+                        short stval = rs.getShort(i);
+                        row[i-1] = stval;
+                        break;
+                    case 'i':
+                        int ival = rs.getInt(i);
+                        row[i-1] = ival;
+                        break;
+                    case 'j':
+                        long lgval = rs.getLong(i);
+                        row[i-1] = lgval;
+                        break;
+                    case 'e':
+                        float realval = rs.getFloat(i);
+                        row[i-1] = realval;
+                        break;
+                    case 'f':
+                        double dblval = rs.getDouble(i);
+                        row[i-1] = dblval;
+                        break;
+                    case 'p':
+                        Timestamp tsval = (Timestamp)rs.getObject(i);
+                        row[i-1] = tsval; //KdbUtil.toVarChar(tsval);
+                        break;
+                    case 'C':
+                        row[i-1] = rs.getString(i);
+                        break;
+                    // case 'B':
+                    //     boolean[] abl = (boolean[]) rs.getObject(i);
+                    //     row[i-1] = KdbUtil.toVarChar(abl);
+                    //     break;
+                    case 'X':
+                        byte[] ab = (byte[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(ab);
+                        break;
+                    // case 'H':
+                    //     short[] as = (short[]) rs.getObject(i);
+                    //     row[i-1] = KdbUtil.toVarChar(as);
+                    //     break;
+                    case 'I':
+                        int[] ai = (int[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(ai);
+                        break;
+                    case 'J':
+                        long[] al = (long[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(al);
+                        break;
+                    // case 'E':
+                    //     float[] ae = (float[]) rs.getObject(i);
+                    //     row[i-1] = KdbUtil.toVarChar(ae);
+                    //     break;
+                    case 'F':
+                        double[] ad = (double[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(ad);
+                        break;
+                    case 'S': //list of symbol
+                        String[] as = (String[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(as);
+                        break;
+                    case 'P': //list of timestamp
+                        Timestamp[] ats = (Timestamp[]) rs.getObject(i);
+                        row[i-1] = KdbUtil.toVarChar(ats);
+                        break;
+                    // case 'G':
+                    //     Object[] ag = (Object[]) rs.getObject(i);
+                    //     row[i-1] = Arrays.toString(ag);
+                    //     break;
+                    default:
+                        Object val = rs.getObject(i);
+                        logger.info("getObject " + i + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
+                        row[i-1] = val == null ? null : val.toString();
+                }
+                i++;
+            }
+            rows.add(row);
+        }
+        this.rs = new ResultSetImpl(getMetaData(), rows);
+        return true;
 	}
 
 	@Override
@@ -187,11 +291,6 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 	public void setObject(int parameterIndex, Object x) throws SQLException {
 		throw new SQLException("not support");
 		
-	}
-
-	@Override
-	public boolean execute() throws SQLException {
-        return super.execute(sql);
 	}
 
 	@Override
