@@ -15,14 +15,14 @@ public class SqlExprs {
 
     public static class SelectStatement {
         private final Table table;
-        private final List<ColumnExprWithAlias> columns;
+        private final List<Column> columns;
         private final List<Integer> groupargs;
         private final Expr where;
         private final Expr having;
         private final Integer limit;
 
         public SelectStatement(
-            @NotNull List<ColumnExprWithAlias> columns,
+            @NotNull List<Column> columns,
             @NotNull Table table,
             @Nullable Expr where,
             @Nullable List<Integer> groupargs,
@@ -68,11 +68,10 @@ public class SqlExprs {
                 for(Integer colnum : groupargs) {
                     if(gs.length() > 0)
                         gs.append(", ");
-                    Expr expr = columns.get(colnum - 1).expr;
                     excludedColumn[colnum - 1] = true;
                     gs.append(SqlSelectToQscriptTranslator.escapeColumnName(columns.get(colnum - 1).getAliasName()));
                     gs.append(":");
-                    gs.append(expr.toQscript());
+                    gs.append(columns.get(colnum - 1).toQscript());
                 }
             }
 
@@ -86,14 +85,16 @@ public class SqlExprs {
             {
                 int i = 0;
                 StringBuilder cs = new StringBuilder();
-                for(ColumnExprWithAlias c : columns) {
+                for(Column c : columns) {
                     if(! excludedColumn[i]) {
                         if(cs.length() > 0)
                             cs.append(", ");
-                        String aliasname = c.getAliasName();
-                        cs.append(SqlSelectToQscriptTranslator.escapeColumnName(aliasname));
-                        cs.append(":");
-                        cs.append(c.expr.toQscript());
+                        if(! c.toQscript().equals("*")) {
+                            String aliasname = c.getAliasName();
+                            cs.append(SqlSelectToQscriptTranslator.escapeColumnName(aliasname));
+                            cs.append(":");
+                            cs.append(c.toQscript());
+                        }
                     }
                     i++;
                 }
@@ -121,9 +122,34 @@ public class SqlExprs {
         public String getAliasName();
     }
 
-    // public static class Subquery {
-    //     private final String aliasName;
-    // }
+    public static class TableSelect implements Table {
+        private final SelectStatement select;
+        private final String aliasName;
+
+        public TableSelect(
+            @NotNull SelectStatement select,
+            @NotNull String aliasName
+        )
+        {
+            this.select = select;
+            this.aliasName = aliasName;
+        }
+
+        @Override
+        public String getAliasName() {
+            return aliasName;
+        }
+
+        @Override
+        public String getTableName() {
+            return "(" + select.toQscript() + ")";
+        }
+
+        @Override
+        public String toString() {
+            return select.toString();
+        }
+    }
 
 	public static class TableImpl implements Table
 	{
@@ -211,14 +237,36 @@ public class SqlExprs {
 			return s.toString();
 		}
     }
-    
-    public static class ColumnExprWithAlias {
+
+    public static interface Column {
+        public String getAliasName();
+        public String toQscript();
+    }
+
+    public static class WildcardColumns implements Column {
+        @Override
+        public String getAliasName() {
+            return null;
+        }
+
+        @Override
+        public String toQscript() {
+            return "*";
+        }
+
+        @Override
+        public String toString() {
+            return "*";
+        }
+    }
+
+    public static class ColumnImpl implements Column {
         @NotNull
-        public final Expr expr;
+        private final Expr expr;
         @Nullable
         private final String aliasName;
 
-        public ColumnExprWithAlias(@NotNull Expr expr, @Nullable String aliasName) {
+        public ColumnImpl(@NotNull Expr expr, @Nullable String aliasName) {
             if(expr == null)
                 throw new NullPointerException("expr is null");
             this.expr = expr;
@@ -229,6 +277,7 @@ public class SqlExprs {
             return aliasName != null;
         }
 
+        @Override
         public String getAliasName() {
             if(aliasName != null)
                 return aliasName;
@@ -236,6 +285,16 @@ public class SqlExprs {
                 return ((ColumnExpr)expr).columnName;
             }
             return expr.toString();
+        }
+
+        @Override
+        public String toQscript() {
+            return expr.toQscript();
+        }
+
+        @Override
+        public String toString() {
+            return expr + " AS " + aliasName;
         }
     }
 	
@@ -1131,7 +1190,7 @@ public class SqlExprs {
             return 's'; //list of char
         }
     }
-    
+
 	//@Immutable
 	public static final class ColumnExpr extends Expr
 	{

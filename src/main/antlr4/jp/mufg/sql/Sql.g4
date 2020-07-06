@@ -13,7 +13,7 @@ selectStmt returns [SelectStatement val]
     :   ('SELECT'|'select') columnNames ('FROM'|'from') table where groupBy having limit
         { $val = new SelectStatement(
             $columnNames.columns,
-            $table.tbl,
+            $table.val,
             $where.val,
             $groupBy.val,
             $having.val,
@@ -22,27 +22,27 @@ selectStmt returns [SelectStatement val]
         }
     ;
 
-table returns [Table tbl]
-    :            t=name 'AS' a=name { $tbl = new TableImpl($t.text, $a.text); }
-    |            t=name      a=name { $tbl = new TableImpl($t.text, $a.text); }
-    |            t=name             { $tbl = new TableImpl($t.text, null   ); }
-    |   name '.' t=name 'AS' a=name { $tbl = new TableImpl($t.text, $a.text); }
-    |   name '.' t=name      a=name { $tbl = new TableImpl($t.text, $a.text); }
-    |   name '.' t=name             { $tbl = new TableImpl($t.text, null   ); }
-    |   '(' selectStmt ')' 'AS' a=name { $tbl = null; }
-    |   '(' selectStmt ')'      a=name { $tbl = null; }
-    |   '(' selectStmt ')'             { $tbl = null; }
+table returns [Table val]
+    :            t=name 'AS' a=name { $val = new TableImpl($t.text, $a.text); }
+    |            t=name      a=name { $val = new TableImpl($t.text, $a.text); }
+    |            t=name             { $val = new TableImpl($t.text, null   ); }
+    |   name '.' t=name 'AS' a=name { $val = new TableImpl($t.text, $a.text); }
+    |   name '.' t=name      a=name { $val = new TableImpl($t.text, $a.text); }
+    |   name '.' t=name             { $val = new TableImpl($t.text, null   ); }
+    |   '(' selectStmt ')' 'AS' a=name { $val = new TableSelect($selectStmt.val, $a.text); }
+    |   '(' selectStmt ')'      a=name { $val = new TableSelect($selectStmt.val, $a.text); }
+    |   '(' selectStmt ')'             { $val = new TableSelect($selectStmt.val, null   ); }
     ;
 
-columnNames returns [List<ColumnExprWithAlias> columns]
-    :   c1=columnName { $columns = new LinkedList<ColumnExprWithAlias>(); $columns.add($c1.val); }
+columnNames returns [List<Column> columns]
+    :   c1=columnName { $columns = new LinkedList<Column>(); $columns.add($c1.val); }
         (',' c2=columnName { $columns.add($c2.val); })*
     ;
 
-columnName returns [ColumnExprWithAlias val]
-    :  expr  'AS' id=name { $val = new ColumnExprWithAlias($expr.val, $id.text); }
-    |  expr               { $val = new ColumnExprWithAlias($expr.val, null); }
-    |  '*'                { $val = null; }
+columnName returns [Column val]
+    :  expr  'AS' id=name { $val = new ColumnImpl($expr.val, $id.text); }
+    |  expr               { $val = new ColumnImpl($expr.val, null); }
+    |  '*'                { $val = new WildcardColumns(); }
     ;
 
 where returns [Expr val]

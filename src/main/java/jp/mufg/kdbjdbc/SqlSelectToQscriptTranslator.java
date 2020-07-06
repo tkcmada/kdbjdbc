@@ -5,7 +5,7 @@ import jp.mufg.sql.SqlLexer;
 import jp.mufg.sql.SqlParser;
 import jp.mufg.sql.SqlParser.SelectStmtContext;
 import jp.mufg.sqlutil.SqlExprs.Arguments;
-import jp.mufg.sqlutil.SqlExprs.ColumnExprWithAlias;
+import jp.mufg.sqlutil.SqlExprs.Column;
 import jp.mufg.sqlutil.SqlExprs.EqExpr;
 import jp.mufg.sqlutil.SqlExprs.Expr;
 import jp.mufg.sqlutil.SqlExprs.SelectStatement;

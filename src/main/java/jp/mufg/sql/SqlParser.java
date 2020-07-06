@@ -176,7 +176,7 @@ public class SqlParser extends Parser {
 			setState(65); ((SelectStmtContext)_localctx).limit = limit();
 			 ((SelectStmtContext)_localctx).val =  new SelectStatement(
 			            ((SelectStmtContext)_localctx).columnNames.columns,
-			            ((SelectStmtContext)_localctx).table.tbl,
+			            ((SelectStmtContext)_localctx).table.val,
 			            ((SelectStmtContext)_localctx).where.val,
 			            ((SelectStmtContext)_localctx).groupBy.val,
 			            ((SelectStmtContext)_localctx).having.val,
@@ -197,9 +197,10 @@ public class SqlParser extends Parser {
 	}
 
 	public static class TableContext extends ParserRuleContext {
-		public Table tbl;
+		public Table val;
 		public NameContext t;
 		public NameContext a;
+		public SelectStmtContext selectStmt;
 		public List<NameContext> name() {
 			return getRuleContexts(NameContext.class);
 		}
@@ -235,7 +236,7 @@ public class SqlParser extends Parser {
 				setState(68); ((TableContext)_localctx).t = name();
 				setState(69); match(3);
 				setState(70); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -244,7 +245,7 @@ public class SqlParser extends Parser {
 				{
 				setState(73); ((TableContext)_localctx).t = name();
 				setState(74); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -252,7 +253,7 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(77); ((TableContext)_localctx).t = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, null   ); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, null   ); 
 				}
 				break;
 
@@ -264,7 +265,7 @@ public class SqlParser extends Parser {
 				setState(82); ((TableContext)_localctx).t = name();
 				setState(83); match(3);
 				setState(84); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -275,7 +276,7 @@ public class SqlParser extends Parser {
 				setState(88); match(25);
 				setState(89); ((TableContext)_localctx).t = name();
 				setState(90); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -285,7 +286,7 @@ public class SqlParser extends Parser {
 				setState(93); name();
 				setState(94); match(25);
 				setState(95); ((TableContext)_localctx).t = name();
-				 ((TableContext)_localctx).tbl =  new TableImpl(((TableContext)_localctx).t.text, null   ); 
+				 ((TableContext)_localctx).val =  new TableImpl(((TableContext)_localctx).t.text, null   ); 
 				}
 				break;
 
@@ -293,11 +294,11 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(98); match(21);
-				setState(99); selectStmt();
+				setState(99); ((TableContext)_localctx).selectStmt = selectStmt();
 				setState(100); match(44);
 				setState(101); match(3);
 				setState(102); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  null; 
+				 ((TableContext)_localctx).val =  new TableSelect(((TableContext)_localctx).selectStmt.val, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -305,10 +306,10 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(105); match(21);
-				setState(106); selectStmt();
+				setState(106); ((TableContext)_localctx).selectStmt = selectStmt();
 				setState(107); match(44);
 				setState(108); ((TableContext)_localctx).a = name();
-				 ((TableContext)_localctx).tbl =  null; 
+				 ((TableContext)_localctx).val =  new TableSelect(((TableContext)_localctx).selectStmt.val, ((TableContext)_localctx).a.text); 
 				}
 				break;
 
@@ -316,9 +317,9 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(111); match(21);
-				setState(112); selectStmt();
+				setState(112); ((TableContext)_localctx).selectStmt = selectStmt();
 				setState(113); match(44);
-				 ((TableContext)_localctx).tbl =  null; 
+				 ((TableContext)_localctx).val =  new TableSelect(((TableContext)_localctx).selectStmt.val, null   ); 
 				}
 				break;
 			}
@@ -335,7 +336,7 @@ public class SqlParser extends Parser {
 	}
 
 	public static class ColumnNamesContext extends ParserRuleContext {
-		public List<ColumnExprWithAlias> columns;
+		public List<Column> columns;
 		public ColumnNameContext c1;
 		public ColumnNameContext c2;
 		public List<ColumnNameContext> columnName() {
@@ -366,7 +367,7 @@ public class SqlParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(118); ((ColumnNamesContext)_localctx).c1 = columnName();
-			 ((ColumnNamesContext)_localctx).columns =  new LinkedList<ColumnExprWithAlias>(); _localctx.columns.add(((ColumnNamesContext)_localctx).c1.val); 
+			 ((ColumnNamesContext)_localctx).columns =  new LinkedList<Column>(); _localctx.columns.add(((ColumnNamesContext)_localctx).c1.val); 
 			setState(126);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -396,7 +397,7 @@ public class SqlParser extends Parser {
 	}
 
 	public static class ColumnNameContext extends ParserRuleContext {
-		public ColumnExprWithAlias val;
+		public Column val;
 		public ExprContext expr;
 		public NameContext id;
 		public NameContext name() {
@@ -431,7 +432,7 @@ public class SqlParser extends Parser {
 				setState(129); ((ColumnNameContext)_localctx).expr = expr();
 				setState(130); match(3);
 				setState(131); ((ColumnNameContext)_localctx).id = name();
-				 ((ColumnNameContext)_localctx).val =  new ColumnExprWithAlias(((ColumnNameContext)_localctx).expr.val, ((ColumnNameContext)_localctx).id.text); 
+				 ((ColumnNameContext)_localctx).val =  new ColumnImpl(((ColumnNameContext)_localctx).expr.val, ((ColumnNameContext)_localctx).id.text); 
 				}
 				break;
 
@@ -439,7 +440,7 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(134); ((ColumnNameContext)_localctx).expr = expr();
-				 ((ColumnNameContext)_localctx).val =  new ColumnExprWithAlias(((ColumnNameContext)_localctx).expr.val, null); 
+				 ((ColumnNameContext)_localctx).val =  new ColumnImpl(((ColumnNameContext)_localctx).expr.val, null); 
 				}
 				break;
 
@@ -447,7 +448,7 @@ public class SqlParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(137); match(22);
-				 ((ColumnNameContext)_localctx).val =  null; 
+				 ((ColumnNameContext)_localctx).val =  new WildcardColumns(); 
 				}
 				break;
 			}

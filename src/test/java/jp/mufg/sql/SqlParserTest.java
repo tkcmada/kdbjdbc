@@ -170,11 +170,11 @@ public class SqlParserTest {
         Assert.assertEquals("distinct select mn__z__ok:(`int$(`mm$(z))), yr__z__ok:(`int$(`year$(z))) from t2", q);
     }
 
-    // @Test
-    // public void test_select_stmt_subquery() throws IOException {
-    //     String q = parse("SELECT * FROM (SELECT * FROM public.bbb) \"TableauSQL\" WHERE (0 = 1)");
-    //     // Assert.assertEquals("distinct select mn__z__ok:(`int$(`mm$(z))), yr__z__ok:(`int$(`year$(z))) from t2", q);
-    // }
+    @Test
+    public void test_select_stmt_func_subquery() throws IOException {
+        String q = parse("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1`]) where ( 0 = 1 )", q);
+    }
 
     
     //remaining issues
