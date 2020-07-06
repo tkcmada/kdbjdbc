@@ -23,6 +23,7 @@ public class SqlParserTest {
 
     private String parse2(String sql) throws IOException {
         SqlSelectToQscriptTranslator t = new SqlSelectToQscriptTranslator(sql);
+        Map<String, Map<String, Character>> type_by_col_tbl = new HashMap<String, Map<String, Character>>();
         HashMap<String, Character> type_by_col = new HashMap<String,Character>();
         type_by_col.put("date", 'd');
         type_by_col.put("c"   , 'c');
@@ -30,8 +31,15 @@ public class SqlParserTest {
         type_by_col.put("name", 's');
         // type_by_col.put("ts"  , 'p');
         type_by_col.put("z"   , 'p');
-        Map<String, Map<String, Character>> type_by_col_tbl = new HashMap<String, Map<String, Character>>();
         type_by_col_tbl.put("t2", type_by_col);
+        //        
+        type_by_col = new HashMap<String,Character>();
+        type_by_col.put("universal_id", 'g');
+        type_by_col.put("version_id"  , 's');
+        type_by_col.put("bid_prices"  , 'F');
+        type_by_col.put("bid_amounts" , 'J');
+        type_by_col_tbl.put("(select  from MarketBooksFunc[`USDJPY;`V1])", type_by_col);
+
         t.convertLiteralType(new SqlExprs.TypeContextImpl(type_by_col_tbl));
         String q = t.toQscript();
         System.out.println(q);
@@ -175,6 +183,14 @@ public class SqlParserTest {
         String q = parse("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
         Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
     }
+
+    @Test
+    public void test_select_stmt_func_cnt() throws IOException {
+        String q = parse2("SELECT SUM(1) AS \"cnt:CustomSQL_74E37922F46A4521AB1810425A001810:ok\", \"Custom SQL Query\".\"universal_id\" AS \"universal_id\", \"Custom SQL Query\".\"version_id\" AS \"version_id\" FROM ( SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\" ) \"Custom SQL Query\" WHERE (\"Custom SQL Query\".\"version_id\" = 'V1') GROUP BY 2, 3");
+        Assert.assertEquals("select cnt__CustomSQL_74E37922F46A4521AB1810425A001810__ok:sum 1 by universal_id:universal_id, version_id:version_id from (select  from MarketBooksFunc[`USDJPY;`V1]) where ( version_id = `V1 )", q);
+    }
+
+    // 
 
     
     //remaining issues

@@ -39,8 +39,27 @@ public class SqlExprs {
         }
 
         public void checkType(TypeContext ctxt) {
+            //subquery
+
             if(where != null) {
-                where.checkType(ctxt);
+                where.checkType(new TypeContextSupportSubquery(ctxt));
+            }
+        }
+
+        private class TypeContextSupportSubquery implements TypeContext {
+            private final TypeContext internal;
+
+            TypeContextSupportSubquery(TypeContext internal) {
+                this.internal = internal;
+            }
+
+            @Override
+            public char getType(String tableName, String columnName) {
+                // i.e. tableName is "Custom SQL Query" and its alias of another subquery
+                if(tableName.equals(table.getAliasName())) {
+                    tableName = table.getTableName();
+                }
+                return internal.getType(tableName, columnName);
             }
         }
 
@@ -63,6 +82,7 @@ public class SqlExprs {
             //SELECT * FROM (SELECT * FROM t) WHERE (0=1)
             //is converted into
             //SELECT * FROM (SELECT * FROM t LIMIT 1)
+            //to push down condition
 
             if(where != null && where.toQscript().equals("( 0 = 1 )") && (table instanceof TableSelect)) {
                 this.where = null;
@@ -345,7 +365,11 @@ public class SqlExprs {
         @Override
         public char getType(String tableName, String columnName) {
             Map<String, Character> type_by_col = type_by_col_by_tbl.get(tableName);
+            if(type_by_col == null)
+                throw new IllegalArgumentException("meta data is not found for table=" + tableName);
             Character typeobj = type_by_col.get(columnName);
+            if(typeobj == null)
+                throw new IllegalArgumentException("meta data is not found for table=" + tableName + " column=" + columnName);
             return (char) typeobj;
         }
     }
