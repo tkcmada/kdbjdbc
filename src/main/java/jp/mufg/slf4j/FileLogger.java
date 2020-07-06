@@ -92,7 +92,7 @@ public class FileLogger extends LoggerBase {
         System.out.println("setting logdir " + logdir);
 		File logfile = new File(logdir, "log.txt");
 		try {
-            FileWriter w = new FileWriter(logfile, true);
+            FileWriter w = new FileWriter(logfile, false); //no append
             if ( ! writer.compareAndSet(null, w) ) {
                 w.close();
             }
