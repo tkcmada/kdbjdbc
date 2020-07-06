@@ -8,70 +8,15 @@ import java.sql.Statement;
 
 import jp.mufg.slf4j.FileLogger;
 
-public class KdbStatement implements Statement {
+public abstract class KdbStatement implements Statement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
     protected final Statement target;
-    private final KdbDatabaseMetaData meta;
-    protected ResultSet rs;
+    protected final KdbDatabaseMetaData meta;
 
     KdbStatement(Statement target, KdbDatabaseMetaData meta) {
         this.target = target;
         this.meta = meta;
     }
-
-    private void setDummyResultSet() throws SQLException {
-        ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true));
-        this.rs = new ResultSetImpl(meta);
-    }
-
-    @Override
-    public final void close() throws SQLException {
-        target.close();
-    }
-
-    @Override
-    public final boolean isClosed() throws SQLException {
-        return target.isClosed();
-    }
-
-    @Override
-    public final boolean execute(String sql) throws SQLException {
-        String pure_q = null;
-        try {
-            logger.info("execute:" + String.valueOf(sql));
-            setDummyResultSet();
-            if(sql.startsWith("q)")) {
-                rs = target.executeQuery(sql);
-                return true;
-            }
-            else {
-                if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
-                    logger.info("This sql is not supported. " + sql);
-                    throw new SQLException("temp table is not supported. " + sql);
-                }
-                else if(sql.startsWith("SELECT ")) {
-                    KdbPreparedStatement pstmt = new KdbPreparedStatement(sql, target, meta);
-                    try {
-                        pstmt.execute();
-                        this.rs = pstmt.getResultSet();
-                        return true;
-                    } finally {
-                        pstmt.close();
-                    }
-                }
-                throw new SQLException("general SQL is not support " + sql);
-            }
-        }
-        catch(SQLException ex) {
-            logger.info("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
-            throw new SQLException("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
-        }
-    }
-
-    @Override
-	public final ResultSet getResultSet() throws SQLException {
-    	return rs;
-	}
 
 	@Override
 	public final <T> T unwrap(Class<T> iface) throws SQLException {

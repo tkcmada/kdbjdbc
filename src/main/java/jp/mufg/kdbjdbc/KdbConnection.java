@@ -33,7 +33,7 @@ public class KdbConnection implements Connection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new KdbStatement(conn.createStatement(), meta);
+        return new KdbPreparedStatement(conn.createStatement(), meta);
     }
 
     @Override

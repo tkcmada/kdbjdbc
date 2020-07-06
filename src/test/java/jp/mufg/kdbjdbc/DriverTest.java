@@ -404,9 +404,9 @@ public class DriverTest {
     public void test_Statement_q_t2_where_date_equals() throws SQLException, ClassNotFoundException {
         setup();
 
-        Statement e = conn.createStatement();
-        Assert.assertTrue(e.execute("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date = '1970-01-04') GROUP BY 1"));
-        ResultSet rs = e.getResultSet();
+        PreparedStatement pstmt = conn.prepareStatement("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date = '1970-01-04') GROUP BY 1");
+        Assert.assertTrue(pstmt.execute());
+        ResultSet rs = pstmt.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(2, meta.getColumnCount());
 
@@ -425,7 +425,7 @@ public class DriverTest {
         Assert.assertEquals(1.4         , rs.getObject("sum:f:ok"));
 
         rs.close();
-        e.close();;
+        pstmt.close();;
     }
 
     @Test

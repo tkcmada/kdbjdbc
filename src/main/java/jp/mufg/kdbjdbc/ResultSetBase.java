@@ -40,11 +40,13 @@ import jp.mufg.slf4j.FileLogger;
 public abstract class ResultSetBase implements ResultSet {
 	private static final Logger logger = FileLogger.getLogger(ResultSetBase.class);
 
-    private final ResultSetMetaData meta;
+    protected final ResultSetMetaData meta;
     private final Map<String, Integer> label2index;
     private boolean wasnull = false;
 
     protected ResultSetBase(final ResultSetMetaData meta) throws SQLException {
+        if(meta == null)
+            throw new NullPointerException("meta is null");
         this.meta = meta;
         final int n = meta.getColumnCount();
         this.label2index = new HashMap<String, Integer>(n);

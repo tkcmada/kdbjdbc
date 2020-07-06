@@ -33,22 +33,41 @@ import jp.mufg.slf4j.FileLogger;
 public class KdbPreparedStatement extends KdbStatement implements PreparedStatement {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbPreparedStatement.class);
 
-    private final String sql;
-    private final String q;
-    private final LinkedHashMap<String, KdbDatabaseMetaData.ColumnAndType> colnametype2;
-    private final ColumnInfo[] cols;
-    // private final ResultSetMetaDataImpl rsmeta;
+    private String sql;
+    private String q;
+    private LinkedHashMap<String, KdbDatabaseMetaData.ColumnAndType> colnametype2;
+    private ColumnInfo[] cols;
+    private ResultSet rs;
 
-    KdbPreparedStatement(String sql, Statement kdbstmt, KdbDatabaseMetaData metadata) throws SQLException {
-        super(kdbstmt, metadata);
+    KdbPreparedStatement(String sql, Statement kdbstmt, KdbDatabaseMetaData meta) throws SQLException {
+        super(kdbstmt, meta);
+        prepare(sql);
+    }
+
+    KdbPreparedStatement(Statement kdbstmt, KdbDatabaseMetaData meta) throws SQLException {
+        super(kdbstmt, meta);
+    }
+
+    @Override
+    public final void close() throws SQLException {
+        target.close();
+        this.rs = null;
+    }
+
+    @Override
+    public final boolean isClosed() throws SQLException {
+        return target.isClosed();
+    }
+
+    private void prepare(String sql) throws SQLException {
         this.sql = sql;
         logger.info("converting sql..." + sql);
         SqlSelectToQscriptTranslator sqltoq = new SqlSelectToQscriptTranslator(sql);
 
-        sqltoq.convertLiteralType(metadata);
+        sqltoq.convertLiteralType(meta);
         this.q = sqltoq.toQscript();
         logger.info("converted q-script>>>" + q + "<<<");
-        this.colnametype2 = metadata.getColumnAndType("(" + q + ")");
+        this.colnametype2 = meta.getColumnAndType("(" + q + ")");
 
         List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
         for(KdbDatabaseMetaData.ColumnAndType e : colnametype2.values()) {
@@ -58,6 +77,44 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
         }
         this.cols = cols.toArray(new ColumnInfo[cols.size()]);
     }
+
+    private void setDummyResultSet() throws SQLException {
+        ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true));
+        this.rs = new ResultSetImpl(meta);
+    }
+
+    @Override
+    public final boolean execute(String sql) throws SQLException {
+        String pure_q = null;
+        try {
+            logger.info("execute:" + String.valueOf(sql));
+            setDummyResultSet();
+            if(sql.startsWith("q)")) {
+                rs = target.executeQuery(sql);
+                return true;
+            }
+            else {
+                if(sql.contains(" TEMPORARY ") || sql.contains("DROP TABLE")) {
+                    logger.info("This sql is not supported. " + sql);
+                    throw new SQLException("temp table is not supported. " + sql);
+                }
+                else if(sql.startsWith("SELECT ")) {
+                    prepare(sql);
+                    return execute();
+                }
+                throw new SQLException("general SQL is not support " + sql);
+            }
+        }
+        catch(SQLException ex) {
+            logger.info("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
+            throw new SQLException("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
+        }
+    }
+
+    @Override
+	public final ResultSet getResultSet() throws SQLException {
+    	return rs;
+	}
 
 	@Override
 	public ResultSet executeQuery() throws SQLException {
@@ -72,104 +129,10 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 
 	@Override
 	public boolean execute() throws SQLException {
-        java.util.List<Object[]> rows = new ArrayList<Object[]>();
-
         final String qscript = "q) " + q;
         logger.info("execute on kdb+...>>>" + qscript + "<<<");
         ResultSet rs = target.executeQuery(qscript);
-        while(rs.next()) {
-            Object[] row = new Object[cols.length];
-            int i = 1;
-            for(ColumnAndType e : colnametype2.values()) {
-                char coltype = e.type;
-                Object obj = rs.getObject(i);
-                logger.info("ResultSet get value..." + i + " coltype:" + coltype + " value=" + obj + "(" + (obj == null ? "null" : obj.getClass().getName()) + ")");
-                switch(coltype) {
-                    case 'b':
-                        boolean blval = rs.getBoolean(i);
-                        row[i-1] = blval;
-                        break;
-                    case 'x':
-                        byte btval = rs.getByte(i);
-                        row[i-1] = btval;
-                        break;
-                    case 'h':
-                        short stval = rs.getShort(i);
-                        row[i-1] = stval;
-                        break;
-                    case 'i':
-                        int ival = rs.getInt(i);
-                        row[i-1] = ival;
-                        break;
-                    case 'j':
-                        long lgval = rs.getLong(i);
-                        row[i-1] = lgval;
-                        break;
-                    case 'e':
-                        float realval = rs.getFloat(i);
-                        row[i-1] = realval;
-                        break;
-                    case 'f':
-                        double dblval = rs.getDouble(i);
-                        row[i-1] = dblval;
-                        break;
-                    case 'p':
-                        Timestamp tsval = (Timestamp)rs.getObject(i);
-                        row[i-1] = tsval; //KdbUtil.toVarChar(tsval);
-                        break;
-                    case 'C':
-                        row[i-1] = rs.getString(i);
-                        break;
-                    // case 'B':
-                    //     boolean[] abl = (boolean[]) rs.getObject(i);
-                    //     row[i-1] = KdbUtil.toVarChar(abl);
-                    //     break;
-                    case 'X':
-                        byte[] ab = (byte[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(ab);
-                        break;
-                    // case 'H':
-                    //     short[] as = (short[]) rs.getObject(i);
-                    //     row[i-1] = KdbUtil.toVarChar(as);
-                    //     break;
-                    case 'I':
-                        int[] ai = (int[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(ai);
-                        break;
-                    case 'J':
-                        long[] al = (long[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(al);
-                        break;
-                    // case 'E':
-                    //     float[] ae = (float[]) rs.getObject(i);
-                    //     row[i-1] = KdbUtil.toVarChar(ae);
-                    //     break;
-                    case 'F':
-                        double[] ad = (double[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(ad);
-                        break;
-                    case 'S': //list of symbol
-                        String[] as = (String[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(as);
-                        break;
-                    case 'P': //list of timestamp
-                        Timestamp[] ats = (Timestamp[]) rs.getObject(i);
-                        row[i-1] = KdbUtil.toVarChar(ats);
-                        break;
-                    // case 'G':
-                    //     Object[] ag = (Object[]) rs.getObject(i);
-                    //     row[i-1] = Arrays.toString(ag);
-                    //     break;
-                    default:
-                        Object val = rs.getObject(i);
-                        logger.info("getObject " + i + " " + val + "(" + (val == null ? "null" : val.getClass().getName()) + ")");
-                        row[i-1] = val == null ? null : val.toString();
-                }
-                i++;
-            }
-            rows.add(row);
-        }
-        this.rs = new ResultSetImpl(getMetaData(), rows);
+        this.rs = new ResultSetWrapper(getMetaData(), rs);
         return true;
 	}
 
