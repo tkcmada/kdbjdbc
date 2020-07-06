@@ -49,7 +49,7 @@ meta MarketBooksNoNull
 MarketBooksNoNull
 
 MarketBooksFunc:{ [sym;ver] select universal_id , version_id , bid_prices, bid_amounts from MarketBooks where sym = sym , version_id = ver }
-
+MarketBooksFunc[`USDJPY;`V1]
 ```
 
 How to test ?

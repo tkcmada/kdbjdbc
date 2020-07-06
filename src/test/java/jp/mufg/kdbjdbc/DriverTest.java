@@ -433,10 +433,7 @@ public class DriverTest {
         setup();
 
         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
-        Assert.assertTrue(pstmt.execute());
-        ResultSet rs = pstmt.getResultSet();
-        ResultSetMetaData meta = rs.getMetaData();
-        Assert.assertEquals(4, meta.getColumnCount());
+        ResultSetMetaData meta = pstmt.getMetaData();
 
         int p = 0;
 
@@ -459,6 +456,10 @@ public class DriverTest {
         Assert.assertEquals("bid_amounts"   , meta.getColumnName(p));
         Assert.assertEquals("J"             , meta.getColumnTypeName(p));
         Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        Assert.assertTrue(pstmt.execute());
+        ResultSet rs = pstmt.getResultSet();
+        Assert.assertEquals(4, meta.getColumnCount());
 
         rs.close();
         pstmt.close();;

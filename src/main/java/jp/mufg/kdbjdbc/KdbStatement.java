@@ -81,8 +81,6 @@ public class KdbStatement implements Statement {
                     for(ColumnAndType e : colnametype2.values()) {
                         String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
                         Character coltypeobj = e.type;
-                        // if(SqlSelectToQscriptTranslator.isDummyColumn(colname))
-                        //     continue;
                         cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
                     }
                     ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(cols.toArray(new ColumnInfo[cols.size()]));

@@ -22,7 +22,10 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import jp.mufg.slf4j.FileLogger;
 
@@ -30,10 +33,29 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbPreparedStatement.class);
 
     private final String sql;
+    private final String q;
+    private final LinkedHashMap<String, KdbDatabaseMetaData.ColumnAndType> colnametype2;
+    private final ColumnInfo[] cols;
+    // private final ResultSetMetaDataImpl rsmeta;
 
-    KdbPreparedStatement(String sql, Statement kdbstmt, KdbDatabaseMetaData metadata) {
+    KdbPreparedStatement(String sql, Statement kdbstmt, KdbDatabaseMetaData metadata) throws SQLException {
         super(kdbstmt, metadata);
         this.sql = sql;
+        logger.info("converting sql..." + sql);
+        SqlSelectToQscriptTranslator sqltoq = new SqlSelectToQscriptTranslator(sql);
+
+        sqltoq.convertLiteralType(metadata);
+        this.q = sqltoq.toQscript();
+        logger.info("converted q-script>>>" + q + "<<<");
+        this.colnametype2 = metadata.getColumnAndType("(" + q + ")");
+
+        List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
+        for(KdbDatabaseMetaData.ColumnAndType e : colnametype2.values()) {
+            String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
+            Character coltypeobj = e.type;
+            cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
+        }
+        this.cols = cols.toArray(new ColumnInfo[cols.size()]);
     }
 
 	@Override
@@ -210,7 +232,7 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		throw new SQLException("not support");
+        return new ResultSetMetaDataImpl(cols);
 	}
 
 	@Override
