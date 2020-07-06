@@ -185,6 +185,12 @@ public class SqlParserTest {
     }
 
     @Test
+    public void test_select_stmt_func_subquery2() throws IOException {
+        String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1`]\") \"カスタム SQL クエリー\" WHERE (0 = 1)");
+        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
+    }
+
+    @Test
     public void test_select_stmt_func_cnt() throws IOException {
         String q = parse2("SELECT SUM(1) AS \"cnt:CustomSQL_74E37922F46A4521AB1810425A001810:ok\", \"Custom SQL Query\".\"universal_id\" AS \"universal_id\", \"Custom SQL Query\".\"version_id\" AS \"version_id\" FROM ( SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\" ) \"Custom SQL Query\" WHERE (\"Custom SQL Query\".\"version_id\" = 'V1') GROUP BY 2, 3");
         Assert.assertEquals("select cnt__CustomSQL_74E37922F46A4521AB1810425A001810__ok:sum 1 by universal_id:universal_id, version_id:version_id from (select  from MarketBooksFunc[`USDJPY;`V1]) where ( version_id = `V1 )", q);

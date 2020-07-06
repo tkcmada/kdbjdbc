@@ -43,7 +43,7 @@ public class KdbDriver implements Driver {
         }
         String host_port = url.substring(KdbDriver.URI_PREFIX.length());
         String qconnstr = "jdbc:q:" + host_port;
-        logger.info("KdbDriver ver 0.2 connecting to " + qconnstr + " " + String.valueOf(info));
+        logger.info("KdbDriver ver 20200706-1603 connecting to " + qconnstr + " " + String.valueOf(info));
         Connection conn = DriverManager.getConnection(qconnstr, info);
         return new KdbConnection(conn);
     }

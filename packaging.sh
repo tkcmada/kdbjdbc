@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #mvn dependency:copy-dependencies -DoutputDirectory=lib
+date > src/main/resources/META-INF/version.txt
 mvn clean install -DskipTests
 cp -p target/kdbjdbc*.jar lib/kdb_jdbc.jar
 #tar zcvf kdbjdbc.tar.gz lib
