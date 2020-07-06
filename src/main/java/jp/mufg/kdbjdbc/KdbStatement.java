@@ -19,7 +19,7 @@ public class KdbStatement implements Statement {
         this.meta = meta;
     }
 
-    private void setDummyResultSet() {
+    private void setDummyResultSet() throws SQLException {
         ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true));
         this.rs = new ResultSetImpl(meta);
     }
