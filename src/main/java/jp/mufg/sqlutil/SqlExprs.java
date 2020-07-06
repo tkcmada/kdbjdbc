@@ -17,9 +17,9 @@ public class SqlExprs {
         private final Table table;
         private final List<Column> columns;
         private final List<Integer> groupargs;
-        private final Expr where;
+        private Expr where;
         private final Expr having;
-        private final Integer limit;
+        private Integer limit;
 
         public SelectStatement(
             @NotNull List<Column> columns,
@@ -59,6 +59,15 @@ public class SqlExprs {
         
         public String toQscript() {
             StringBuilder s = new StringBuilder();
+
+            //SELECT * FROM (SELECT * FROM t) WHERE (0=1)
+            //is converted into
+            //SELECT * FROM (SELECT * FROM t LIMIT 1)
+
+            if(where != null && where.toQscript().equals("( 0 = 1 )") && (table instanceof TableSelect)) {
+                this.where = null;
+                ((TableSelect)table).select.limit = 1;
+            }
 
             final boolean distinct = isDistinct();
             //groupby

@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -13,11 +14,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
@@ -424,7 +423,41 @@ public class DriverTest {
         Assert.assertEquals("1970-01-04", rs.getObject("date"));
         Assert.assertEquals(1.4         , rs.getObject("sum:f:ok"));
 
-        // Assert.assertFalse(rs.next());
+        rs.close();
+        e.close();;
+    }
+
+    @Test
+    public void test_Statement_q_MarketBooksFunc() throws SQLException, ClassNotFoundException {
+        setup();
+
+        Statement e = conn.createStatement();
+        Assert.assertTrue(e.execute("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)"));
+        ResultSet rs = e.getResultSet();
+        ResultSetMetaData meta = rs.getMetaData();
+        Assert.assertEquals(4, meta.getColumnCount());
+
+        int p = 0;
+
+        p++;
+        Assert.assertEquals("universal_id"  , meta.getColumnName(p));
+        Assert.assertEquals("g"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("version_id"    , meta.getColumnName(p));
+        Assert.assertEquals("s"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("bid_prices"    , meta.getColumnName(p));
+        Assert.assertEquals("F"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("bid_amounts"   , meta.getColumnName(p));
+        Assert.assertEquals("J"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         rs.close();
         e.close();;

@@ -173,7 +173,7 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_func_subquery() throws IOException {
         String q = parse("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
-        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1`]) where ( 0 = 1 )", q);
+        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
     }
 
     
