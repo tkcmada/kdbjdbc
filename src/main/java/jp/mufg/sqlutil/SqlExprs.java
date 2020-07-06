@@ -1,43 +1,131 @@
 package jp.mufg.sqlutil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.text.DateFormatter;
-
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
-import org.apache.commons.lang3.StringUtils;
 
-import jp.mufg.kdbjdbc.KdbUtil;
+import jp.mufg.kdbjdbc.SqlSelectToQscriptTranslator;
 
 public class SqlExprs {
-	// public static class Tables
-	// {
-    //     private final List<Table> tables = new ArrayList<SqlExprs.Table>();
-        		
-	// 	public void add(Table t)
-	// 	{
-	// 		tables.add(t);
-	// 	}
-		
-	// 	public List<Table> getTables()
-	// 	{
-	// 		return Collections.unmodifiableList(tables);
-	// 	}
-		
-	// 	@Override
-	// 	public String toString()
-	// 	{
-	// 		return StringUtils.join(tables, ' ');
-	// 	}
-    // }
+
+    public static class SelectStatement {
+        private final Table table;
+        private final List<ColumnExprWithAlias> columns;
+        private final List<Integer> groupargs;
+        private final Expr where;
+        private final Expr having;
+        private final Integer limit;
+
+        public SelectStatement(
+            @NotNull List<ColumnExprWithAlias> columns,
+            @NotNull Table table,
+            @Nullable Expr where,
+            @Nullable List<Integer> groupargs,
+            @Nullable Expr having,
+            @Nullable Integer limit
+        )
+        {
+            this.columns = columns;
+            this.table = table;
+            this.where = where;
+            this.groupargs = groupargs;
+            this.having = having;
+            this.limit = limit;
+        }
+
+        public void checkType(TypeContext ctxt) {
+            if(where != null) {
+                where.checkType(ctxt);
+            }
+        }
+
+        private boolean isDistinct() {
+            if(groupargs == null)
+                return false;
+            HashSet<Integer> colnum = new HashSet<Integer>();
+            for(int i = 1; i <= columns.size(); i++)
+                colnum.add(i);
+            for(Integer colno : groupargs) {
+                colnum.remove(colno);
+            }
+            return colnum.size() == 0;
+        }
+
+        
+        public String toQscript() {
+            StringBuilder s = new StringBuilder();
+
+            final boolean distinct = isDistinct();
+            //groupby
+            boolean[] excludedColumn = new boolean[columns.size()];
+            StringBuilder gs = new StringBuilder();
+            if(! distinct && groupargs != null) {
+                for(Integer colnum : groupargs) {
+                    if(gs.length() > 0)
+                        gs.append(", ");
+                    Expr expr = columns.get(colnum - 1).expr;
+                    excludedColumn[colnum - 1] = true;
+                    gs.append(SqlSelectToQscriptTranslator.escapeColumnName(columns.get(colnum - 1).getAliasName()));
+                    gs.append(":");
+                    gs.append(expr.toQscript());
+                }
+            }
+
+            if(distinct) {
+                s.append("distinct ");
+            }
+            if(limit != null) {
+                s.append(limit + "#");
+            }
+            s.append("select ");
+            {
+                int i = 0;
+                StringBuilder cs = new StringBuilder();
+                for(ColumnExprWithAlias c : columns) {
+                    if(! excludedColumn[i]) {
+                        if(cs.length() > 0)
+                            cs.append(", ");
+                        String aliasname = c.getAliasName();
+                        cs.append(SqlSelectToQscriptTranslator.escapeColumnName(aliasname));
+                        cs.append(":");
+                        cs.append(c.expr.toQscript());
+                    }
+                    i++;
+                }
+                s.append(cs.toString());
+            }
+            if(gs.length() > 0) {
+                s.append(" by ");
+                s.append(gs.toString());
+            }
+            s.append(" from ");
+            s.append(table.getTableName());
+            //ignore alias name
+            //HAVING is ignored
+            if(where != null) {
+                s.append(" where ");
+                s.append(where.toQscript());
+            }
+            return s.toString();
+
+        }
+    }
     
-	public static class Table
+    public static interface Table {
+        public String getTableName();
+        public String getAliasName();
+    }
+
+    // public static class Subquery {
+    //     private final String aliasName;
+    // }
+
+	public static class TableImpl implements Table
 	{
 		public enum JoinType
 		{
@@ -52,13 +140,14 @@ public class SqlExprs {
 			{
 				this.sql = sql;
 			}
-		}
+        }
+        
 		private final String tableName;
-		private final String aliasName;
+        private final String aliasName;
 		private JoinType joinType;
 		private Expr joinExpr;
 
-		public Table(@NotNull String tableName, @Nullable String aliasName)
+		public TableImpl(@NotNull String tableName, @Nullable String aliasName)
 		{
             super();
             if(tableName == null)
@@ -67,11 +156,13 @@ public class SqlExprs {
 			this.aliasName = aliasName;
 		}
 		
+        @Override
 		public String getTableName()
 		{
 			return tableName;
 		}
 
+        @Override
 		public String getAliasName()
 		{
 			return aliasName;

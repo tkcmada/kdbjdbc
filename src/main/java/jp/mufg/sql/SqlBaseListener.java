@@ -56,6 +56,9 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterTable(SqlParser.TableContext ctx) { }
 	@Override public void exitTable(SqlParser.TableContext ctx) { }
 
+	@Override public void enterSelectStmtWhole(SqlParser.SelectStmtWholeContext ctx) { }
+	@Override public void exitSelectStmtWhole(SqlParser.SelectStmtWholeContext ctx) { }
+
 	@Override public void enterHaving(SqlParser.HavingContext ctx) { }
 	@Override public void exitHaving(SqlParser.HavingContext ctx) { }
 

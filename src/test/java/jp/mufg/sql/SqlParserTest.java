@@ -170,6 +170,13 @@ public class SqlParserTest {
         Assert.assertEquals("distinct select mn__z__ok:(`int$(`mm$(z))), yr__z__ok:(`int$(`year$(z))) from t2", q);
     }
 
+    // @Test
+    // public void test_select_stmt_subquery() throws IOException {
+    //     String q = parse("SELECT * FROM (SELECT * FROM public.bbb) \"TableauSQL\" WHERE (0 = 1)");
+    //     // Assert.assertEquals("distinct select mn__z__ok:(`int$(`mm$(z))), yr__z__ok:(`int$(`year$(z))) from t2", q);
+    // }
+
+    
     //remaining issues
     
     //Edit Filter cause this SQL

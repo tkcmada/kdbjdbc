@@ -53,6 +53,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterTable(SqlParser.TableContext ctx);
 	void exitTable(SqlParser.TableContext ctx);
 
+	void enterSelectStmtWhole(SqlParser.SelectStmtWholeContext ctx);
+	void exitSelectStmtWhole(SqlParser.SelectStmtWholeContext ctx);
+
 	void enterHaving(SqlParser.HavingContext ctx);
 	void exitHaving(SqlParser.HavingContext ctx);
 

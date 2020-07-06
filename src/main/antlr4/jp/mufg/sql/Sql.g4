@@ -5,17 +5,33 @@ import jp.mufg.sqlutil.SqlExprs.*;
 import java.util.*;
 }
 
-selectStmt
-    :   'SELECT' columnNames 'FROM' table where? groupBy? having? limit? '$'
+selectStmtWhole returns [SelectStatement val]
+    :   selectStmt '$' { $val = $selectStmt.val; }
+    ;
+
+selectStmt returns [SelectStatement val]
+    :   ('SELECT'|'select') columnNames ('FROM'|'from') table where groupBy having limit
+        { $val = new SelectStatement(
+            $columnNames.columns,
+            $table.tbl,
+            $where.val,
+            $groupBy.val,
+            $having.val,
+            $limit.val
+            );
+        }
     ;
 
 table returns [Table tbl]
-    :            t=name 'AS' a=name { $tbl = new Table($t.text, $a.text); }
-    |            t=name      a=name { $tbl = new Table($t.text, $a.text); }
-    |            t=name             { $tbl = new Table($t.text, null   ); }
-    |   name '.' t=name 'AS' a=name { $tbl = new Table($t.text, $a.text); }
-    |   name '.' t=name      a=name { $tbl = new Table($t.text, $a.text); }
-    |   name '.' t=name             { $tbl = new Table($t.text, null   ); }
+    :            t=name 'AS' a=name { $tbl = new TableImpl($t.text, $a.text); }
+    |            t=name      a=name { $tbl = new TableImpl($t.text, $a.text); }
+    |            t=name             { $tbl = new TableImpl($t.text, null   ); }
+    |   name '.' t=name 'AS' a=name { $tbl = new TableImpl($t.text, $a.text); }
+    |   name '.' t=name      a=name { $tbl = new TableImpl($t.text, $a.text); }
+    |   name '.' t=name             { $tbl = new TableImpl($t.text, null   ); }
+    |   '(' selectStmt ')' 'AS' a=name { $tbl = null; }
+    |   '(' selectStmt ')'      a=name { $tbl = null; }
+    |   '(' selectStmt ')'             { $tbl = null; }
     ;
 
 columnNames returns [List<ColumnExprWithAlias> columns]
@@ -26,22 +42,27 @@ columnNames returns [List<ColumnExprWithAlias> columns]
 columnName returns [ColumnExprWithAlias val]
     :  expr  'AS' id=name { $val = new ColumnExprWithAlias($expr.val, $id.text); }
     |  expr               { $val = new ColumnExprWithAlias($expr.val, null); }
+    |  '*'                { $val = null; }
     ;
 
 where returns [Expr val]
     : 'WHERE' expr { $val = $expr.val; }
+    |              { $val = null;      }
     ;
 
-groupBy
-    : 'GROUP' 'BY' groupargs
+groupBy returns [List<Integer> val]
+    : 'GROUP' 'BY' groupargs { $val = $groupargs.val; }
+    |                        { $val = null;           }
     ;
 
-having
-    : 'HAVING' expr
+having returns [Expr val]
+    : 'HAVING' expr { $val = $expr.val; }
+    |               { $val = null;      }
     ;
 
-limit
-    : 'LIMIT' pint
+limit returns [Integer val]
+    : 'LIMIT' pint { $val = $pint.val; }
+    |              { $val = null;      }
     ;
 
 expr returns [Expr val]
