@@ -38,7 +38,8 @@ public class KdbConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        throw new SQLException("prepareStatement " + sql);
+        logger.info("prepareStatement sql=" + sql);
+        return new KdbPreparedStatement(sql, conn.createStatement(), meta);
     }
 
     @Override

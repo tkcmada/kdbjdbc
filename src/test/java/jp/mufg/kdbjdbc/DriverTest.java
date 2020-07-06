@@ -3,6 +3,7 @@ package jp.mufg.kdbjdbc;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -431,9 +432,9 @@ public class DriverTest {
     public void test_Statement_q_MarketBooksFunc() throws SQLException, ClassNotFoundException {
         setup();
 
-        Statement e = conn.createStatement();
-        Assert.assertTrue(e.execute("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)"));
-        ResultSet rs = e.getResultSet();
+        PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
+        Assert.assertTrue(pstmt.execute());
+        ResultSet rs = pstmt.getResultSet();
         ResultSetMetaData meta = rs.getMetaData();
         Assert.assertEquals(4, meta.getColumnCount());
 
@@ -460,6 +461,6 @@ public class DriverTest {
         Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         rs.close();
-        e.close();;
+        pstmt.close();;
     }
 }
