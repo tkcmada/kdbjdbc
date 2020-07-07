@@ -24,6 +24,7 @@ public class SqlParserTest {
     private String parse2(String sql) throws IOException {
         SqlSelectToQscriptTranslator t = new SqlSelectToQscriptTranslator(sql);
         Map<String, Map<String, Character>> type_by_col_tbl = new HashMap<String, Map<String, Character>>();
+        // for t2
         HashMap<String, Character> type_by_col = new HashMap<String,Character>();
         type_by_col.put("date", 'd');
         type_by_col.put("c"   , 'c');
@@ -33,7 +34,11 @@ public class SqlParserTest {
         type_by_col.put("ts"  , 'n');
         type_by_col.put("z"   , 'p');
         type_by_col_tbl.put("t2", type_by_col);
-        //        
+        // for t3
+        type_by_col = new HashMap<String,Character>();
+        type_by_col.put("str" , 'C');
+        type_by_col_tbl.put("t3", type_by_col);
+        // for (select  from MarketBooksFunc[`USDJPY;`V1])
         type_by_col = new HashMap<String,Character>();
         type_by_col.put("universal_id", 'g');
         type_by_col.put("version_id"  , 's');
@@ -117,6 +122,18 @@ public class SqlParserTest {
     public void test_select_stmt_group_by_where_symbol_equals() throws IOException {
         String q = parse2("SELECT t2.name AS name, SUM(t2.r) AS \"sum:r:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.name = 'def') GROUP BY 1");
         Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where ( name = `def )", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_string1_equals() throws IOException {
+        String q = parse2("SELECT SUM(1) AS \"cnt:t3:ok\", t3.str AS str FROM \"public\".\"t3\" \"t3\" WHERE (t3.str = 'x') GROUP BY 2");
+        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where ( str like string \"x\" )", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_string2_equals() throws IOException {
+        String q = parse2("SELECT SUM(1) AS \"cnt:t3:ok\", t3.str AS str FROM \"public\".\"t3\" \"t3\" WHERE (t3.str = 'xyz') GROUP BY 2");
+        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where ( str like \"xyz\" )", q);
     }    
 
     @Test

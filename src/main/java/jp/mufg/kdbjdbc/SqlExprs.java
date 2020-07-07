@@ -572,7 +572,11 @@ public class SqlExprs {
         public void checkType(TypeContext ctxt) {
             List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
             rhs.collectStringExpr(strs);
-            fixStringType(strs, lhs.getType(ctxt));
+            char type = lhs.getType(ctxt);
+            fixStringType(strs, type);
+            if(type == 'C') {
+                op = "like";
+            }
         }
     }
 
@@ -591,6 +595,13 @@ public class SqlExprs {
                     break;
                 case 'c':
                     se.replacePlainString("\"" + s + "\"", 'c');
+                    break;
+                case 'C':
+                    if(s.length() <= 1) {
+                        se.replacePlainString("string \"" + s + "\"", 'C');
+                    } else {
+                        se.replacePlainString("\"" + s + "\"", 'C');
+                    }
                     break;
                 case 'g':
                     se.replacePlainString("\"G\"$\"" + s + "\"", 'g');

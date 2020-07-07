@@ -7,17 +7,14 @@ import java.net.URL;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.NClob;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.Ref;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.RowId;
 import java.sql.SQLException;
-import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
@@ -88,7 +85,6 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 
     @Override
     public final boolean execute(String sql) throws SQLException {
-        String pure_q = null;
         try {
             logger.info("execute:" + String.valueOf(sql));
             setDummyResultSet();
@@ -109,8 +105,8 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
             }
         }
         catch(SQLException ex) {
-            logger.info("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
-            throw new SQLException("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + pure_q, ex);
+            logger.info("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + q, ex);
+            throw new SQLException("Q execution error:error=" + ex.getMessage() + " sql=" + sql + " q=" + q, ex);
         }
     }
 
