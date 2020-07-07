@@ -1,7 +1,6 @@
 package jp.mufg.kdbjdbc;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +8,6 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
-
-import jp.mufg.kdbjdbc.SqlSelectToQscriptTranslator;
 
 public class SqlExprs {
 
@@ -37,6 +34,11 @@ public class SqlExprs {
             this.groupargs = groupargs;
             this.having = having;
             this.limit = limit;
+            if(groupargs != null) {
+                for(GroupArg g : groupargs) {
+                    g.setReferenceColumn(columns);
+                }
+            }
         }
 
         public void checkType(TypeContext ctxt) {
@@ -71,7 +73,7 @@ public class SqlExprs {
             for(Column c : columns)
                 colmap.put(c, c);
             for(GroupArg g : groupargs) {
-                Column c = g.getReferenceColumn(columns);
+                Column c = g.getReferenceColumn();
                 if(c != null) {
                     colmap.remove(c);
                 }
@@ -101,7 +103,7 @@ public class SqlExprs {
                 for(GroupArg g : groupargs) {
                     if(gs.length() > 0)
                         gs.append(", ");
-                    Column gc = g.getReferenceColumn(columns);
+                    Column gc = g.getReferenceColumn();
                     if(gc != null) {
                         excludedColumn.put(gc, gc);
                         gs.append(SqlSelectToQscriptTranslator.escapeColumnName(gc.getAliasName()));
@@ -333,36 +335,71 @@ public class SqlExprs {
     }
 
     public static interface GroupArg {
-        public Column getReferenceColumn(List<Column> columns);
+        public void setReferenceColumn(List<Column> columns);
+
+        @Nullable
+        public Column getReferenceColumn();
+
+        public String toQscript();
     }
 
     public static class ColumnNumberArg implements GroupArg {
         private final int columnNumber;
+        private Column refColumn;
 
         public ColumnNumberArg(int columnNumber) {
             this.columnNumber = columnNumber;
         }
 
         @Override
-        public Column getReferenceColumn(List<Column> columns) {
-            return columns.get(columnNumber - 1);
+        public void setReferenceColumn(List<Column> columns) {
+            this.refColumn = columns.get(columnNumber-1);
+        }
+
+        @Nullable
+        @Override
+        public Column getReferenceColumn() {
+            return refColumn;
+        }
+
+        @Override
+        public String toQscript() {
+            return refColumn.toQscript();
+        }
+
+    }
+
+    public static class GroupExpr implements GroupArg {
+        @NotNull
+        private final Expr expr;
+
+        public GroupExpr(@NotNull Expr expr) {
+            if(expr == null)
+                throw new NullPointerException("expr is null");
+            this.expr = expr;
+        }
+
+        @Override
+        public void setReferenceColumn(List<Column> columns) {
+            //do nothing
+        }
+
+        @Nullable
+        @Override
+        public Column getReferenceColumn() {
+            return null;
+        }
+
+        @Override
+        public String toQscript() {
+            return expr.toQscript();
         }
     }
-	
+
 	public static abstract class Expr
 	{
-		// /**
-		//  * SQL表現をJXPath表現に変換する
-		//  * 
-		//  * @return jxpath
-		//  */
-		// public abstract String toJxpath();
-		// /**
-		//  * SQL表現をJava式のソースコードに変換する
-		//  */
-		// public abstract String toJavaExprSrc();
 		/**
-		 * SQL表現をq-scriptのソースコードに変換する
+		 * Convert SQL into q-script
 		 */
         public abstract String toQscript();
         
