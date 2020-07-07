@@ -8,8 +8,9 @@ public class ColumnInfo {
 	private final String typename;
     private final boolean nullable;
     private final int type;
+    public final int actualColumnNumber;
 
-	public ColumnInfo(String name, String typename, boolean nullable) {
+	public ColumnInfo(String name, String typename, boolean nullable, int actualColumnNumber) {
 		super();
         this.name = name;
 		this.typename = typename;
@@ -31,8 +32,9 @@ public class ColumnInfo {
         //     this.type = Types.TIMESTAMP;
         else
             this.type = Types.VARCHAR;
-		this.nullable = nullable;
-	}
+        this.nullable = nullable;
+        this.actualColumnNumber = actualColumnNumber;
+    }
 
 	public int getColumnType() {
         return this.type;

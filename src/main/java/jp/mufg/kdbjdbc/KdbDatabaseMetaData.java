@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import jp.mufg.slf4j.FileLogger;
 import jp.mufg.kdbjdbc.SqlExprs.TypeContext;
@@ -64,7 +63,7 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
 	public ResultSet getTableTypes() throws SQLException {
         logger.info("getTableTypes");
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("TABLE_TYPE", "text", false)
+				new ColumnInfo("TABLE_TYPE", "text", false, 1)
 		);
 		List<Object[]> rows = new ArrayList<Object[]>();
 		rows.add(new Object[] {"FOREIGN TABLE"});//1
@@ -94,16 +93,16 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
 	public ResultSet getTables(final String catalog, final String schemaPattern, final String tableNamePattern, final String[] types)
 			throws SQLException {                
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("table_cat", "text", true),//1
-				new ColumnInfo("table_schem", "name", false),//2
-				new ColumnInfo("table_name" , "name", false),//3
-				new ColumnInfo("table_type"	, "text", true),//4
-				new ColumnInfo("remarks"	, "text", true),//5
-				new ColumnInfo("type_cat"	, "text", true),//6
-				new ColumnInfo("type_schem"	, "text", true),//7
-				new ColumnInfo("type_name"	, "text", true),//8
-				new ColumnInfo("self_referencing_col_name"	, "text", true),//9
-				new ColumnInfo("ref_generation"	, "text", true)//10
+				new ColumnInfo("table_cat"  , "text", true , 1),//1
+				new ColumnInfo("table_schem", "name", false, 2),//2
+				new ColumnInfo("table_name" , "name", false, 3),//3
+				new ColumnInfo("table_type"	, "text", true , 4),//4
+				new ColumnInfo("remarks"	, "text", true , 5),//5
+				new ColumnInfo("type_cat"	, "text", true , 6),//6
+				new ColumnInfo("type_schem"	, "text", true , 7),//7
+				new ColumnInfo("type_name"	, "text", true , 8),//8
+				new ColumnInfo("self_referencing_col_name"	, "text", true, 9),//9
+				new ColumnInfo("ref_generation"	, "text", true, 10)//10
         );
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("q) flip ( `table_name`dummy ! (tables[]; tables[] ) )");
@@ -152,30 +151,30 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
     @Override
 	public ResultSet getColumns(final String catalog, final String schemaPattern, final String tableNamePattern, final String columnNamePattern) throws SQLException {
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("TABLE_CAT"		, "text", true), //1
-				new ColumnInfo("TABLE_SCHEM"	, "name", false), //2
-				new ColumnInfo("TABLE_NAME" 	, "name", false),//3
-				new ColumnInfo("COLUMN_NAME"	, "text", true),//4
-				new ColumnInfo("DATA_TYPE"		, "text", true),//5
-				new ColumnInfo("TYPE_NAME"		, "text", true),//6
-				new ColumnInfo("COLUMN_SIZE"	, "int4", true),//7
-				new ColumnInfo("BUFFER_LENGTH"	, "int4", true),//8
-				new ColumnInfo("DECIMAL_DIGITS"	, "int4", true),//9
-				new ColumnInfo("NUM_PREC_RADIX"	, "int4", true),//10
-				new ColumnInfo("NULLABLE"		, "int4", true),//11
-				new ColumnInfo("REMARKS"		, "text", true),//12
-				new ColumnInfo("COLUMN_DEF"		, "text", true),//13
-				new ColumnInfo("SQL_DATA_TYPE"	, "text", true),//14
-				new ColumnInfo("SQL_DATETIME_SUB"	, "text", true),//15
-				new ColumnInfo("CHAR_OCTET_LENGTH"	, "int4", true),//16
-				new ColumnInfo("ORDINAL_POSITION"	, "int4", true),//17
-				new ColumnInfo("IS_NULLABLE"		, "text", true),//18
-				new ColumnInfo("SCOPE_CATALOG"		, "text", true),//19
-				new ColumnInfo("SCOPE_SCHEMA"		, "text", true),//20
-				new ColumnInfo("SCOPE_TABLE"		, "text", true),//21
-				new ColumnInfo("SOURCE_DATA_TYPE"	, "text", true),//22
-				new ColumnInfo("IS_AUTO_INCREMENT"	, "text", true),//23
-				new ColumnInfo("IS_GENERATED_COLUMN", "text", true) //24
+				new ColumnInfo("TABLE_CAT"		, "text", true , 1), //1
+				new ColumnInfo("TABLE_SCHEM"	, "name", false, 2), //2
+				new ColumnInfo("TABLE_NAME" 	, "name", false, 3),//3
+				new ColumnInfo("COLUMN_NAME"	, "text", true , 4),//4
+				new ColumnInfo("DATA_TYPE"		, "text", true , 5),//5
+				new ColumnInfo("TYPE_NAME"		, "text", true , 6),//6
+				new ColumnInfo("COLUMN_SIZE"	, "int4", true , 7),//7
+				new ColumnInfo("BUFFER_LENGTH"	, "int4", true , 8),//8
+				new ColumnInfo("DECIMAL_DIGITS"	, "int4", true , 9),//9
+				new ColumnInfo("NUM_PREC_RADIX"	, "int4", true ,10),//10
+				new ColumnInfo("NULLABLE"		, "int4", true ,11),//11
+				new ColumnInfo("REMARKS"		, "text", true ,12),//12
+				new ColumnInfo("COLUMN_DEF"		, "text", true ,13),//13
+				new ColumnInfo("SQL_DATA_TYPE"	, "text", true ,14),//14
+				new ColumnInfo("SQL_DATETIME_SUB"	, "text", true, 15),//15
+				new ColumnInfo("CHAR_OCTET_LENGTH"	, "int4", true, 16),//16
+				new ColumnInfo("ORDINAL_POSITION"	, "int4", true, 17),//17
+				new ColumnInfo("IS_NULLABLE"		, "text", true, 18),//18
+				new ColumnInfo("SCOPE_CATALOG"		, "text", true, 19),//19
+				new ColumnInfo("SCOPE_SCHEMA"		, "text", true, 20),//20
+				new ColumnInfo("SCOPE_TABLE"		, "text", true, 21),//21
+				new ColumnInfo("SOURCE_DATA_TYPE"	, "text", true, 22),//22
+				new ColumnInfo("IS_AUTO_INCREMENT"	, "text", true, 23),//23
+				new ColumnInfo("IS_GENERATED_COLUMN", "text", true, 24) //24
 		);
         
         String tbl = tableNamePattern;
@@ -255,20 +254,20 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
 	@Override
 	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("pktable_cat"	, "text", true), //1
-				new ColumnInfo("pktable_schem"	, "name", false), //2
-				new ColumnInfo("pktable_name" 	, "name", false),//3
-				new ColumnInfo("pkcolumn_name"	, "name", false),//4
-				new ColumnInfo("fktable_cat"	, "text", true),//5
-				new ColumnInfo("fktable_schem"	, "name", false),//6
-				new ColumnInfo("fktable_name"	, "name", false),//7
-				new ColumnInfo("fkcolumn_name"	, "name", false),//8
-				new ColumnInfo("key_seq"		, "int4", true),//9
-				new ColumnInfo("update_rule"	, "int4", true),//10
-				new ColumnInfo("delete_rule"	, "int4", true),//11
-				new ColumnInfo("fk_name"		, "name", false),//12
-				new ColumnInfo("pk_name"		, "name", false),//13
-				new ColumnInfo("deferrability"	, "int4", true) //14
+				new ColumnInfo("pktable_cat"	, "text", true , 1), //1
+				new ColumnInfo("pktable_schem"	, "name", false, 2), //2
+				new ColumnInfo("pktable_name" 	, "name", false, 3),//3
+				new ColumnInfo("pkcolumn_name"	, "name", false, 4),//4
+				new ColumnInfo("fktable_cat"	, "text", true , 5),//5
+				new ColumnInfo("fktable_schem"	, "name", false, 6),//6
+				new ColumnInfo("fktable_name"	, "name", false, 7),//7
+				new ColumnInfo("fkcolumn_name"	, "name", false, 8),//8
+				new ColumnInfo("key_seq"		, "int4", true , 9),//9
+				new ColumnInfo("update_rule"	, "int4", true ,10),//10
+				new ColumnInfo("delete_rule"	, "int4", true ,11),//11
+				new ColumnInfo("fk_name"		, "name", false,12),//12
+				new ColumnInfo("pk_name"		, "name", false,13),//13
+				new ColumnInfo("deferrability"	, "int4", true ,14) //14
 		);
 		return new ResultSetImpl(meta);
 	}
@@ -276,12 +275,12 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
 	@Override
 	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
 		ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(
-				new ColumnInfo("table_cat"	, "text", true), //1
-				new ColumnInfo("table_schem"	, "name", false), //2
-				new ColumnInfo("table_name" 	, "name", false),//3
-				new ColumnInfo("column_name"	, "name", false),//4
-				new ColumnInfo("key_seq"		, "int4", true),//5
-				new ColumnInfo("pk_name"		, "name", false)//6
+				new ColumnInfo("table_cat"     	, "text", true , 1), //1
+				new ColumnInfo("table_schem"	, "name", false, 2), //2
+				new ColumnInfo("table_name" 	, "name", false, 3),//3
+				new ColumnInfo("column_name"	, "name", false, 4),//4
+				new ColumnInfo("key_seq"		, "int4", true , 5),//5
+				new ColumnInfo("pk_name"		, "name", false, 6)//6
 		);
 		return new ResultSetImpl(meta);
 	}

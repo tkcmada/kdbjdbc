@@ -16,7 +16,11 @@ public class ResultSetMetaDataImpl implements ResultSetMetaData {
 	public ResultSetMetaDataImpl(ColumnInfo...columns) {
 		super();
 		this.columns =  columns;
-	}
+    }
+    
+    public int getActualColumnNumber(int columnNumber) {
+        return columns[columnNumber-1].actualColumnNumber;
+    }
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {

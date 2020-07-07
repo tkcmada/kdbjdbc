@@ -464,4 +464,41 @@ public class DriverTest {
         rs.close();
         pstmt.close();;
     }
+
+
+    @Test
+    public void test_Statement_q_dummy_col() throws SQLException, ClassNotFoundException {
+        setup();
+
+        PreparedStatement pstmt = conn.prepareStatement("SELECT SUM('t2'.'f') AS 'sum:f:ok', 100 AS 'x' FROM 'public'.'t2' 't2' WHERE ('t2'.'x' = 100) GROUP BY 't2'.'x'".replace("'", "\""));
+        ResultSetMetaData meta = pstmt.getMetaData();
+        Assert.assertEquals(2, meta.getColumnCount());
+
+        int p = 0;
+        
+        p++;
+        Assert.assertEquals("sum:f:ok"      , meta.getColumnName(p));
+        Assert.assertEquals("f"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.FLOAT     , meta.getColumnType(p));
+
+        p++;
+        Assert.assertEquals("x"             , meta.getColumnName(p));
+        Assert.assertEquals("j"             , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.BIGINT    , meta.getColumnType(p));
+
+        Assert.assertTrue(pstmt.execute());
+        ResultSet rs = pstmt.getResultSet();
+        
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals(1.5 , rs.getObject(1));
+        Assert.assertEquals(1.5 , rs.getObject("sum:f:ok"));
+        Assert.assertEquals(100L, rs.getObject(2));
+        Assert.assertEquals(100L, rs.getObject("x"));
+
+        Assert.assertFalse(rs.next());
+
+        rs.close();
+        pstmt.close();;
+    }
+    // 
 }

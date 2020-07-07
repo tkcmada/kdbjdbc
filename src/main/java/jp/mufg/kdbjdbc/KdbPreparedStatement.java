@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import jp.mufg.kdbjdbc.KdbDatabaseMetaData.ColumnAndType;
 import jp.mufg.slf4j.FileLogger;
 
 public class KdbPreparedStatement extends KdbStatement implements PreparedStatement {
@@ -70,16 +69,20 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
         this.colnametype2 = meta.getColumnAndType("(" + q + ")");
 
         List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
+        int actualColumnNumber = 0;
         for(KdbDatabaseMetaData.ColumnAndType e : colnametype2.values()) {
+            actualColumnNumber++;
             String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
             Character coltypeobj = e.type;
-            cols.add(new ColumnInfo(colname, coltypeobj.toString(), true));
+            if(! colname.startsWith("dummy_")) {
+                cols.add(new ColumnInfo(colname, coltypeobj.toString(), true, actualColumnNumber));
+            }
         }
         this.cols = cols.toArray(new ColumnInfo[cols.size()]);
     }
 
     private void setDummyResultSet() throws SQLException {
-        ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true));
+        ResultSetMetaDataImpl meta = new ResultSetMetaDataImpl(new ColumnInfo("dummy", "text", true, 1));
         this.rs = new ResultSetImpl(meta);
     }
 
@@ -293,7 +296,7 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 	}
 
 	@Override
-	public ResultSetMetaData getMetaData() throws SQLException {
+	public ResultSetMetaDataImpl getMetaData() throws SQLException {
         return new ResultSetMetaDataImpl(cols);
 	}
 

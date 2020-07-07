@@ -8,18 +8,33 @@ import java.sql.Timestamp;
 public class ResultSetWrapper extends ResultSetBase {
     private ResultSet rs;
     private boolean closed = false;
+    private final int[] columnNumber2ActualColumnNumber;
 
     public ResultSetWrapper(ResultSetMetaData meta, ResultSet rs) throws SQLException {
         super(meta);
+        int n = meta.getColumnCount();
         this.rs = rs;
+        if(meta instanceof ResultSetMetaDataImpl) {
+            columnNumber2ActualColumnNumber = new int[n];
+            for(int i = 1; i <= n; i++) {
+                int colno =  ((ResultSetMetaDataImpl) meta).getActualColumnNumber(i);
+                if(colno <= 0)
+                    throw new IllegalArgumentException("no actual column number is specified for " + i + ":" + meta.getColumnName(i));
+                columnNumber2ActualColumnNumber[i-1] = colno;
+            }
+        }
+        else {
+            columnNumber2ActualColumnNumber = null;
+        }
     }
 
     @Override
     public Object getObjectImpl(int columnIndex) throws SQLException {
         if(closed)
             throw new SQLException("already closed");
-        char coltype = meta.getColumnTypeName(columnIndex).charAt(0);
-        return getObjectImpl(columnIndex, coltype);
+        final int colno = columnNumber2ActualColumnNumber == null ? columnIndex : columnNumber2ActualColumnNumber[columnIndex-1];
+        final char coltype = meta.getColumnTypeName(columnIndex).charAt(0);
+        return getObjectImpl(colno, coltype);
     }
 
     @Override
