@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import jp.mufg.slf4j.FileLogger;
-import jp.mufg.sqlutil.SqlExprs.TypeContext;
+import jp.mufg.kdbjdbc.SqlExprs.TypeContext;
 
 public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
     private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);

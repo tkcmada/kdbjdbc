@@ -1,10 +1,8 @@
 package jp.mufg.kdbjdbc;
-import java.util.HashSet;
 
 import jp.mufg.sql.SqlLexer;
 import jp.mufg.sql.SqlParser;
-import jp.mufg.sqlutil.SqlExprs.SelectStatement;
-import jp.mufg.sqlutil.SqlExprs.TypeContext;
+import jp.mufg.kdbjdbc.SqlExprs.*;
 
 import java.io.IOException;
 import java.io.StringReader;

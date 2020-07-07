@@ -1,7 +1,7 @@
 // Generated from jp/mufg/sql/Sql.g4 by ANTLR 4.0
 package jp.mufg.sql;
  
-import jp.mufg.sqlutil.SqlExprs.*;
+import jp.mufg.kdbjdbc.SqlExprs.*;
 import java.util.*;
 
 import org.antlr.v4.runtime.Lexer;

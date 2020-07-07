@@ -1,7 +1,7 @@
 // Generated from jp/mufg/sql/Sql.g4 by ANTLR 4.0
 package jp.mufg.sql;
  
-import jp.mufg.sqlutil.SqlExprs.*;
+import jp.mufg.kdbjdbc.SqlExprs.*;
 import java.util.*;
 
 import org.antlr.v4.runtime.tree.*;
@@ -37,6 +37,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterLimit(SqlParser.LimitContext ctx);
 	void exitLimit(SqlParser.LimitContext ctx);
+
+	void enterGrouparg(SqlParser.GroupargContext ctx);
+	void exitGrouparg(SqlParser.GroupargContext ctx);
 
 	void enterWhere(SqlParser.WhereContext ctx);
 	void exitWhere(SqlParser.WhereContext ctx);

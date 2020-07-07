@@ -1,7 +1,8 @@
-package jp.mufg.sqlutil;
+package jp.mufg.kdbjdbc;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class SqlExprs {
     public static class SelectStatement {
         private final Table table;
         private final List<Column> columns;
-        private final List<Integer> groupargs;
+        private final List<GroupArg> groupargs;
         private Expr where;
         private final Expr having;
         private Integer limit;
@@ -25,7 +26,7 @@ public class SqlExprs {
             @NotNull List<Column> columns,
             @NotNull Table table,
             @Nullable Expr where,
-            @Nullable List<Integer> groupargs,
+            @Nullable List<GroupArg> groupargs,
             @Nullable Expr having,
             @Nullable Integer limit
         )
@@ -66,13 +67,16 @@ public class SqlExprs {
         private boolean isDistinct() {
             if(groupargs == null)
                 return false;
-            HashSet<Integer> colnum = new HashSet<Integer>();
-            for(int i = 1; i <= columns.size(); i++)
-                colnum.add(i);
-            for(Integer colno : groupargs) {
-                colnum.remove(colno);
+            Map<Column,Column> colmap = new IdentityHashMap<Column,Column>();
+            for(Column c : columns)
+                colmap.put(c, c);
+            for(GroupArg g : groupargs) {
+                Column c = g.getReferenceColumn(columns);
+                if(c != null) {
+                    colmap.remove(c);
+                }
             }
-            return colnum.size() == 0;
+            return colmap.size() == 0;
         }
 
         
@@ -91,16 +95,19 @@ public class SqlExprs {
 
             final boolean distinct = isDistinct();
             //groupby
-            boolean[] excludedColumn = new boolean[columns.size()];
+            Map<Column, Column> excludedColumn = new IdentityHashMap<SqlExprs.Column,SqlExprs.Column>();
             StringBuilder gs = new StringBuilder();
             if(! distinct && groupargs != null) {
-                for(Integer colnum : groupargs) {
+                for(GroupArg g : groupargs) {
                     if(gs.length() > 0)
                         gs.append(", ");
-                    excludedColumn[colnum - 1] = true;
-                    gs.append(SqlSelectToQscriptTranslator.escapeColumnName(columns.get(colnum - 1).getAliasName()));
-                    gs.append(":");
-                    gs.append(columns.get(colnum - 1).toQscript());
+                    Column gc = g.getReferenceColumn(columns);
+                    if(gc != null) {
+                        excludedColumn.put(gc, gc);
+                        gs.append(SqlSelectToQscriptTranslator.escapeColumnName(gc.getAliasName()));
+                        gs.append(":");
+                        gs.append(gc.toQscript());
+                    }
                 }
             }
 
@@ -112,10 +119,9 @@ public class SqlExprs {
             }
             s.append("select ");
             {
-                int i = 0;
                 StringBuilder cs = new StringBuilder();
                 for(Column c : columns) {
-                    if(! excludedColumn[i]) {
+                    if(excludedColumn.get(c) == null) {
                         if(cs.length() > 0)
                             cs.append(", ");
                         if(! c.toQscript().equals("*")) {
@@ -125,7 +131,6 @@ public class SqlExprs {
                             cs.append(c.toQscript());
                         }
                     }
-                    i++;
                 }
                 s.append(cs.toString());
             }
@@ -324,6 +329,23 @@ public class SqlExprs {
         @Override
         public String toString() {
             return expr + " AS " + aliasName;
+        }
+    }
+
+    public static interface GroupArg {
+        public Column getReferenceColumn(List<Column> columns);
+    }
+
+    public static class ColumnNumberArg implements GroupArg {
+        private final int columnNumber;
+
+        public ColumnNumberArg(int columnNumber) {
+            this.columnNumber = columnNumber;
+        }
+
+        @Override
+        public Column getReferenceColumn(List<Column> columns) {
+            return columns.get(columnNumber - 1);
         }
     }
 	

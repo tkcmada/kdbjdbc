@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.mufg.kdbjdbc.SqlSelectToQscriptTranslator;
-import jp.mufg.sqlutil.SqlExprs;
+import jp.mufg.kdbjdbc.SqlExprs;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -117,6 +117,14 @@ public class SqlParserTest {
         String q = parse2("SELECT t2.name AS name, SUM(t2.r) AS \"sum:r:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.name = 'def') GROUP BY 1");
         Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where ( name = `def )", q);
     }    
+
+    // @Test
+    // public void test_select_stmt_group_by_where_int_equals() throws IOException {
+    //     String q = parse("SELECT SUM('t2'.'f') AS 'sum:f:ok', 100 AS 'x' FROM 'public'.'t2' 't2' WHERE ('t2'.'x' = 100) GROUP BY 't2'.'x'");
+    //     Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_x:x from t2 where ( x = 100 )", q);
+    // }    
+
+    //SELECT SUM("t2"."f") AS "sum:f:ok", 100 AS "x" FROM "public"."t2" "t2" WHERE ("t2"."x" = 100) GROUP BY "t2"."x"
 
     @Test
     public void test_select_stmt_group_by_where_timestamp_equals() throws IOException {

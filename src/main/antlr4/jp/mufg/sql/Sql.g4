@@ -1,7 +1,7 @@
 grammar Sql;
 
 @header { 
-import jp.mufg.sqlutil.SqlExprs.*;
+import jp.mufg.kdbjdbc.SqlExprs.*;
 import java.util.*;
 }
 
@@ -50,7 +50,7 @@ where returns [Expr val]
     |              { $val = null;      }
     ;
 
-groupBy returns [List<Integer> val]
+groupBy returns [List<GroupArg> val]
     : 'GROUP' 'BY' groupargs { $val = $groupargs.val; }
     |                        { $val = null;           }
     ;
@@ -129,12 +129,16 @@ stringExpr returns [StringExpr val]
     : str { $val = new StringExpr($str.text); }
     ;
 
-groupargs returns [List<Integer> val]
-    : { List<Integer> _args = new ArrayList<Integer>(); }
-      (e1=pint { _args.add($e1.val); }
-        (',' e2=pint { _args.add($e2.val); } )*
+groupargs returns [List<GroupArg> val]
+    : { List<GroupArg> _args = new ArrayList<GroupArg>(); }
+      ( e1=grouparg { _args.add($e1.val); }
+        (',' e2=grouparg { _args.add($e2.val); } )*
       )?
       { $val = _args; }
+    ;
+
+grouparg returns [GroupArg val]
+    : pint       { $val = new ColumnNumberArg($pint.val); }
     ;
 
 args returns [Arguments val]
