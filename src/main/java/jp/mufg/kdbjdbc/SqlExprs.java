@@ -100,6 +100,7 @@ public class SqlExprs {
             Map<Column, Column> excludedColumn = new IdentityHashMap<SqlExprs.Column,SqlExprs.Column>();
             StringBuilder gs = new StringBuilder();
             if(! distinct && groupargs != null) {
+                int groupcnt = 0;
                 for(GroupArg g : groupargs) {
                     if(gs.length() > 0)
                         gs.append(", ");
@@ -107,9 +108,13 @@ public class SqlExprs {
                     if(gc != null) {
                         excludedColumn.put(gc, gc);
                         gs.append(SqlSelectToQscriptTranslator.escapeColumnName(gc.getAliasName()));
-                        gs.append(":");
-                        gs.append(gc.toQscript());
                     }
+                    else {
+                        gs.append("dummy_" + groupcnt);
+                    }
+                    gs.append(":");
+                    gs.append(g.toQscript());
+                    groupcnt++;
                 }
             }
 

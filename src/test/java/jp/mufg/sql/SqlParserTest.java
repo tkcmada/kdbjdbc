@@ -28,6 +28,7 @@ public class SqlParserTest {
         type_by_col.put("date", 'd');
         type_by_col.put("c"   , 'c');
         type_by_col.put("g"   , 'g');
+        type_by_col.put("x"   , 'i');
         type_by_col.put("name", 's');
         // type_by_col.put("ts"  , 'p');
         type_by_col.put("z"   , 'p');
@@ -118,11 +119,11 @@ public class SqlParserTest {
         Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where ( name = `def )", q);
     }    
 
-    // @Test
-    // public void test_select_stmt_group_by_where_int_equals() throws IOException {
-    //     String q = parse("SELECT SUM('t2'.'f') AS 'sum:f:ok', 100 AS 'x' FROM 'public'.'t2' 't2' WHERE ('t2'.'x' = 100) GROUP BY 't2'.'x'");
-    //     Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_x:x from t2 where ( x = 100 )", q);
-    // }    
+    @Test
+    public void test_select_stmt_group_by_where_int_equals() throws IOException {
+        String q = parse("SELECT SUM('t2'.'f') AS 'sum:f:ok', 100 AS 'x' FROM 'public'.'t2' 't2' WHERE ('t2'.'x' = 100) GROUP BY 't2'.'x'");
+        Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_0:x from t2 where ( x = 100 )", q);
+    }    
 
     //SELECT SUM("t2"."f") AS "sum:f:ok", 100 AS "x" FROM "public"."t2" "t2" WHERE ("t2"."x" = 100) GROUP BY "t2"."x"
 

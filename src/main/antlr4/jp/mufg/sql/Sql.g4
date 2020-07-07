@@ -139,6 +139,7 @@ groupargs returns [List<GroupArg> val]
 
 grouparg returns [GroupArg val]
     : pint       { $val = new ColumnNumberArg($pint.val); }
+    | expr       { $val = new GroupExpr($expr.val);       }
     ;
 
 args returns [Arguments val]
