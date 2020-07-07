@@ -30,7 +30,7 @@ public class SqlParserTest {
         type_by_col.put("g"   , 'g');
         type_by_col.put("x"   , 'i');
         type_by_col.put("name", 's');
-        // type_by_col.put("ts"  , 'p');
+        type_by_col.put("ts"  , 'n');
         type_by_col.put("z"   , 'p');
         type_by_col_tbl.put("t2", type_by_col);
         //        
@@ -125,12 +125,16 @@ public class SqlParserTest {
         Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_0:x from t2 where ( x = 100 )", q);
     }    
 
-    //SELECT SUM("t2"."f") AS "sum:f:ok", 100 AS "x" FROM "public"."t2" "t2" WHERE ("t2"."x" = 100) GROUP BY "t2"."x"
-
     @Test
     public void test_select_stmt_group_by_where_timestamp_equals() throws IOException {
         String q = parse2("SELECT SUM(t2.f) AS \"sum:f:ok\", t2.z AS z FROM \"public\".\"t2\" \"t2\" WHERE (t2.z = '2015.01.01D01:02:03.001002030') GROUP BY 2");
         Assert.assertEquals("select sum__f__ok:sum f by z:z from t2 where ( z = 2015.01.01D01:02:03.001002030 )", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_timespan_equals() throws IOException {
+        String q = parse2("SELECT SUM(t2.f) AS \"sum:f:ok\", t2.ts AS ts FROM \"public\".\"t2\" \"t2\" WHERE (t2.ts = '01:02:03.001002000') GROUP BY 2");
+        Assert.assertEquals("select sum__f__ok:sum f by ts:ts from t2 where ( ts = 01:02:03.001002000 )", q);
     }    
 
     @Test

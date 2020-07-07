@@ -586,6 +586,9 @@ public class SqlExprs {
                 case 'p':
                     se.replacePlainString(s, 'p');
                     break;
+                case 'n':
+                    se.replacePlainString(s, 'n');
+                    break;
                 case 'c':
                     se.replacePlainString("\"" + s + "\"", 'c');
                     break;
