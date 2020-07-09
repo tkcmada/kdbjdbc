@@ -91,10 +91,12 @@ compExpr returns [Expr val]
     | lhs=primaryExpr { $val = $lhs.val; }
     ;
 
+// arithmatic operators are not supported yet.
+
 primaryExpr returns [Expr val]
     : e1=columnExpr    { $val = $e1.val; }
     | functionExpr     { $val = $functionExpr.val; }
-    | numberExpr       { $val = $numberExpr.val; }
+    | numberLiteral    { $val = $numberLiteral.val; }
     | stringExpr       { $val = $stringExpr.val; }
     | booleanLiteral   { $val = $booleanLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
@@ -121,8 +123,8 @@ booleanLiteral returns [BooleanLiteral val]
     : tk=('TRUE'|'FALSE') { $val = new BooleanLiteral(Boolean.parseBoolean($tk.text)); }
     ;
 
-numberExpr returns [NumberExpr val]
-    : numtk=NUMBER { $val = new NumberExpr($numtk.text); }
+numberLiteral returns [NumberLiteral val]
+    : numtk=NUMBER_LITERAL { $val = new NumberLiteral($numtk.text); }
     ;
 
 stringExpr returns [StringExpr val]
@@ -167,18 +169,20 @@ str returns [String text]
     ;
 
 pint returns [int val]
-    : num=NUMBER { $val = Integer.parseInt($num.text); }
+    : num=NUMBER_LITERAL { $val = Integer.parseInt($num.text); }
     ;
 
-WS
-    : ( ' ' | '\t' | '\r' | '\n' ) -> skip
-    ;
+WS  : [ \t\r\n]+  -> skip;
 
-NUMBER
+NUMBER_LITERAL
     : '-'? [0-9]+ ('.' [0-9])?
     ;
 
 ID1 : ( [A-Za-z_#])  ( [A-Za-z_#$@0-9] )*;
 ID2 : '"' (~('"'))* '"';
 
-STR : '\'' (~('\''))* '\'';
+STR : SQUOTA_STRING;
+
+//fragment ID_LITERAL:                 [A-Z_$0-9]*?[A-Z_$]+?[A-Z_$0-9]*;
+fragment DQUOTA_STRING:              '"' ( '\\'. | '""' | ~('"'| '\\') )* '"';
+fragment SQUOTA_STRING:              '\'' ('\\'. | '\'\'' | ~('\'' | '\\'))* '\'';

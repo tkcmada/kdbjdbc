@@ -25,7 +25,7 @@ public class SqlParser extends Parser {
 		T__22=24, T__21=25, T__20=26, T__19=27, T__18=28, T__17=29, T__16=30, 
 		T__15=31, T__14=32, T__13=33, T__12=34, T__11=35, T__10=36, T__9=37, T__8=38, 
 		T__7=39, T__6=40, T__5=41, T__4=42, T__3=43, T__2=44, T__1=45, T__0=46, 
-		WS=47, NUMBER=48, ID1=49, ID2=50, STR=51;
+		WS=47, NUMBER_LITERAL=48, ID1=49, ID2=50, STR=51;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'LIMIT'", "'INTEGER'", "'AS'", "'BY'", "'FROM'", "'ELSE'", 
 		"'WHERE'", "'EXTRACT'", "'!='", "'END'", "'AND'", "'QUARTER'", "'='", 
@@ -33,21 +33,21 @@ public class SqlParser extends Parser {
 		"'*'", "'SELECT'", "','", "'.'", "'WHEN'", "'MINUTE'", "'DISTINCT'", "'CAST'", 
 		"'MONTH'", "'DAY'", "'FALSE'", "'HOUR'", "'>='", "'<'", "'select'", "'YEAR'", 
 		"'>'", "'OR'", "'or'", "'HAVING'", "'IN'", "'in'", "')'", "'and'", "'TRUE'", 
-		"WS", "NUMBER", "ID1", "ID2", "STR"
+		"WS", "NUMBER_LITERAL", "ID1", "ID2", "STR"
 	};
 	public static final int
 		RULE_selectStmtWhole = 0, RULE_selectStmt = 1, RULE_table = 2, RULE_columnNames = 3, 
 		RULE_columnName = 4, RULE_where = 5, RULE_groupBy = 6, RULE_having = 7, 
 		RULE_limit = 8, RULE_expr = 9, RULE_orExpr = 10, RULE_andExpr = 11, RULE_eqExpr = 12, 
 		RULE_compExpr = 13, RULE_primaryExpr = 14, RULE_caseExpr = 15, RULE_whenThenExpr = 16, 
-		RULE_functionExpr = 17, RULE_booleanLiteral = 18, RULE_numberExpr = 19, 
+		RULE_functionExpr = 17, RULE_booleanLiteral = 18, RULE_numberLiteral = 19, 
 		RULE_stringExpr = 20, RULE_groupargs = 21, RULE_grouparg = 22, RULE_args = 23, 
 		RULE_columnExpr = 24, RULE_name = 25, RULE_str = 26, RULE_pint = 27;
 	public static final String[] ruleNames = {
 		"selectStmtWhole", "selectStmt", "table", "columnNames", "columnName", 
 		"where", "groupBy", "having", "limit", "expr", "orExpr", "andExpr", "eqExpr", 
 		"compExpr", "primaryExpr", "caseExpr", "whenThenExpr", "functionExpr", 
-		"booleanLiteral", "numberExpr", "stringExpr", "groupargs", "grouparg", 
+		"booleanLiteral", "numberLiteral", "stringExpr", "groupargs", "grouparg", 
 		"args", "columnExpr", "name", "str", "pint"
 	};
 
@@ -1038,7 +1038,7 @@ public class SqlParser extends Parser {
 		public Expr val;
 		public ColumnExprContext e1;
 		public FunctionExprContext functionExpr;
-		public NumberExprContext numberExpr;
+		public NumberLiteralContext numberLiteral;
 		public StringExprContext stringExpr;
 		public BooleanLiteralContext booleanLiteral;
 		public CaseExprContext caseExpr;
@@ -1049,9 +1049,6 @@ public class SqlParser extends Parser {
 		}
 		public ColumnExprContext columnExpr() {
 			return getRuleContext(ColumnExprContext.class,0);
-		}
-		public NumberExprContext numberExpr() {
-			return getRuleContext(NumberExprContext.class,0);
 		}
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -1064,6 +1061,9 @@ public class SqlParser extends Parser {
 		}
 		public FunctionExprContext functionExpr() {
 			return getRuleContext(FunctionExprContext.class,0);
+		}
+		public NumberLiteralContext numberLiteral() {
+			return getRuleContext(NumberLiteralContext.class,0);
 		}
 		public PrimaryExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1105,8 +1105,8 @@ public class SqlParser extends Parser {
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(233); ((PrimaryExprContext)_localctx).numberExpr = numberExpr();
-				 ((PrimaryExprContext)_localctx).val =  ((PrimaryExprContext)_localctx).numberExpr.val; 
+				setState(233); ((PrimaryExprContext)_localctx).numberLiteral = numberLiteral();
+				 ((PrimaryExprContext)_localctx).val =  ((PrimaryExprContext)_localctx).numberLiteral.val; 
 				}
 				break;
 
@@ -1407,32 +1407,32 @@ public class SqlParser extends Parser {
 		return _localctx;
 	}
 
-	public static class NumberExprContext extends ParserRuleContext {
-		public NumberExpr val;
+	public static class NumberLiteralContext extends ParserRuleContext {
+		public NumberLiteral val;
 		public Token numtk;
-		public TerminalNode NUMBER() { return getToken(SqlParser.NUMBER, 0); }
-		public NumberExprContext(ParserRuleContext parent, int invokingState) {
+		public TerminalNode NUMBER_LITERAL() { return getToken(SqlParser.NUMBER_LITERAL, 0); }
+		public NumberLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_numberExpr; }
+		@Override public int getRuleIndex() { return RULE_numberLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterNumberExpr(this);
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterNumberLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitNumberExpr(this);
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitNumberLiteral(this);
 		}
 	}
 
-	public final NumberExprContext numberExpr() throws RecognitionException {
-		NumberExprContext _localctx = new NumberExprContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_numberExpr);
+	public final NumberLiteralContext numberLiteral() throws RecognitionException {
+		NumberLiteralContext _localctx = new NumberLiteralContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_numberLiteral);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(304); ((NumberExprContext)_localctx).numtk = match(NUMBER);
-			 ((NumberExprContext)_localctx).val =  new NumberExpr((((NumberExprContext)_localctx).numtk!=null?((NumberExprContext)_localctx).numtk.getText():null)); 
+			setState(304); ((NumberLiteralContext)_localctx).numtk = match(NUMBER_LITERAL);
+			 ((NumberLiteralContext)_localctx).val =  new NumberLiteral((((NumberLiteralContext)_localctx).numtk!=null?((NumberLiteralContext)_localctx).numtk.getText():null)); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -1521,7 +1521,7 @@ public class SqlParser extends Parser {
 			 List<GroupArg> _args = new ArrayList<GroupArg>(); 
 			setState(322);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << 8) | (1L << 17) | (1L << 21) | (1L << 28) | (1L << 29) | (1L << 32) | (1L << 46) | (1L << NUMBER) | (1L << ID1) | (1L << ID2) | (1L << STR))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << 8) | (1L << 17) | (1L << 21) | (1L << 28) | (1L << 29) | (1L << 32) | (1L << 46) | (1L << NUMBER_LITERAL) | (1L << ID1) | (1L << ID2) | (1L << STR))) != 0)) {
 				{
 				setState(311); ((GroupargsContext)_localctx).e1 = grouparg();
 				 _args.add(((GroupargsContext)_localctx).e1.val); 
@@ -1649,7 +1649,7 @@ public class SqlParser extends Parser {
 			 List<Expr> _args = new ArrayList<Expr>(); 
 			setState(346);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << 8) | (1L << 17) | (1L << 21) | (1L << 28) | (1L << 29) | (1L << 32) | (1L << 46) | (1L << NUMBER) | (1L << ID1) | (1L << ID2) | (1L << STR))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << 8) | (1L << 17) | (1L << 21) | (1L << 28) | (1L << 29) | (1L << 32) | (1L << 46) | (1L << NUMBER_LITERAL) | (1L << ID1) | (1L << ID2) | (1L << STR))) != 0)) {
 				{
 				setState(335); ((ArgsContext)_localctx).e1 = expr();
 				 _args.add(((ArgsContext)_localctx).e1.val); 
@@ -1842,7 +1842,7 @@ public class SqlParser extends Parser {
 	public static class PintContext extends ParserRuleContext {
 		public int val;
 		public Token num;
-		public TerminalNode NUMBER() { return getToken(SqlParser.NUMBER, 0); }
+		public TerminalNode NUMBER_LITERAL() { return getToken(SqlParser.NUMBER_LITERAL, 0); }
 		public PintContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1863,7 +1863,7 @@ public class SqlParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(369); ((PintContext)_localctx).num = match(NUMBER);
+			setState(369); ((PintContext)_localctx).num = match(NUMBER_LITERAL);
 			 ((PintContext)_localctx).val =  Integer.parseInt((((PintContext)_localctx).num!=null?((PintContext)_localctx).num.getText():null)); 
 			}
 		}

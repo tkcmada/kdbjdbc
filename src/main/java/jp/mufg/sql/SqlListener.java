@@ -8,9 +8,6 @@ import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 
 public interface SqlListener extends ParseTreeListener {
-	void enterNumberExpr(SqlParser.NumberExprContext ctx);
-	void exitNumberExpr(SqlParser.NumberExprContext ctx);
-
 	void enterGroupBy(SqlParser.GroupByContext ctx);
 	void exitGroupBy(SqlParser.GroupByContext ctx);
 
@@ -91,4 +88,7 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterAndExpr(SqlParser.AndExprContext ctx);
 	void exitAndExpr(SqlParser.AndExprContext ctx);
+
+	void enterNumberLiteral(SqlParser.NumberLiteralContext ctx);
+	void exitNumberLiteral(SqlParser.NumberLiteralContext ctx);
 }

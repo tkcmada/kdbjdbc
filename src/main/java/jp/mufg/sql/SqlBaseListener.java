@@ -11,9 +11,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
 
 public class SqlBaseListener implements SqlListener {
-	@Override public void enterNumberExpr(SqlParser.NumberExprContext ctx) { }
-	@Override public void exitNumberExpr(SqlParser.NumberExprContext ctx) { }
-
 	@Override public void enterGroupBy(SqlParser.GroupByContext ctx) { }
 	@Override public void exitGroupBy(SqlParser.GroupByContext ctx) { }
 
@@ -94,6 +91,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterAndExpr(SqlParser.AndExprContext ctx) { }
 	@Override public void exitAndExpr(SqlParser.AndExprContext ctx) { }
+
+	@Override public void enterNumberLiteral(SqlParser.NumberLiteralContext ctx) { }
+	@Override public void exitNumberLiteral(SqlParser.NumberLiteralContext ctx) { }
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) { }
 	@Override public void exitEveryRule(ParserRuleContext ctx) { }

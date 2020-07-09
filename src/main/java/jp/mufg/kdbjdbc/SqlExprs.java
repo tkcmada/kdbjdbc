@@ -1217,11 +1217,11 @@ public class SqlExprs {
 	}
 
 	//@Immutable
-	public static final class NumberExpr extends LiteralExpr
+	public static final class NumberLiteral extends LiteralExpr
 	{
 		private final String numberString;
 
-		public NumberExpr(String numberString)
+		public NumberLiteral(String numberString)
 		{
             super();
             if(numberString == null)
