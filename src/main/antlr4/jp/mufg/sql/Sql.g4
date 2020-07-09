@@ -97,7 +97,7 @@ primaryExpr returns [Expr val]
     : e1=columnExpr    { $val = $e1.val; }
     | functionExpr     { $val = $functionExpr.val; }
     | numberLiteral    { $val = $numberLiteral.val; }
-    | stringExpr       { $val = $stringExpr.val; }
+    | stringLiteral       { $val = $stringLiteral.val; }
     | booleanLiteral   { $val = $booleanLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
     | 'DISTINCT' expr  { $val = new DistinctExpr($expr.val); }
@@ -127,8 +127,8 @@ numberLiteral returns [NumberLiteral val]
     : numtk=NUMBER_LITERAL { $val = new NumberLiteral($numtk.text); }
     ;
 
-stringExpr returns [StringExpr val]
-    : str { $val = new StringExpr($str.text); }
+stringLiteral returns [StringLiteral val]
+    : str { $val = new StringLiteral($str.text); }
     ;
 
 groupargs returns [List<GroupArg> val]

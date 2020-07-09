@@ -71,7 +71,7 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
             actualColumnNumber++;
             String colname = SqlSelectToQscriptTranslator.dequoteColumnName(e.name);
             Character coltypeobj = e.type;
-            if(! colname.startsWith("dummy_")) {
+            if(! colname.startsWith(SqlExprs.DUMMY_COLUMN_PREFIX)) {
                 cols.add(new ColumnInfo(colname, coltypeobj.toString(), true, actualColumnNumber));
             }
         }

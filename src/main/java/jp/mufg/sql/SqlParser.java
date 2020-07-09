@@ -41,13 +41,13 @@ public class SqlParser extends Parser {
 		RULE_limit = 8, RULE_expr = 9, RULE_orExpr = 10, RULE_andExpr = 11, RULE_eqExpr = 12, 
 		RULE_compExpr = 13, RULE_primaryExpr = 14, RULE_caseExpr = 15, RULE_whenThenExpr = 16, 
 		RULE_functionExpr = 17, RULE_booleanLiteral = 18, RULE_numberLiteral = 19, 
-		RULE_stringExpr = 20, RULE_groupargs = 21, RULE_grouparg = 22, RULE_args = 23, 
+		RULE_stringLiteral = 20, RULE_groupargs = 21, RULE_grouparg = 22, RULE_args = 23, 
 		RULE_columnExpr = 24, RULE_name = 25, RULE_str = 26, RULE_pint = 27;
 	public static final String[] ruleNames = {
 		"selectStmtWhole", "selectStmt", "table", "columnNames", "columnName", 
 		"where", "groupBy", "having", "limit", "expr", "orExpr", "andExpr", "eqExpr", 
 		"compExpr", "primaryExpr", "caseExpr", "whenThenExpr", "functionExpr", 
-		"booleanLiteral", "numberLiteral", "stringExpr", "groupargs", "grouparg", 
+		"booleanLiteral", "numberLiteral", "stringLiteral", "groupargs", "grouparg", 
 		"args", "columnExpr", "name", "str", "pint"
 	};
 
@@ -1039,16 +1039,16 @@ public class SqlParser extends Parser {
 		public ColumnExprContext e1;
 		public FunctionExprContext functionExpr;
 		public NumberLiteralContext numberLiteral;
-		public StringExprContext stringExpr;
+		public StringLiteralContext stringLiteral;
 		public BooleanLiteralContext booleanLiteral;
 		public CaseExprContext caseExpr;
 		public ExprContext expr;
 		public Token type;
-		public StringExprContext stringExpr() {
-			return getRuleContext(StringExprContext.class,0);
-		}
 		public ColumnExprContext columnExpr() {
 			return getRuleContext(ColumnExprContext.class,0);
+		}
+		public StringLiteralContext stringLiteral() {
+			return getRuleContext(StringLiteralContext.class,0);
 		}
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -1113,8 +1113,8 @@ public class SqlParser extends Parser {
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(236); ((PrimaryExprContext)_localctx).stringExpr = stringExpr();
-				 ((PrimaryExprContext)_localctx).val =  ((PrimaryExprContext)_localctx).stringExpr.val; 
+				setState(236); ((PrimaryExprContext)_localctx).stringLiteral = stringLiteral();
+				 ((PrimaryExprContext)_localctx).val =  ((PrimaryExprContext)_localctx).stringLiteral.val; 
 				}
 				break;
 
@@ -1446,34 +1446,34 @@ public class SqlParser extends Parser {
 		return _localctx;
 	}
 
-	public static class StringExprContext extends ParserRuleContext {
-		public StringExpr val;
+	public static class StringLiteralContext extends ParserRuleContext {
+		public StringLiteral val;
 		public StrContext str;
 		public StrContext str() {
 			return getRuleContext(StrContext.class,0);
 		}
-		public StringExprContext(ParserRuleContext parent, int invokingState) {
+		public StringLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_stringExpr; }
+		@Override public int getRuleIndex() { return RULE_stringLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterStringExpr(this);
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterStringLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitStringExpr(this);
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitStringLiteral(this);
 		}
 	}
 
-	public final StringExprContext stringExpr() throws RecognitionException {
-		StringExprContext _localctx = new StringExprContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_stringExpr);
+	public final StringLiteralContext stringLiteral() throws RecognitionException {
+		StringLiteralContext _localctx = new StringLiteralContext(_ctx, getState());
+		enterRule(_localctx, 40, RULE_stringLiteral);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(307); ((StringExprContext)_localctx).str = str();
-			 ((StringExprContext)_localctx).val =  new StringExpr(((StringExprContext)_localctx).str.text); 
+			setState(307); ((StringLiteralContext)_localctx).str = str();
+			 ((StringLiteralContext)_localctx).val =  new StringLiteral(((StringLiteralContext)_localctx).str.text); 
 			}
 		}
 		catch (RecognitionException re) {

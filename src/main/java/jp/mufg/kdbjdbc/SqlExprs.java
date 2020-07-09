@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
 
 public class SqlExprs {
+    public static final String DUMMY_COLUMN_PREFIX = "dummy_";
 
     public static class SelectStatement {
         private final Table table;
@@ -110,7 +111,7 @@ public class SqlExprs {
                         gs.append(SqlSelectToQscriptTranslator.escapeColumnName(gc.getAliasName()));
                     }
                     else {
-                        gs.append("dummy_" + groupcnt);
+                        gs.append(DUMMY_COLUMN_PREFIX + groupcnt);
                     }
                     gs.append(":");
                     gs.append(g.toQscript());
@@ -412,7 +413,7 @@ public class SqlExprs {
 
         public abstract void checkType(TypeContext ctxt);
 
-        public abstract void collectStringExpr(List<StringExpr> result);
+        public abstract void collectStringLiteral(List<StringLiteral> result);
     }
     
     public static interface TypeContext {
@@ -471,8 +472,8 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            expr.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            expr.collectStringLiteral(result);
         }
 
 		public Expr getExpr()
@@ -537,9 +538,9 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            lhs.collectStringExpr(result);
-            rhs.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            lhs.collectStringLiteral(result);
+            rhs.collectStringLiteral(result);
         }
 
         @Override
@@ -570,9 +571,9 @@ public class SqlExprs {
 
         @Override
         public void checkType(TypeContext ctxt) {
-            List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
-            rhs.collectStringExpr(strs);
-            char type = lhs.getType(ctxt);
+            final List<StringLiteral> strs = new LinkedList<SqlExprs.StringLiteral>();
+            rhs.collectStringLiteral(strs);
+            final char type = lhs.getType(ctxt);
             fixStringType(strs, type);
             if(type == 'C') {
                 op = "like";
@@ -580,34 +581,21 @@ public class SqlExprs {
         }
     }
 
-    private static void fixStringType(List<StringExpr> strs, char targetType) {
-        for(StringExpr se : strs) {
+    private static void fixStringType(List<StringLiteral> strs, char targetType) {
+        for(StringLiteral se : strs) {
             String s = se.string;
             switch(targetType) {
                 case 'd':
-                    se.replacePlainString(s.replace("-", "."), 'd');
+                    se.string = s.replace("-", ".");
+                    se.type   = 'd';
                     break;
                 case 'p':
-                    se.replacePlainString(s, 'p');
-                    break;
                 case 'n':
-                    se.replacePlainString(s, 'n');
-                    break;
                 case 'c':
-                    se.replacePlainString("\"" + s + "\"", 'c');
-                    break;
                 case 'C':
-                    if(s.length() <= 1) {
-                        se.replacePlainString("string \"" + s + "\"", 'C');
-                    } else {
-                        se.replacePlainString("\"" + s + "\"", 'C');
-                    }
-                    break;
                 case 'g':
-                    se.replacePlainString("\"G\"$\"" + s + "\"", 'g');
-                    break;
                 case 's':
-                    se.replacePlainString("`" + s, 's');
+                    se.type = targetType;
                     break;
                 default:
                     //do nothing
@@ -728,15 +716,15 @@ public class SqlExprs {
 
         @Override
         public void checkType(TypeContext ctxt) {
-            List<StringExpr> strs = new LinkedList<SqlExprs.StringExpr>();
-            arguments.collectStringExpr(strs);
+            List<StringLiteral> strs = new LinkedList<SqlExprs.StringLiteral>();
+            arguments.collectStringLiteral(strs);
             fixStringType(strs, lhs.getType(ctxt));
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            lhs.collectStringExpr(result);
-            arguments.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            lhs.collectStringLiteral(result);
+            arguments.collectStringLiteral(result);
         }
 
 		@Override
@@ -857,13 +845,13 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
             for(WhenThen wt : whenThens) {
-                wt.whenExpr.collectStringExpr(result);
-                wt.thenExpr.collectStringExpr(result);
+                wt.whenExpr.collectStringLiteral(result);
+                wt.thenExpr.collectStringLiteral(result);
             }
             if(elseExpr != null) {
-                elseExpr.collectStringExpr(result);
+                elseExpr.collectStringLiteral(result);
             }
         }
 
@@ -923,9 +911,9 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
             for(Expr e : exprs)
-                e.collectStringExpr(result);
+                e.collectStringLiteral(result);
         }
 
         @Override
@@ -991,8 +979,8 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            expr.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            expr.collectStringLiteral(result);
         }
 
         @Override
@@ -1029,8 +1017,8 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            expr.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            expr.collectStringLiteral(result);
         }
 
         @Override
@@ -1067,8 +1055,8 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            expr.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            expr.collectStringLiteral(result);
         }
 
         @Override
@@ -1137,8 +1125,8 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
-            arguments.collectStringExpr(result);
+        public void collectStringLiteral(List<StringLiteral> result) {
+            arguments.collectStringLiteral(result);
         }
 
 
@@ -1212,7 +1200,7 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
         }
 	}
 
@@ -1251,54 +1239,67 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
         }
 	}
 
 	//@Immutable
-	public static final class StringExpr extends LiteralExpr
+	public static final class StringLiteral extends LiteralExpr
 	{
-        private final String string;
-        private String replacedPlainString;
-        private char replacedType;
+        private String string;
+        private char type;
 
-		public StringExpr(String string)
+		public StringLiteral(String string)
 		{
 			super();
-			this.string = string;
+            this.string = string;
+            this.type   = 's';
         }
         
-        public void replacePlainString(String newstr, char newtype) {
-            this.replacedPlainString = newstr;
-            this.replacedType = newtype;
+        public void replaceString(String newstr, char newtype) {
+            this.string = newstr;
+            this.type   = newtype;
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
             result.add(this);
         }
 
 		@Override
 		public String toString()
 		{
-            if(replacedPlainString != null)
-                return replacedPlainString; //no quote required
-			return "'" + string + "'";
+            return toQscript();
 		}
 		
 		@Override
 		public String toQscript()
 		{
-            if(replacedPlainString != null)
-                return replacedPlainString; //no quote required
-			return "`" + string;
+            switch(type) {
+                case 'p': //fall-through
+                case 'n': //fall-through
+                case 'd': //fall-through
+                    return string;
+                case 'c':
+                    return "\"" + string + "\"";
+                case 'C':
+                    if(string.length() <= 1) {
+                        return "string \"" + string + "\"";
+                    } else {
+                        return "\"" + string + "\"";
+                    }
+                case 'g':
+                    return "\"G\"$\"" + string + "\"";
+                case 's':
+                    return "`" + string;
+                default:
+                    throw new UnsupportedOperationException("unknown StringLiteral type " + type); 
+            }
         }
         
         @Override
         public char getType(TypeContext ctxt) {
-            if(replacedPlainString != null)
-                return replacedType;
-            return 's'; //list of char
+            return type;
         }
     }
 
@@ -1326,7 +1327,7 @@ public class SqlExprs {
         }
 
         @Override
-        public void collectStringExpr(List<StringExpr> result) {
+        public void collectStringLiteral(List<StringLiteral> result) {
             //do nothing
         }
 

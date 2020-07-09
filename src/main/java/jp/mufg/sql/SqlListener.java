@@ -17,9 +17,6 @@ public interface SqlListener extends ParseTreeListener {
 	void enterFunctionExpr(SqlParser.FunctionExprContext ctx);
 	void exitFunctionExpr(SqlParser.FunctionExprContext ctx);
 
-	void enterStringExpr(SqlParser.StringExprContext ctx);
-	void exitStringExpr(SqlParser.StringExprContext ctx);
-
 	void enterColumnExpr(SqlParser.ColumnExprContext ctx);
 	void exitColumnExpr(SqlParser.ColumnExprContext ctx);
 
@@ -73,6 +70,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterEqExpr(SqlParser.EqExprContext ctx);
 	void exitEqExpr(SqlParser.EqExprContext ctx);
+
+	void enterStringLiteral(SqlParser.StringLiteralContext ctx);
+	void exitStringLiteral(SqlParser.StringLiteralContext ctx);
 
 	void enterName(SqlParser.NameContext ctx);
 	void exitName(SqlParser.NameContext ctx);

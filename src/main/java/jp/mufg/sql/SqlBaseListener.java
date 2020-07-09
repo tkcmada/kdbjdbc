@@ -20,9 +20,6 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterFunctionExpr(SqlParser.FunctionExprContext ctx) { }
 	@Override public void exitFunctionExpr(SqlParser.FunctionExprContext ctx) { }
 
-	@Override public void enterStringExpr(SqlParser.StringExprContext ctx) { }
-	@Override public void exitStringExpr(SqlParser.StringExprContext ctx) { }
-
 	@Override public void enterColumnExpr(SqlParser.ColumnExprContext ctx) { }
 	@Override public void exitColumnExpr(SqlParser.ColumnExprContext ctx) { }
 
@@ -76,6 +73,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterEqExpr(SqlParser.EqExprContext ctx) { }
 	@Override public void exitEqExpr(SqlParser.EqExprContext ctx) { }
+
+	@Override public void enterStringLiteral(SqlParser.StringLiteralContext ctx) { }
+	@Override public void exitStringLiteral(SqlParser.StringLiteralContext ctx) { }
 
 	@Override public void enterName(SqlParser.NameContext ctx) { }
 	@Override public void exitName(SqlParser.NameContext ctx) { }
