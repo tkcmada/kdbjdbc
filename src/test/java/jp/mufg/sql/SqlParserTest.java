@@ -115,49 +115,49 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_group_by_where_char_equals() throws IOException {
         String q = parse2("SELECT t2.c AS c, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.c = 'a') GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f by c:c from t2 where ( c = \"a\" )", q);
+        Assert.assertEquals("select sum__f__ok:sum f by c:c from t2 where c = \"a\"", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_guid_equals() throws IOException {
         String q = parse2("SELECT t2.g AS g, SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.g = '8c6b8b64-6815-6084-0a3e-178401251b68') GROUP BY 1");
-        Assert.assertEquals("select sum__lg__ok:sum lg by g:g from t2 where ( g = \"G\"$\"8c6b8b64-6815-6084-0a3e-178401251b68\" )", q);
+        Assert.assertEquals("select sum__lg__ok:sum lg by g:g from t2 where g = \"G\"$\"8c6b8b64-6815-6084-0a3e-178401251b68\"", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_symbol_equals() throws IOException {
         String q = parse2("SELECT t2.name AS name, SUM(t2.r) AS \"sum:r:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.name = 'def') GROUP BY 1");
-        Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where ( name = `def )", q);
+        Assert.assertEquals("select sum__r__ok:sum r by name:name from t2 where name = `def", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_string1_equals() throws IOException {
         String q = parse2("SELECT SUM(1) AS \"cnt:t3:ok\", t3.str AS str FROM \"public\".\"t3\" \"t3\" WHERE (t3.str = 'x') GROUP BY 2");
-        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where ( str like string \"x\" )", q);
+        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where str like string \"x\"", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_string2_equals() throws IOException {
         String q = parse2("SELECT SUM(1) AS \"cnt:t3:ok\", t3.str AS str FROM \"public\".\"t3\" \"t3\" WHERE (t3.str = 'xyz') GROUP BY 2");
-        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where ( str like \"xyz\" )", q);
+        Assert.assertEquals("select cnt__t3__ok:sum 1 by str:str from t3 where str like \"xyz\"", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_int_equals() throws IOException {
         String q = parse("SELECT SUM('t2'.'f') AS 'sum:f:ok', 100 AS 'x' FROM 'public'.'t2' 't2' WHERE ('t2'.'x' = 100) GROUP BY 't2'.'x'");
-        Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_0:x from t2 where ( x = 100 )", q);
+        Assert.assertEquals("select sum__f__ok:sum f, x:100 by dummy_0:x from t2 where x = 100", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_timestamp_equals() throws IOException {
         String q = parse2("SELECT SUM(t2.f) AS \"sum:f:ok\", t2.z AS z FROM \"public\".\"t2\" \"t2\" WHERE (t2.z = '2015.01.01D01:02:03.001002030') GROUP BY 2");
-        Assert.assertEquals("select sum__f__ok:sum f by z:z from t2 where ( z = 2015.01.01D01:02:03.001002030 )", q);
+        Assert.assertEquals("select sum__f__ok:sum f by z:z from t2 where z = 2015.01.01D01:02:03.001002030", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_timespan_equals() throws IOException {
         String q = parse2("SELECT SUM(t2.f) AS \"sum:f:ok\", t2.ts AS ts FROM \"public\".\"t2\" \"t2\" WHERE (t2.ts = '01:02:03.001002000') GROUP BY 2");
-        Assert.assertEquals("select sum__f__ok:sum f by ts:ts from t2 where ( ts = 01:02:03.001002000 )", q);
+        Assert.assertEquals("select sum__f__ok:sum f by ts:ts from t2 where ts = 01:02:03.001002000", q);
     }    
 
     @Test
@@ -169,31 +169,31 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_group_by_where_date_in_with_curry() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date in ('2019-08-01', '2019-08-02')) GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where ( date in (2019.08.01, 2019.08.02) )", q);
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where date in (2019.08.01, 2019.08.02)", q);
     }    
 
     @Test
-    public void test_select_stmt_group_by_where_and() throws IOException {
+    public void test_select_stmt_group_by_where_and_date_equals() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE ((t2.name = 'abc') AND (t2.date = '2019-08-01')) GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where ( (name = `abc) and (date = 2019.08.01) )", q);
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (date = 2019.08.01), (name = `abc)", q);
     }    
 
     @Test
-    public void test_select_stmt_group_by_where_and2() throws IOException {
-        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE t2.name = 'abc' AND t2.date = '2019-08-01' GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (name = `abc) and (date = 2019.08.01)", q);
+    public void test_select_stmt_group_by_where_and_date_in() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE t2.name = 'abc' AND t2.date IN ('2019-08-01','2019-08-02') GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (date in (2019.08.01, 2019.08.02)), (name = `abc)", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_date_not_in_case() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04') THEN FALSE WHEN (t2.date = '1970-01-05') THEN FALSE ELSE TRUE END) GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where ( not (date in (1970.01.04; 1970.01.05)) )", q);
+        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where not (date in (1970.01.04; 1970.01.05))", q);
     }    
 
     @Test
     public void test_select_stmt_group_by_where_generic_case() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04' or t2.date = '1970-01-03') THEN FALSE WHEN (t2.date = '1970-01-05') THEN FALSE ELSE TRUE END) GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where ( $[t2.date = 1970.01.04 or t2.date = 1970.01.03;0x00;t2.date = 1970.01.05;0x00;0x01] )", q);
+        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where $[t2.date = 1970.01.04 or t2.date = 1970.01.03;0x00;t2.date = 1970.01.05;0x00;0x01]", q);
     }    
 
     @Test
@@ -241,7 +241,7 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_func_cnt() throws IOException {
         String q = parse2("SELECT SUM(1) AS \"cnt:CustomSQL_74E37922F46A4521AB1810425A001810:ok\", \"Custom SQL Query\".\"universal_id\" AS \"universal_id\", \"Custom SQL Query\".\"version_id\" AS \"version_id\" FROM ( SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\" ) \"Custom SQL Query\" WHERE (\"Custom SQL Query\".\"version_id\" = 'V1') GROUP BY 2, 3");
-        Assert.assertEquals("select cnt__CustomSQL_74E37922F46A4521AB1810425A001810__ok:sum 1 by universal_id:universal_id, version_id:version_id from (select  from MarketBooksFunc[`USDJPY;`V1]) where ( version_id = `V1 )", q);
+        Assert.assertEquals("select cnt__CustomSQL_74E37922F46A4521AB1810425A001810__ok:sum 1 by universal_id:universal_id, version_id:version_id from (select  from MarketBooksFunc[`USDJPY;`V1]) where version_id = `V1", q);
     }
 
     // 

@@ -81,7 +81,7 @@ orExpr returns [Expr val]
     ;
 
 andExpr returns [Expr val]
-    : lhs=eqExpr op=('and'|'AND') rhs=eqExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
+    : lhs=eqExpr op=('and'|'AND') rhs=eqExpr { $val = new AndExpr($lhs.val, $rhs.val); }
     | lhs=eqExpr { $val = $lhs.val; }
     ;
 

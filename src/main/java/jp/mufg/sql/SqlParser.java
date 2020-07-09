@@ -915,7 +915,7 @@ public class SqlParser extends Parser {
 				}
 				consume();
 				setState(197); ((AndExprContext)_localctx).rhs = eqExpr();
-				 ((AndExprContext)_localctx).val =  new BinaryExpr((((AndExprContext)_localctx).op!=null?((AndExprContext)_localctx).op.getText():null), ((AndExprContext)_localctx).lhs.val, ((AndExprContext)_localctx).rhs.val); 
+				 ((AndExprContext)_localctx).val =  new AndExpr(((AndExprContext)_localctx).lhs.val, ((AndExprContext)_localctx).rhs.val); 
 				}
 				break;
 

@@ -34,7 +34,6 @@ public class SqlExprs {
         {
             this.columns = columns;
             this.table = table;
-            this.where = where;
             this.groupargs = groupargs;
             this.having = having;
             this.limit = limit;
@@ -43,6 +42,40 @@ public class SqlExprs {
                 for(GroupArg g : groupargs) {
                     g.setReferenceColumn(columns);
                 }
+            }
+            //top level and is converted into subphrase
+            if(where != null) {
+                where = uncurry(where);
+                LinkedList<Expr> result = new LinkedList<SqlExprs.Expr>();
+                where.collectTopLevelAndLeaf(result);
+                if(result.size() > 1) {
+                    //move date condition at first
+                    LinkedList<Expr> date_result = new LinkedList<SqlExprs.Expr>();
+                    LinkedList<Expr> non_date_result = new LinkedList<SqlExprs.Expr>();
+                    LinkedList<Expr> sorted_result = new LinkedList<SqlExprs.Expr>();
+                    for(Expr e : result) {
+                        String q = e.toQscript();
+                        if(q.matches("(.*^[\\w\\d_]|\\A)date .*")) {
+                            date_result.add(e);
+                        }
+                        else {
+                            non_date_result.add(e);
+                        }
+                    }
+                    sorted_result.addAll(date_result);
+                    sorted_result.addAll(non_date_result);
+                    where = new SubphraseExpr(sorted_result);
+                }
+            }
+
+            if(where != null && where.toQscript().equals("0 = 1") && (table instanceof TableSelect)) {
+                this.where = null;
+                SelectStatement sel = ((TableSelect)table).select;
+                sel.limit = 1;
+                sel.forceSimpleLimit = true;
+            }
+            else {
+                this.where = where;
             }
         }
 
@@ -94,13 +127,6 @@ public class SqlExprs {
             //is converted into
             //SELECT * FROM (SELECT * FROM t LIMIT 1)
             //to push down condition
-
-            if(where != null && where.toQscript().equals("( 0 = 1 )") && (table instanceof TableSelect)) {
-                this.where = null;
-                SelectStatement sel = ((TableSelect)table).select;
-                sel.limit = 1;
-                sel.forceSimpleLimit = true;
-            }
 
             final boolean distinct = isDistinct();
             //groupby
@@ -432,6 +458,10 @@ public class SqlExprs {
         public abstract void checkType(TypeContext ctxt);
 
         public abstract void collectStringLiteral(List<StringLiteral> result);
+
+        public void collectTopLevelAndLeaf(List<Expr> result) {
+            result.add(this);
+        }
     }
     
     public static interface TypeContext {
@@ -497,7 +527,12 @@ public class SqlExprs {
 		public Expr getExpr()
 		{
 			return expr;
-		}
+        }
+        
+        @Override
+        public void collectTopLevelAndLeaf(List<Expr> result) {
+            expr.collectTopLevelAndLeaf(result);
+        }
 	}
 	
 	// public static class NullExpr extends Expr
@@ -520,7 +555,52 @@ public class SqlExprs {
 	// 		return "null";
 	// 	}
 	// }
+	public static class SubphraseExpr extends Expr
+	{
+        @NotNull
+        private final List<Expr> exprs;
 
+        public SubphraseExpr(@NotNull List<Expr> exprs) {
+            if(exprs == null)
+                throw new NullPointerException("exprs is null");
+            this.exprs = exprs;
+        }
+
+        @Override
+        public void checkType(TypeContext ctxt) {
+            for(Expr e : exprs)
+                e.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringLiteral(List<StringLiteral> result) {
+            for(Expr e : exprs)
+                e.collectStringLiteral(result);
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return exprs.get(0).getType(ctxt);
+        }
+
+        @Override
+        public String toQscript() {
+            StringBuilder s = new StringBuilder();
+            for(Expr e : exprs) {
+                if(s.length() > 0)
+                    s.append(", ");
+                s.append("(");
+                s.append(e.toQscript());
+                s.append(")");
+            }
+            return s.toString();
+        }
+
+        @Override
+        public String toString() {
+            return toQscript();
+        }
+    }
 	public static class BinaryExpr extends Expr
 	{
 		protected String op;
@@ -578,21 +658,31 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-            if(op.equals("and")) {
-                lhs = uncurry(lhs);
-                rhs = uncurry(rhs);
-    			return "(" + lhs.toQscript() + ") " + op + " (" + rhs.toQscript() + ")";
-            }
-            else {
-    			return lhs.toQscript() + " " + op + " " + rhs.toQscript();
-            }
+            return lhs.toQscript() + " " + op + " " + rhs.toQscript();
         }
     }
 
     private static Expr uncurry(Expr e) {
         if(e instanceof CurryExpr)
-            return ((CurryExpr) e).expr;
+            return uncurry(((CurryExpr) e).expr);
         return e;
+    }
+
+    public static class AndExpr extends BinaryExpr {
+        public AndExpr(Expr lhs, Expr rhs) {
+            super("and", lhs, rhs);
+        }
+
+        @Override
+        public String toQscript() {
+            return "(" + uncurry(lhs).toQscript() + ") " + op + " (" + uncurry(rhs).toQscript() + ")";
+        }
+
+        @Override
+        public void collectTopLevelAndLeaf(List<Expr> result) {
+            lhs.collectTopLevelAndLeaf(result);
+            rhs.collectTopLevelAndLeaf(result);
+        }
     }
 
     public static class EqExpr extends BinaryExpr {
