@@ -589,11 +589,11 @@ public class SqlExprs {
                     se.string = s.replace("-", ".");
                     se.type   = 'd';
                     break;
-                case 'p':
-                case 'n':
-                case 'c':
-                case 'C':
-                case 'g':
+                case 'p': //fall-through
+                case 'n': //fall-through
+                case 'c': //fall-through
+                case 'C': //fall-through
+                case 'g': //fall-through
                 case 's':
                     se.type = targetType;
                     break;
