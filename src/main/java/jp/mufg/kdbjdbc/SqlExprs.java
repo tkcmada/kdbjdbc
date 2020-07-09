@@ -164,7 +164,12 @@ public class SqlExprs {
                     q = limit + "#" + q;
                 }
                 else {
-                    q = "(min(" + limit + ",count(" + q + ")))#" + q;
+                    final int server_limit = offset != null ? limit + offset : limit;
+                    q = "(min(" + server_limit + ",count(" + q + ")))#" + q;
+                    if(offset != null) {
+                        //add in-memory limit and offset
+                        q = "select [" + offset + "," + limit + "] from " + q;
+                    }
                 }
             }
 
