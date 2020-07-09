@@ -27,6 +27,7 @@ public class SqlParserTest {
         // for t2
         HashMap<String, Character> type_by_col = new HashMap<String,Character>();
         type_by_col.put("date", 'd');
+        type_by_col.put("otherdate", 'd');
         type_by_col.put("c"   , 'c');
         type_by_col.put("g"   , 'g');
         type_by_col.put("x"   , 'i');
@@ -176,6 +177,12 @@ public class SqlParserTest {
     public void test_select_stmt_group_by_where_and_date_equals() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE ((t2.name = 'abc') AND (t2.date = '2019-08-01')) GROUP BY 1");
         Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (date = 2019.08.01), (name = `abc)", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_and_otherdate_equals() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE ((t2.name = 'abc') AND (t2.otherdate = '2019-08-01')) GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (name = `abc), (otherdate = 2019.08.01)", q);
     }    
 
     @Test
