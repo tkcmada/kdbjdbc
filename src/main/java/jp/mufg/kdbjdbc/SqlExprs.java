@@ -578,10 +578,23 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-			return lhs.toQscript() + " " + op + " " + rhs.toQscript();
+            if(op.equals("and")) {
+                lhs = uncurry(lhs);
+                rhs = uncurry(rhs);
+    			return "(" + lhs.toQscript() + ") " + op + " (" + rhs.toQscript() + ")";
+            }
+            else {
+    			return lhs.toQscript() + " " + op + " " + rhs.toQscript();
+            }
         }
     }
-    
+
+    private static Expr uncurry(Expr e) {
+        if(e instanceof CurryExpr)
+            return ((CurryExpr) e).expr;
+        return e;
+    }
+
     public static class EqExpr extends BinaryExpr {
         public EqExpr(String op, Expr lhs, Expr rhs) {
             super(op, lhs, rhs);
@@ -816,7 +829,7 @@ public class SqlExprs {
 				, @Nullable Expr elseExpr
 		)
 		{
-			super();
+            super();
 			this.baseExpr = baseExpr;
 			this.whenThens = whenThens;
 			this.elseExpr = elseExpr;
@@ -875,15 +888,56 @@ public class SqlExprs {
 
         @Override
         public String toQscript() {
+            try {
+                return tryInQscript();
+            }
+            catch(UnsupportedOperationException ignored) {
+                return toConditionQscript();
+            }
+        }
+
+        private String toConditionQscript() {
+            if(baseExpr != null)
+                throw new UnsupportedOperationException("case with baseExpr is not supported. " + toString());
+            StringBuilder s = new StringBuilder();
+            s.append("$[");
+            int i = 0;
+            for(WhenThen wt : whenThens) {
+                if(i > 0)
+                    s.append(";");
+                s.append(uncurry(wt.whenExpr).toString());
+                s.append(";");
+                s.append(uncurry(wt.thenExpr).toQscript());
+                i++;
+            }
+            if(elseExpr != null) {
+                s.append(";");
+                s.append(uncurry(elseExpr).toQscript());
+            }
+            s.append("]");
+            return s.toString();
+        }
+
+        private String tryInQscript() {
             //assuming all when expression is ColExpr = <expr> and THEN is false and ELSE is true 
+            //and then it can be converted into in condition.
+            if(baseExpr != null)
+                throw new UnsupportedOperationException("case with baseExpr is not supported. " + toString());
             List<Expr> inlist = new LinkedList<SqlExprs.Expr>();
             ColumnExpr colexpr = null;
+            if(! (uncurry(elseExpr) instanceof BooleanLiteral))
+                throw new UnsupportedOperationException("else should be BooleanLiteral");
+            if(! ((BooleanLiteral)uncurry(elseExpr)).getValue())
+                throw new UnsupportedOperationException("else should be TRUE");
             for(WhenThen wt : whenThens) {
-                Expr e = wt.whenExpr;
-                if(e instanceof CurryExpr)
-                    e = ((CurryExpr) e).expr;
+                final Expr e = uncurry(wt.whenExpr);
+                if(! (e instanceof EqExpr))
+                    throw new UnsupportedOperationException();
+                final Expr t = uncurry(wt.thenExpr);
+                if(! (t instanceof BooleanLiteral))
+                    throw new UnsupportedOperationException();
                 EqExpr eq = (EqExpr) e;
-                boolean thenval = ((BooleanLiteral)wt.thenExpr).getValue();
+                boolean thenval = ((BooleanLiteral) t).getValue();
                 if(thenval)
                     throw new UnsupportedOperationException("not support true in WHEN THEN");
                 if(colexpr != null) {
@@ -895,8 +949,6 @@ public class SqlExprs {
                 }
                 inlist.add(eq.getRhs());
             }            
-            if(! ((BooleanLiteral)elseExpr).getValue())
-                throw new UnsupportedOperationException("else should be TRUE");
             return new InExpr(colexpr, new Arguments(inlist), true).toQscript();
         }
 	}
@@ -1209,7 +1261,7 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-			return String.valueOf(value);
+            return value ? "0x01" : "0x00";
         }
         
         @Override
