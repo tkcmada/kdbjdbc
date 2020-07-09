@@ -19,6 +19,7 @@ public class SqlExprs {
         private Expr where; //amendable
         private final Expr having;
         private Integer limit; //amendable
+        private boolean forceSimpleLimit = false;
         private final Integer offset;
 
         public SelectStatement(
@@ -96,7 +97,9 @@ public class SqlExprs {
 
             if(where != null && where.toQscript().equals("( 0 = 1 )") && (table instanceof TableSelect)) {
                 this.where = null;
-                ((TableSelect)table).select.limit = 1;
+                SelectStatement sel = ((TableSelect)table).select;
+                sel.limit = 1;
+                sel.forceSimpleLimit = true;
             }
 
             final boolean distinct = isDistinct();
@@ -124,9 +127,6 @@ public class SqlExprs {
 
             if(distinct) {
                 s.append("distinct ");
-            }
-            if(limit != null) {
-                s.append(limit + "#");
             }
             s.append("select ");
             {
@@ -157,8 +157,18 @@ public class SqlExprs {
                 s.append(" where ");
                 s.append(where.toQscript());
             }
-            return s.toString();
 
+            String q = s.toString();
+            if(limit != null) {
+                if(forceSimpleLimit) {
+                    q = limit + "#" + q;
+                }
+                else {
+                    q = "(min(" + limit + ",count(" + q + ")))#" + q;
+                }
+            }
+
+            return q;
         }
     }
     
