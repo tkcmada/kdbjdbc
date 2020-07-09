@@ -59,6 +59,9 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterHaving(SqlParser.HavingContext ctx) { }
 	@Override public void exitHaving(SqlParser.HavingContext ctx) { }
 
+	@Override public void enterOffset(SqlParser.OffsetContext ctx) { }
+	@Override public void exitOffset(SqlParser.OffsetContext ctx) { }
+
 	@Override public void enterOrExpr(SqlParser.OrExprContext ctx) { }
 	@Override public void exitOrExpr(SqlParser.OrExprContext ctx) { }
 

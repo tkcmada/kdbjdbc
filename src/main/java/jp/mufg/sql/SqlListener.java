@@ -56,6 +56,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterHaving(SqlParser.HavingContext ctx);
 	void exitHaving(SqlParser.HavingContext ctx);
 
+	void enterOffset(SqlParser.OffsetContext ctx);
+	void exitOffset(SqlParser.OffsetContext ctx);
+
 	void enterOrExpr(SqlParser.OrExprContext ctx);
 	void exitOrExpr(SqlParser.OrExprContext ctx);
 

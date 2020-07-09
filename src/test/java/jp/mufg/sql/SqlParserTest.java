@@ -59,6 +59,12 @@ public class SqlParserTest {
     }
 
     @Test
+    public void test_select_stmt1_limit_offset() throws IOException {
+        String q = parse("SELECT 't2'.'id' AS 'id' , 't2'.'name' as 'name' FROM 'public'.'t2' 't2' LIMIT 1000 OFFSET 2000");
+        Assert.assertEquals("1000#select id:id, name:name from t2", q);
+    }
+
+    @Test
     public void test_select_stmt2() throws IOException {
         String q = parse("SELECT 't2'.'bl' AS 'bl' , 't2'.'c' AS 'c', SUM('t2'.'bt') AS 'sum:bt:ok' FROM 'public'.'t2' 't2' GROUP BY 1, 2");
         Assert.assertEquals("select sum__bt__ok:sum bt by bl:bl, c:c from t2", q);

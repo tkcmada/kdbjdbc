@@ -10,14 +10,15 @@ selectStmtWhole returns [SelectStatement val]
     ;
 
 selectStmt returns [SelectStatement val]
-    :   ('SELECT'|'select') columnNames ('FROM'|'from') table where groupBy having limit
+    :   ('SELECT'|'select') columnNames ('FROM'|'from') table where groupBy having limit offset
         { $val = new SelectStatement(
             $columnNames.columns,
             $table.val,
             $where.val,
             $groupBy.val,
             $having.val,
-            $limit.val
+            $limit.val,
+            $offset.val
             );
         }
     ;
@@ -63,6 +64,11 @@ having returns [Expr val]
 limit returns [Integer val]
     : 'LIMIT' pint { $val = $pint.val; }
     |              { $val = null;      }
+    ;
+
+offset returns [Integer val]
+    : 'OFFSET' pint { $val = $pint.val; }
+    |               { $val = null;      }
     ;
 
 expr returns [Expr val]

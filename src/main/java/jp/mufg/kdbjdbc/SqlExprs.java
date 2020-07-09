@@ -16,9 +16,10 @@ public class SqlExprs {
         private final Table table;
         private final List<Column> columns;
         private final List<GroupArg> groupargs;
-        private Expr where;
+        private Expr where; //amendable
         private final Expr having;
-        private Integer limit;
+        private Integer limit; //amendable
+        private final Integer offset;
 
         public SelectStatement(
             @NotNull List<Column> columns,
@@ -26,7 +27,8 @@ public class SqlExprs {
             @Nullable Expr where,
             @Nullable List<GroupArg> groupargs,
             @Nullable Expr having,
-            @Nullable Integer limit
+            @Nullable Integer limit,
+            @Nullable Integer offset
         )
         {
             this.columns = columns;
@@ -35,6 +37,7 @@ public class SqlExprs {
             this.groupargs = groupargs;
             this.having = having;
             this.limit = limit;
+            this.offset = offset;
             if(groupargs != null) {
                 for(GroupArg g : groupargs) {
                     g.setReferenceColumn(columns);
