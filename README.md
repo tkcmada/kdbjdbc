@@ -40,7 +40,7 @@ t4: ([] c1:0 1; ll:(10 20; (0Nj; 40)); lb:((0x00; 0x01); (0x00; 0x03)); li:((0i;
 meta t4
 t4
 
-MarketBooks: ([] universal_id:( (1?0Ng)[0]; (1?0Ng)[0] ); sym:`USDJPY`USDJPY; version_id:`V1`V2; bid_prices:((0n; 100.02); (200.01; 200.02)); bid_amounts:((1000000; 2000000); (3000000; 4000000) ); ask_amounts:((1000001; 2000001); (3000001; 4000001) ) )
+MarketBooks: ([] date:2020.01.01 2020.01.02; universal_id:( (1?0Ng)[0]; (1?0Ng)[0] ); sym:`USDJPY`USDJPY; version_id:`V1`V2; bid_prices:((0n; 100.02); (200.01; 200.02)); bid_amounts:((1000000; 2000000); (3000000; 4000000) ); ask_amounts:((1000001; 2000001); (3000001; 4000001) ) )
 meta MarketBooks
 MarketBooks
 
@@ -50,6 +50,11 @@ MarketBooksNoNull
 
 MarketBooksFunc:{ [sym;ver] select universal_id , version_id , bid_prices, bid_amounts from MarketBooks where sym = sym , version_id = ver }
 MarketBooksFunc[`USDJPY;`V1]
+
+MarketBooksFunc2:{ [date_;sym] select date, universal_id , version_id , bid_prices, bid_amounts from MarketBooks where date = date_, sym = sym }
+MarketBooksFunc2[2020.01.01;`USDJPY]
+
+
 ```
 
 How to test ?
