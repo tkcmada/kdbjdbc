@@ -1468,6 +1468,40 @@ public class SqlExprs {
     }
 
 	//@Immutable
+	public static final class DateLiteral extends LiteralExpr
+	{
+        private final String string;
+
+		public DateLiteral(String string)
+		{
+			super();
+            this.string = string;
+        }
+        
+        @Override
+        public void collectStringLiteral(List<StringLiteral> result) {
+            //do nothing
+        }
+
+		@Override
+		public String toString()
+		{
+            return toQscript();
+		}
+		
+		@Override
+		public String toQscript()
+		{
+            return string.replace('-', '.');
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'd';
+        }
+    }
+
+	//@Immutable
 	public static final class ColumnExpr extends Expr
 	{
 		@Nullable

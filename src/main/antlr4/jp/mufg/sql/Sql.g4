@@ -105,6 +105,7 @@ primaryExpr returns [Expr val]
     | numberLiteral    { $val = $numberLiteral.val; }
     | stringLiteral       { $val = $stringLiteral.val; }
     | booleanLiteral   { $val = $booleanLiteral.val; }
+    | dateLiteral      { $val = $dateLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
     | 'DISTINCT' expr  { $val = new DistinctExpr($expr.val); }
     | 'CAST' '(' expr 'AS' type=('INTEGER'|'DATE') ')' { $val = new CastExpr($expr.val, $type.text); }
@@ -135,6 +136,10 @@ numberLiteral returns [NumberLiteral val]
 
 stringLiteral returns [StringLiteral val]
     : str { $val = new StringLiteral($str.text); }
+    ;
+
+dateLiteral returns [DateLiteral val]
+    : 'DATE' str { $val = new DateLiteral($str.text); }
     ;
 
 groupargs returns [List<GroupArg> val]

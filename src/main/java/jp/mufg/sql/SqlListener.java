@@ -80,6 +80,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterName(SqlParser.NameContext ctx);
 	void exitName(SqlParser.NameContext ctx);
 
+	void enterDateLiteral(SqlParser.DateLiteralContext ctx);
+	void exitDateLiteral(SqlParser.DateLiteralContext ctx);
+
 	void enterCaseExpr(SqlParser.CaseExprContext ctx);
 	void exitCaseExpr(SqlParser.CaseExprContext ctx);
 

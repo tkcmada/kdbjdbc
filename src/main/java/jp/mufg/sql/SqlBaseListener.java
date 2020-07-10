@@ -83,6 +83,9 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterName(SqlParser.NameContext ctx) { }
 	@Override public void exitName(SqlParser.NameContext ctx) { }
 
+	@Override public void enterDateLiteral(SqlParser.DateLiteralContext ctx) { }
+	@Override public void exitDateLiteral(SqlParser.DateLiteralContext ctx) { }
+
 	@Override public void enterCaseExpr(SqlParser.CaseExprContext ctx) { }
 	@Override public void exitCaseExpr(SqlParser.CaseExprContext ctx) { }
 

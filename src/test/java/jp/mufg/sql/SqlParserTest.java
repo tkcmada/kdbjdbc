@@ -180,6 +180,18 @@ public class SqlParserTest {
     }    
 
     @Test
+    public void test_select_stmt_group_by_where_and_date_equals_as_date_literal() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date = DATE '2019-08-01') GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where date = 2019.08.01", q);
+    }    
+
+    @Test
+    public void test_select_stmt_group_by_where_and_date_gt_as_date_literal() throws IOException {
+        String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (t2.date >= DATE '2019-08-01') GROUP BY 1");
+        Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where date >= 2019.08.01", q);
+    }    
+
+    @Test
     public void test_select_stmt_group_by_where_and_otherdate_equals() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\" FROM \"public\".\"t2\" \"t2\" WHERE ((t2.name = 'abc') AND (t2.otherdate = '2019-08-01')) GROUP BY 1");
         Assert.assertEquals("select sum__f__ok:sum f by date:date from t2 where (name = `abc), (otherdate = 2019.08.01)", q);
