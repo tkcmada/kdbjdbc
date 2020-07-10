@@ -1158,7 +1158,6 @@ public class SqlExprs {
     {
         private final Expr expr;
         private final String sqltype;
-        private char internalType = ' ';
 
         public CastExpr(Expr expr, String sqltype) {
             this.expr = expr;
@@ -1169,10 +1168,8 @@ public class SqlExprs {
         public char getType(TypeContext ctxt) {
             if(sqltype.equals("INTEGER"))
                 return 'i';
-            if(sqltype.equals("DATE")) {
-                internalType = expr.getType(ctxt);
+            if(sqltype.equals("DATE"))
                 return 'd';
-            }
             throw new UnsupportedOperationException("Not support cast type. " + sqltype);
         }
 
@@ -1190,16 +1187,8 @@ public class SqlExprs {
         public String toQscript() {
             if(sqltype.equals("INTEGER"))
                 return "(`int$(" + expr.toQscript() + "))";
-            if(sqltype.equals("DATE")) {
-                if(internalType == 'd') {
-                    //no need to conversion
-                    return expr.toQscript();
-                }
-                else {
-                    //need to convert
-                    return "(`date$(" + expr.toQscript() + "))";
-                }
-            }
+            if(sqltype.equals("DATE"))
+                return "(`date$(" + expr.toQscript() + "))";
             throw new UnsupportedOperationException("toQscript doesn't support cast type. " + sqltype);
         }
 

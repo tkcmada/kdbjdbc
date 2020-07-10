@@ -2,6 +2,7 @@ package jp.mufg.kdbjdbc;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -180,7 +181,7 @@ public class DriverTest {
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("date"          , rs.getString("COLUMN_NAME"));
-        Assert.assertEquals(Types.VARCHAR   , rs.getInt("DATA_TYPE"));
+        Assert.assertEquals(Types.DATE      , rs.getInt("DATA_TYPE"));
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("z"             , rs.getString("COLUMN_NAME"));
@@ -220,22 +221,27 @@ public class DriverTest {
         p++;
         Assert.assertEquals("name:xxx"  , meta.getColumnName(p));
         Assert.assertEquals("s"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("bl"    , meta.getColumnName(p));
         Assert.assertEquals("b"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.BIT   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("bt"    , meta.getColumnName(p));
         Assert.assertEquals("x"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.TINYINT   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("x"     , meta.getColumnName(p));
         Assert.assertEquals("i"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.INTEGER   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("lg"    , meta.getColumnName(p));
         Assert.assertEquals("j"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.BIGINT   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("r"     , meta.getColumnName(p));
@@ -245,27 +251,32 @@ public class DriverTest {
         p++;
         Assert.assertEquals("f"     , meta.getColumnName(p));
         Assert.assertEquals("f"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.FLOAT   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("date"  , meta.getColumnName(p));
         Assert.assertEquals("d"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.DATE   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("z"     , meta.getColumnName(p));
         Assert.assertEquals("p"     , meta.getColumnTypeName(p));
-        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
+        Assert.assertEquals(Types.TIMESTAMP   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("ts"    , meta.getColumnName(p));
         Assert.assertEquals("n"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("c"     , meta.getColumnName(p));
         Assert.assertEquals("c"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         p++;
         Assert.assertEquals("g"     , meta.getColumnName(p));
         Assert.assertEquals("g"     , meta.getColumnTypeName(p));
+        Assert.assertEquals(Types.VARCHAR   , meta.getColumnType(p));
 
         Assert.assertTrue(rs.next());
         Assert.assertEquals("abc"   , rs.getString("name:xxx"));
@@ -282,8 +293,8 @@ public class DriverTest {
         Assert.assertEquals(1.2f    , rs.getFloat( 6 )  , 0.0001f);
         Assert.assertEquals(1.5f    , rs.getDouble("f"), 0.00001);
         Assert.assertEquals(1.5f    , rs.getDouble( 7 ), 0.00001);
-        Assert.assertEquals("2015-01-01", rs.getObject("date"));
-        Assert.assertEquals("2015-01-01", rs.getObject( 8 ));
+        Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getObject("date")); //"2015-01-01"
+        Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getObject( 8 ));
         Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getTimestamp("z", Calendar.getInstance()));
         Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getObject("z"));
 //        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z")); //varchar version
@@ -379,20 +390,18 @@ public class DriverTest {
         int p = 0;
 
         p++;
-        Assert.assertEquals("date"  , meta.getColumnName(p));
-        Assert.assertEquals("d"     , meta.getColumnTypeName(p));
+        Assert.assertEquals("date"     , meta.getColumnName(p));
+        Assert.assertEquals(Types.DATE , meta.getColumnType(p));
+        Assert.assertEquals("d"        , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("2015-01-01", rs.getObject("date"));
-        Assert.assertEquals("2015-01-01", rs.getObject(1));
+        Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getObject("date")); //"2015-01-01"
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("1970-01-04", rs.getObject("date"));
-        Assert.assertEquals("1970-01-04", rs.getObject(1));
+        Assert.assertEquals(new Date(1970-1900, Calendar.JANUARY, 4), rs.getObject("date")); //"1970-01-04"
 
         Assert.assertTrue(rs.next());
         Assert.assertNull(rs.getObject("date"));
-        Assert.assertNull(rs.getObject(1));
 
         Assert.assertFalse(rs.next());
 
@@ -421,7 +430,7 @@ public class DriverTest {
         Assert.assertEquals("f"     , meta.getColumnTypeName(p));
 
         Assert.assertTrue(rs.next());
-        Assert.assertEquals("1970-01-04", rs.getObject("date"));
+        Assert.assertEquals(new Date(1970-1900, Calendar.JANUARY, 4), rs.getObject("date"));
         Assert.assertEquals(1.4         , rs.getObject("sum:f:ok"));
 
         rs.close();

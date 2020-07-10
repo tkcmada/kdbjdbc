@@ -183,8 +183,10 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
         LinkedHashMap<String, ColumnAndType> colnametype = getColumnAndType(tbl);
         int pos = 1;
         for(ColumnAndType e : colnametype.values()) {
-            String colname = e.name;
-            char ctype = e.type;
+            final String colname = e.name;
+            final char ctype = e.type;
+
+            //default
             String typename = "text";
             int colsize = MAX;
             int sqltype = 12;
@@ -223,22 +225,25 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
                 case 'e': //real
                     typename    = "real";
                     colsize = 10;
-                    sqltype = 4;
                     sqltype = Types.REAL;
                     octetlen = 10;
                     break;
                 case 'f': //float
                     typename    = "float";
                     colsize = 10;
-                    sqltype = 4;
                     sqltype = Types.FLOAT;
                     octetlen = 10;
                     break;
                 case 'p': //timestamp
                     typename    = "timestamp";
                     colsize = 10;
-                    sqltype = 4;
                     sqltype = Types.TIMESTAMP;
+                    octetlen = 10;
+                    break;
+                case 'd': //date
+                    typename    = "date";
+                    colsize = 10;
+                    sqltype = Types.DATE;
                     octetlen = 10;
                     break;
             }

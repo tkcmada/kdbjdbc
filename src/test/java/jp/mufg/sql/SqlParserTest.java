@@ -247,8 +247,8 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt_func_subquery2_date_cast() throws IOException {
-        String q = parse("SELECT CAST(\"カスタム SQL クエリー\".date AS DATE) AS date, \"カスタム SQL クエリー\".version_id AS version_id FROM (SELECT * FROM public.\"MarketBooksFunc2[2020.01.01;`USDJPY`]\") \"カスタム SQL クエリー\" ");
-        Assert.assertEquals("select date:date, version_id:version_id from (select  from MarketBooksFunc2[2020.01.01;`USDJPY])", q);
+        String q = parse("SELECT CAST(\"カスタム SQL クエリー\".date AS DATE) AS date, \"カスタム SQL クエリー\".version_id AS version_id FROM (SELECT * FROM public.\"MarketBooksFunc2[2020.01.01;`USDJPY]\") \"カスタム SQL クエリー\" ");
+        Assert.assertEquals("select date:(`date$(date)), version_id:version_id from (select  from MarketBooksFunc2[2020.01.01;`USDJPY])", q);
     }
 
     @Test

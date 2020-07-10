@@ -1,5 +1,6 @@
 package jp.mufg.kdbjdbc;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -68,8 +69,10 @@ public class ResultSetWrapper extends ResultSetBase {
                 return rs.getFloat(i);
             case 'f':
                 return rs.getDouble(i);
+            case 'd':
+                return (java.sql.Date) rs.getObject(i);
             case 'p':
-                return (Timestamp)rs.getObject(i); //KdbUtil.toVarChar(tsval);
+                return (java.sql.Timestamp) rs.getObject(i); //KdbUtil.toVarChar(tsval);
             case 'C':
                 return rs.getString(i);
             // case 'B':

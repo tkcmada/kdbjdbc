@@ -28,8 +28,10 @@ public class ColumnInfo {
             this.type = Types.REAL;
         else if(typename.equals("f"))
             this.type = Types.FLOAT;
-        // else if(typename.equals("p")) //timestamp as varchar
-        //     this.type = Types.TIMESTAMP;
+        else if(typename.equals("p"))
+            this.type = Types.TIMESTAMP;
+        else if(typename.equals("d"))
+            this.type = Types.DATE;
         else
             this.type = Types.VARCHAR;
         this.nullable = nullable;
