@@ -33,10 +33,6 @@ import org.slf4j.Logger;
 
 import jp.mufg.slf4j.FileLogger;
 
-import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
-
 public abstract class ResultSetBase implements ResultSet {
 	private static final Logger logger = FileLogger.getLogger(ResultSetBase.class);
 
@@ -887,16 +883,12 @@ public abstract class ResultSetBase implements ResultSet {
 
 	@Override
 	public final Date getDate(final int columnIndex, final Calendar cal) throws SQLException {
-		logger.info("getDate");
-		throw new SQLException("ResultSetImpl.getDate is not supported");
-		
+        return getDate(columnIndex);		
 	}
 
 	@Override
 	public final Date getDate(final String columnLabel, final Calendar cal) throws SQLException {
-		logger.info("getDate");
-		throw new SQLException("ResultSetImpl.getDate is not supported");
-		
+        return getDate(columnLabel);		
 	}
 
 	@Override
@@ -915,13 +907,11 @@ public abstract class ResultSetBase implements ResultSet {
 
 	@Override
 	public final Timestamp getTimestamp(final int columnIndex, final Calendar cal) throws SQLException {
-        logger.info("getTimestamp " + columnIndex + " calendar=" + cal);
         return (Timestamp) getObject(columnIndex);
 	}
 
 	@Override
 	public final Timestamp getTimestamp(final String columnLabel, final Calendar cal) throws SQLException {
-        logger.info("getTimestamp " + columnLabel + " calendar=" + cal);
         return (Timestamp) getObject(columnLabel);
 	}
 
