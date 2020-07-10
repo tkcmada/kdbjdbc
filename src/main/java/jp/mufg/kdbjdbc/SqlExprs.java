@@ -1170,6 +1170,8 @@ public class SqlExprs {
                 return 'i';
             if(sqltype.equals("DATE"))
                 return 'd';
+            if(sqltype.equals("TIMESTAMP"))
+                return 'p';
             throw new UnsupportedOperationException("Not support cast type. " + sqltype);
         }
 
@@ -1189,6 +1191,8 @@ public class SqlExprs {
                 return "(`int$(" + expr.toQscript() + "))";
             if(sqltype.equals("DATE"))
                 return "(`date$(" + expr.toQscript() + "))";
+            if(sqltype.equals("TIMESTAMP"))
+                return "(`timestamp$(" + expr.toQscript() + "))";
             throw new UnsupportedOperationException("toQscript doesn't support cast type. " + sqltype);
         }
 

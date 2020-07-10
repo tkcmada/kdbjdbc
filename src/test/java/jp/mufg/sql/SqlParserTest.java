@@ -96,6 +96,13 @@ public class SqlParserTest {
     }    
 
     @Test
+    public void test_select_stmt_date_to_timestamp_col() throws IOException {
+        String q = parse("SELECT CAST(t2.date AS TIMESTAMP) AS ts FROM 'public'.'t2' 't2'");
+        Assert.assertEquals("select ts:(`timestamp$(date)) from t2", q);
+    }    
+
+
+    @Test
     public void test_select_stmt_group_by_count_distinct() throws IOException {
         String q = parse("SELECT COUNT(DISTINCT 't2'.'bl') AS 'ctd:bl:ok', 't2'.'bl' AS 'bl' FROM 'public'.'t2' 't2' GROUP BY 2");
         Assert.assertEquals("select ctd__bl__ok:count distinct bl by bl:bl from t2", q);
