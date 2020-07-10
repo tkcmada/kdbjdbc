@@ -96,11 +96,16 @@ public class SqlParserTest {
     }    
 
     @Test
-    public void test_select_stmt_date_to_timestamp_col() throws IOException {
+    public void test_select_stmt_date_to_timestamp() throws IOException {
         String q = parse("SELECT CAST(t2.date AS TIMESTAMP) AS ts FROM 'public'.'t2' 't2'");
         Assert.assertEquals("select ts:(`timestamp$(date)) from t2", q);
-    }    
+    }
 
+    // @Test
+    // public void test_select_stmt_date_to_timestamp_and_trunc() throws IOException {
+    //     String q = parse("SELECT DATE_TRUNC('DAY', CAST(t2.date AS TIMESTAMP)) AS ts FROM 'public'.'t2' 't2'");
+    //     Assert.assertEquals("select ts:date from t2", q);
+    // }
 
     @Test
     public void test_select_stmt_group_by_count_distinct() throws IOException {

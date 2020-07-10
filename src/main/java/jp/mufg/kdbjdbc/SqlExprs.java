@@ -1281,8 +1281,10 @@ public class SqlExprs {
 
         @Override
         public char getType(TypeContext ctxt) {
-            if(identifiers.equals("count"))
+            if(identifiers.toLowerCase().equals("count"))
                 return 'i';
+            else if(identifiers.toLowerCase().equals("date_trunc"))
+                return 'p';
             else
                 return getArguments().getType(ctxt);
         }
@@ -1310,12 +1312,19 @@ public class SqlExprs {
 		@Override
         public String toQscript()
 		{
+            String identifier = this.identifiers.toUpperCase();
             if(identifiers.equals("TRUNC")) {
                 return arguments.exprs.get(0).toQscript(); //do nthing
             }
-            if(identifiers.equals("VARIANCE")) {
+            else if(identifiers.equals("VARIANCE")) {
                 return "(" + new FunctionCallExpr("STDDEV", arguments).toQscript() + ") xexp 2";
             }
+            // else if(identifiers.equals("DATE_TRUNC")) {
+            //     if(arguments.exprs.get(0).toQscript().equals("`DAY")) {
+            //         uncurry(arguments.exprs.get(1))
+            //     }
+            //     throw new UnsupportedOperationException("DATE_TRUNC is not supported. " + toString());
+            // }
             String qfunc;
             if(identifiers.equals("STDDEV"))
                 qfunc = "dev";
