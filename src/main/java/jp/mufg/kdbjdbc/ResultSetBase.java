@@ -897,12 +897,18 @@ public abstract class ResultSetBase implements ResultSet {
         localtimezone_offset_mills_from_utc = localtimezone.getOffset(0);
     }
 
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+
     private long getOffset(TimeZone to) {
-        if(localtimezone.equals(to))
-            return 0L;
-        final long cal_offset = to.getOffset(0);
-        final long diff_mills = - localtimezone_offset_mills_from_utc + cal_offset;
-        return diff_mills;
+        if(! UTC.equals(to))
+            throw new IllegalArgumentException("Given timezone is not UTC. given timezone=" + to);
+        // if(localtimezone.equals(to))
+        //     return 0L;
+        //assuming
+        // final long cal_offset = to.getOffset(0);
+        // final long diff_mills = - localtimezone_offset_mills_from_utc + cal_offset;
+        // return diff_mills;
+        return localtimezone_offset_mills_from_utc; // Tableau converts -9:00 from the result returned from query.
     }
 
 	@Override
