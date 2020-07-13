@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 
@@ -881,14 +882,41 @@ public abstract class ResultSetBase implements ResultSet {
 		
 	}
 
+    private static final TimeZone localtimezone;
+    private static final long localtimezone_offset_mills_from_utc;
+
+    static {
+        if(System.getProperty("ResultSetBase_OVERRIDE_TZ") != null) {
+            localtimezone = TimeZone.getTimeZone(System.getProperty("ResultSetBase_OVERRIDE_TZ"));
+            logger.info("local time zone is override. " + localtimezone);
+        }
+        else {
+            localtimezone = TimeZone.getDefault();
+            logger.info("local time zone is auto detected. " + localtimezone);
+        }
+        localtimezone_offset_mills_from_utc = localtimezone.getOffset(0);
+    }
+
+    private long getOffset(TimeZone to) {
+        if(localtimezone.equals(to))
+            return 0L;
+        final long cal_offset = to.getOffset(0);
+        final long diff_mills = - localtimezone_offset_mills_from_utc + cal_offset;
+        return diff_mills;
+    }
+
 	@Override
 	public final Date getDate(final int columnIndex, final Calendar cal) throws SQLException {
-        return getDate(columnIndex);		
+        final Date local = getDate(columnIndex);
+        final long diff_mills = getOffset(cal.getTimeZone());
+        if(diff_mills == 0L)
+            return local; //no conversion
+        return new java.sql.Date(local.getTime() + diff_mills);
 	}
 
 	@Override
 	public final Date getDate(final String columnLabel, final Calendar cal) throws SQLException {
-        return getDate(columnLabel);		
+        return getDate(findColumn(columnLabel), cal);		
 	}
 
 	@Override
@@ -907,12 +935,23 @@ public abstract class ResultSetBase implements ResultSet {
 
 	@Override
 	public final Timestamp getTimestamp(final int columnIndex, final Calendar cal) throws SQLException {
-        return (Timestamp) getObject(columnIndex);
+        if(cal == null)
+            throw new NullPointerException("cal is null");
+        final Timestamp local_ts = (Timestamp) getObject(columnIndex);
+        final long diff_mills = getOffset(cal.getTimeZone());
+        if(diff_mills == 0L) {
+            return local_ts; //no conversion required
+        }
+        final long newmills = local_ts.getTime() + diff_mills;
+        final Timestamp cal_ts = new Timestamp(newmills);
+        cal_ts.setNanos(local_ts.getNanos());
+        logger.info("getTimestamp(" + columnIndex + "):org ts:" + local_ts + " cal ts:" + cal_ts + " localtimezone:" + localtimezone + " caltimezone:" + cal.getTimeZone());
+        return cal_ts;
 	}
 
 	@Override
 	public final Timestamp getTimestamp(final String columnLabel, final Calendar cal) throws SQLException {
-        return (Timestamp) getObject(columnLabel);
+        return getTimestamp(findColumn(columnLabel), cal);
 	}
 
 	@Override

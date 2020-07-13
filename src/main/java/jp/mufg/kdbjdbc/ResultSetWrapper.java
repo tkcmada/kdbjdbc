@@ -1,6 +1,5 @@
 package jp.mufg.kdbjdbc;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

@@ -16,14 +16,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 import org.slf4j.LoggerFactory;
 
 public class DriverTest {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DriverTest.class);
+
+    static {
+        System.setProperty("ResultSetBase_OVERRIDE_TZ", "Asia/Tokyo");
+    }
+
+    public static void main(String[] args) {
+        JUnitCore junit = new JUnitCore();
+        junit.run(DriverTest.class);
+    }
 
     private Connection conn;
 
@@ -293,11 +304,14 @@ public class DriverTest {
         Assert.assertEquals(1.2f    , rs.getFloat( 6 )  , 0.0001f);
         Assert.assertEquals(1.5f    , rs.getDouble("f"), 0.00001);
         Assert.assertEquals(1.5f    , rs.getDouble( 7 ), 0.00001);
+        Assert.assertEquals(new Timestamp(2014 - 1900, Calendar.DECEMBER, 31,16, 2, 3, 1002030), rs.getTimestamp("z", Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
+        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY , 1 , 1, 2, 3, 1002030), rs.getTimestamp("z", Calendar.getInstance(TimeZone.getTimeZone("JST"))));
+        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY , 1 , 1, 2, 3, 1002030), rs.getObject("z"));
+//        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z")); //varchar version
+        // Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getDate("date"), Calendar.getInstance(TimeZone.getTimeZone("UTC"))); //"2015-01-01"
+        // Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getDate("date"), Calendar.getInstance(TimeZone.getTimeZone("JST"))); //"2015-01-01"
         Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getObject("date")); //"2015-01-01"
         Assert.assertEquals(new Date(2015-1900, Calendar.JANUARY, 1), rs.getObject( 8 ));
-        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getTimestamp("z", Calendar.getInstance()));
-        Assert.assertEquals(new Timestamp(2015 - 1900, Calendar.JANUARY, 1, 1, 2, 3, 1002030), rs.getObject("z"));
-//        Assert.assertEquals("2015.01.01D01:02:03.001002030"      , rs.getObject("z")); //varchar version
         Assert.assertEquals("01:02:03.001002000", rs.getObject("ts"));
         Assert.assertEquals("01:02:03.001002000", rs.getObject(10  ));
         Assert.assertEquals("a"     , rs.getObject("c"));

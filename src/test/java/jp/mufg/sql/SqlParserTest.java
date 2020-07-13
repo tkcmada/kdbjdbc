@@ -17,6 +17,7 @@ public class SqlParserTest {
         JUnitCore junit = new JUnitCore();
         Result result = junit.run(SqlParserTest.class);
     }
+    
     private String parse(String sql) throws IOException {
         return parse2(sql.replace('\'', '"'));
     }
