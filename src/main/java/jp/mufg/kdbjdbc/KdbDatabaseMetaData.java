@@ -46,12 +46,12 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
 
 	@Override
 	public String getDatabaseProductVersion() throws SQLException {
-        return "12.3 (Debian 12.3-1.pgdg100+1)";
+        return "12.3";
 	}
 
 	@Override
 	public String getDriverName() throws SQLException {
-        return "PostgreSQL JDBC Driver";
+        return "KDB JDBC Driver";
 	}
 
 	@Override
