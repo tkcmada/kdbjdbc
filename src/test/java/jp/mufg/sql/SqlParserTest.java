@@ -97,9 +97,15 @@ public class SqlParserTest {
     }    
 
     @Test
-    public void test_select_stmt_date_to_timestamp() throws IOException {
+    public void test_select_stmt_cast_date_to_timestamp() throws IOException {
         String q = parse("SELECT CAST(t2.date AS TIMESTAMP) AS ts FROM 'public'.'t2' 't2'");
         Assert.assertEquals("select ts:(`timestamp$(date)) from t2", q);
+    }
+
+    @Test
+    public void test_select_stmt_cast_to_timestamp() throws IOException {
+        String q = parse("SELECT CAST(t2.date AS TEXT) AS ts FROM 'public'.'t2' 't2'");
+        Assert.assertEquals("select ts:string(date) from t2", q);
     }
 
     // @Test

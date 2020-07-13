@@ -908,7 +908,10 @@ public abstract class ResultSetBase implements ResultSet {
         // final long cal_offset = to.getOffset(0);
         // final long diff_mills = - localtimezone_offset_mills_from_utc + cal_offset;
         // return diff_mills;
-        return localtimezone_offset_mills_from_utc; // Tableau converts -9:00 from the result returned from query.
+
+        // Original data is assumed to be UTC.
+        // Tableau assumes timestamp date is returned as local timezone.
+        return localtimezone_offset_mills_from_utc;
     }
 
 	@Override

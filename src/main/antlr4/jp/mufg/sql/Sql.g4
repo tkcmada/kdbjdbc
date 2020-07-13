@@ -108,7 +108,7 @@ primaryExpr returns [Expr val]
     | dateLiteral      { $val = $dateLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
     | 'DISTINCT' expr  { $val = new DistinctExpr($expr.val); }
-    | 'CAST' '(' expr 'AS' type=('INTEGER'|'DATE'|'TIMESTAMP') ')' { $val = new CastExpr($expr.val, $type.text); }
+    | 'CAST' '(' expr 'AS' type=('INTEGER'|'DATE'|'TIMESTAMP'|'TEXT') ')' { $val = new CastExpr($expr.val, $type.text); }
     | 'EXTRACT' '(' type=('YEAR'|'QUARTER'|'MONTH'|'DAY'|'HOUR'|'MINUTE'|'SECOND') 'FROM' expr ')' { $val = new ExtractExpr($expr.val, $type.text); }
     | '(' expr ')'     { $val = new CurryExpr($expr.val); }
     ;
