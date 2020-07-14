@@ -9,13 +9,13 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sample JDBC Connection String jdbc:kdb:127.0.0.1:5001
  */
 public class KdbDriver implements Driver {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDriver.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbDriver.class); //FileLogger.getLogger(KdbDriver.class);
     public static final String URI_PREFIX = "jdbc:kdb:";
 
     static {
@@ -41,7 +41,7 @@ public class KdbDriver implements Driver {
         }
         String host_port = url.substring(KdbDriver.URI_PREFIX.length());
         String qconnstr = "jdbc:q:" + host_port;
-        logger.info("KdbDriver ver 20200713-4 connecting to " + qconnstr + " " + String.valueOf(info));
+        logger.info("KdbDriver ver 20200714-1 connecting to " + qconnstr + " " + String.valueOf(info));
         Connection conn = DriverManager.getConnection(qconnstr, info);
         return new KdbConnection(conn);
     }
