@@ -13,11 +13,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
+
 import jp.mufg.kdbjdbc.SqlExprs.TypeContext;
 
 public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDatabaseMetaData.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbDatabaseMetaData.class);
     private final Connection conn;
 
     KdbDatabaseMetaData(Connection conn) {

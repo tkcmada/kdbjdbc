@@ -7,11 +7,10 @@ import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class LogUtil {
-	private static final Logger logger = FileLogger.getLogger(LogUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogUtil.class);
 
     private LogUtil() {}
     

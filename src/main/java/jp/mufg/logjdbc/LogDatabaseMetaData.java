@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import jp.mufg.slf4j.FileLogger;
 
 public class LogDatabaseMetaData implements DatabaseMetaData {
-	private static final Logger logger = FileLogger.getLogger(LogDatabaseMetaData.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogDatabaseMetaData.class);
 	private final DatabaseMetaData target;
 
 	public LogDatabaseMetaData(DatabaseMetaData target) {

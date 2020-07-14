@@ -11,14 +11,12 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import jp.mufg.slf4j.FileLogger;
-
 /**
  * Sample JDBC Connection String jdbc:kdb:127.0.0.1:5001
  */
 public class KdbDriver implements Driver {
-    private static final org.slf4j.Logger slf_logger = LoggerFactory.getLogger(KdbDriver.class);
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDriver.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbDriver.class);
+    // private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbDriver.class);
     public static final String URI_PREFIX = "jdbc:kdb:";
 
     static {
@@ -35,7 +33,7 @@ public class KdbDriver implements Driver {
         if (!url.startsWith(URI_PREFIX)) {
             return null;
         }
-        logger.info("KdbDriver connect " + url + " " + info);
+        logger.info("loading kdb jdbc driver...");
         try {
             Class.forName("jdbc");
         }
@@ -44,8 +42,8 @@ public class KdbDriver implements Driver {
         }
         String host_port = url.substring(KdbDriver.URI_PREFIX.length());
         String qconnstr = "jdbc:q:" + host_port;
-        logger.info("KdbDriver ver 20200714-2 connecting to " + qconnstr + " " + String.valueOf(info));
-        slf_logger.info("This is SLF4J logger. KdbDriver");
+        logger.info("KdbDriver ver 20200714-3 connecting to " + qconnstr + " " + String.valueOf(info));
+        // slf_logger.info("This is SLF4J logger. KdbDriver");
         Connection conn = DriverManager.getConnection(qconnstr, info);
         return new KdbConnection(conn);
     }

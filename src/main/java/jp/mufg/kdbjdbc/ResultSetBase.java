@@ -6,18 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.Date;
 import java.sql.NClob;
 import java.sql.Ref;
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.RowId;
-import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Statement;
@@ -25,17 +21,15 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import jp.mufg.slf4j.FileLogger;
 
 public abstract class ResultSetBase implements ResultSet {
-	private static final Logger logger = FileLogger.getLogger(ResultSetBase.class);
+	private static final Logger logger = LoggerFactory.getLogger(ResultSetBase.class);
 
     protected final ResultSetMetaData meta;
     private final Map<String, Integer> label2index;

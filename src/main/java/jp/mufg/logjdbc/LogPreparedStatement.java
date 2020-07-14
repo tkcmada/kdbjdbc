@@ -23,11 +23,10 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class LogPreparedStatement extends LogStatement implements PreparedStatement {
-	private static final Logger logger = FileLogger.getLogger(LogPreparedStatement.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogPreparedStatement.class);
 	private final PreparedStatement pstmt;
 
 	public LogPreparedStatement(PreparedStatement pstmt) {

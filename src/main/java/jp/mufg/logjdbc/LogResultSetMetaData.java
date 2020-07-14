@@ -4,11 +4,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import jp.mufg.slf4j.FileLogger;
 
 public class LogResultSetMetaData implements ResultSetMetaData {
-private static final Logger logger = FileLogger.getLogger(LogResultSetMetaData.class);
+private static final Logger logger = LoggerFactory.getLogger(LogResultSetMetaData.class);
 	private final ResultSetMetaData target;
 
 	public LogResultSetMetaData(ResultSetMetaData target) {

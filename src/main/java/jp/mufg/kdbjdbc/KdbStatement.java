@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public abstract class KdbStatement implements Statement {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbStatement.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbStatement.class);
     protected final Statement target;
     protected final KdbDatabaseMetaData meta;
 

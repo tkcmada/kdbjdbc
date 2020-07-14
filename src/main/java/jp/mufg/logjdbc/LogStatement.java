@@ -8,11 +8,10 @@ import java.sql.Statement;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class LogStatement implements Statement {
-	private static final Logger logger = FileLogger.getLogger(LogStatement.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogStatement.class);
 	private final Statement target;
 
 	public LogStatement(Statement target) {

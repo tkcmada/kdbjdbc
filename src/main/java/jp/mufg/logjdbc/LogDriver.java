@@ -9,10 +9,11 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
+
 
 public class LogDriver implements java.sql.Driver {
-	private static final org.slf4j.Logger logger = FileLogger.getLogger(LogDriver.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LogDriver.class);
 	private static final String URL_PREFIX = "jdbc:log:"; //jdbc:log:jdbc:mysql:.....
 
     static {
@@ -33,12 +34,12 @@ public class LogDriver implements java.sql.Driver {
         if (! orgurl.startsWith(URL_PREFIX))
             return null;
 		String url = newUrl(orgurl);
-		String logdir = (String) info.get("logdir");
-		if (logdir != null) {
-			FileLogger.setDirectory(new File(logdir));
-			info = (Properties) info.clone();
-			info.remove("logdir");
-        }
+		// String logdir = (String) info.get("logdir");
+		// if (logdir != null) {
+		// 	FileLogger.setDirectory(new File(logdir));
+		// 	info = (Properties) info.clone();
+		// 	info.remove("logdir");
+        // }
         logger.info("original url is " + orgurl);
         logger.info("connect " + url + " " + String.valueOf(info));
 		return new LogConnection(DriverManager.getConnection(url, info));

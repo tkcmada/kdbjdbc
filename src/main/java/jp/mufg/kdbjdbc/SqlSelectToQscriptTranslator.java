@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import jp.mufg.antlrutil.*;
 import jp.mufg.kdbjdbc.SqlSelectToQscriptTranslator;
-import jp.mufg.slf4j.FileLogger;
 
 import org.antlr.v4.runtime.*;
+import org.slf4j.LoggerFactory;
 
 public class SqlSelectToQscriptTranslator {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(SqlSelectToQscriptTranslator.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SqlSelectToQscriptTranslator.class);
 
     private final SelectStatement stmt;
 

@@ -6,11 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class ResultSetImpl extends ResultSetBase {
-	private static final Logger logger = FileLogger.getLogger(ResultSetImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ResultSetImpl.class);
 	private final List<Object[]> rows;
     private int cursor = -1;
 

@@ -22,11 +22,11 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import jp.mufg.slf4j.FileLogger;
 
 public class LogConnection implements Connection {
-	private static final Logger logger = FileLogger.getLogger(LogConnection.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogConnection.class);
 	private final Connection target;
 
 	public LogConnection(Connection target) {

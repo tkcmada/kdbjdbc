@@ -24,10 +24,10 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class KdbPreparedStatement extends KdbStatement implements PreparedStatement {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbPreparedStatement.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbPreparedStatement.class);
 
     private String sql;
     private String q;

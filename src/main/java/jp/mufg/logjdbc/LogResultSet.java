@@ -24,11 +24,10 @@ import java.util.Calendar;
 import java.util.Map;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class LogResultSet implements ResultSet {
-    private static final Logger logger = FileLogger.getLogger(LogResultSet.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogResultSet.class);
 
     private final ResultSet rs, target;
 

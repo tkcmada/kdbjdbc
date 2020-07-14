@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class KdbConnection implements Connection {
-    private static final org.slf4j.Logger logger = FileLogger.getLogger(KdbConnection.class); //LoggerFactory.getLogger(KdbConnection.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(KdbConnection.class);
     private final Connection conn;
     private final KdbDatabaseMetaData meta;
 

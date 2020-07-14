@@ -4,11 +4,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
-
-import jp.mufg.slf4j.FileLogger;
+import org.slf4j.LoggerFactory;
 
 public class ResultSetMetaDataImpl implements ResultSetMetaData {
-	private static final Logger logger = FileLogger.getLogger(ResultSetMetaDataImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ResultSetMetaDataImpl.class);
 	public static final int MAX = 2147483647;
 	
 	private final ColumnInfo[] columns;
