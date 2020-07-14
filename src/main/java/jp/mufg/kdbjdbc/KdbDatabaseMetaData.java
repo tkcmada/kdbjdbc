@@ -138,7 +138,7 @@ public class KdbDatabaseMetaData implements DatabaseMetaData, TypeContext {
         while(rs.next()) {
             String colname = rs.getString(1);
             Character ctypeobj = (Character) rs.getObject(2);
-            logger.info("column->coltype:" + colname + "->" + ctypeobj + ":" + (ctypeobj == null ? "null" : ctypeobj.getClass().getSimpleName()));
+            logger.info("column->coltype:" + colname + "->" + ctypeobj + ":" + (ctypeobj == null ? "null" : ctypeobj.getClass().getName()));
             char ctype = ctypeobj == null ? ' ' : ((char) ctypeobj);
             cols.put(colname, new ColumnAndType(colname, ctype));
         }

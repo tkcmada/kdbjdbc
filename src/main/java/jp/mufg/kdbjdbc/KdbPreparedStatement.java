@@ -57,9 +57,7 @@ public class KdbPreparedStatement extends KdbStatement implements PreparedStatem
 
     private void prepare(String sql) throws SQLException {
         this.sql = sql;
-        logger.info("converting sql..." + sql);
         SqlSelectToQscriptTranslator sqltoq = new SqlSelectToQscriptTranslator(sql);
-
         sqltoq.convertLiteralType(meta);
         this.q = sqltoq.toQscript();
         logger.info("converted q-script>>>" + q + "<<<");

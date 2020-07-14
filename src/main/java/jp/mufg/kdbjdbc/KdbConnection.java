@@ -74,43 +74,36 @@ public class KdbConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        logger.info("getMetaData");
         return meta;
     }
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
-		logger.info("unwrap");
 		throw new SQLException("KdbConnection.unwrap is not supported");
 		
 	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		logger.info("isWrapperFor");
 		throw new SQLException("KdbConnection.isWrapperFor is not supported");
 		
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
-		logger.info("prepareCall");
 		throw new SQLException("KdbConnection.prepareCall is not supported");
 		
 	}
 
 	@Override
 	public String nativeSQL(String sql) throws SQLException {
-		logger.info("nativeSQL");
 		throw new SQLException("KdbConnection.nativeSQL is not supported");
 		
 	}
 
 	@Override
 	public void setReadOnly(boolean readOnly) throws SQLException {
-		logger.info("setReadOnly");
-		throw new SQLException("KdbConnection.setReadOnly is not supported");
-		
+		throw new SQLException("KdbConnection.setReadOnly is not supported");		
 	}
 
 	@Override
