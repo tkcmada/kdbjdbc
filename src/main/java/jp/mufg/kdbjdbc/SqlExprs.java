@@ -601,6 +601,7 @@ public class SqlExprs {
             return toQscript();
         }
     }
+
 	public static class BinaryExpr extends Expr
 	{
 		protected String op;
@@ -659,6 +660,56 @@ public class SqlExprs {
 		public String toQscript()
 		{
             return lhs.toQscript() + " " + op + " " + rhs.toQscript();
+        }
+    }
+
+	public static class UnaryExpr extends Expr
+	{
+		protected String op;
+		protected Expr lhs;
+
+		public UnaryExpr(String op, Expr lhs)
+		{
+			super();
+			this.lhs = lhs;
+			this.op  = op.toLowerCase();
+		}
+		
+		public String getOp()
+		{
+			return op;
+		}
+
+		public Expr getLhs()
+		{
+			return lhs;
+		}
+
+        @Override
+        public void checkType(TypeContext ctxt) {
+            lhs.checkType(ctxt);
+        }
+
+        @Override
+        public void collectStringLiteral(List<StringLiteral> result) {
+            lhs.collectStringLiteral(result);
+        }
+
+        @Override
+        public char getType(TypeContext ctxt) {
+            return lhs.getType(ctxt);
+        }
+
+		@Override
+		public String toString()
+		{
+            return toQscript();
+		}
+		
+		@Override
+		public String toQscript()
+		{
+            return op + " " + lhs.toQscript();
         }
     }
 
@@ -1525,6 +1576,40 @@ public class SqlExprs {
         @Override
         public char getType(TypeContext ctxt) {
             return 'd';
+        }
+    }
+
+	//@Immutable
+	public static final class IntervalLiteral extends LiteralExpr
+	{
+        private final String string;
+
+		public IntervalLiteral(String string)
+		{
+			super();
+            this.string = string;
+        }
+        
+        @Override
+        public void collectStringLiteral(List<StringLiteral> result) {
+            //do nothing
+        }
+
+		@Override
+		public String toString()
+		{
+            return toQscript();
+		}
+		
+		@Override
+		public String toQscript()
+		{
+            return string.toUpperCase().replaceFirst(" *DAYS?", "");
+        }
+        
+        @Override
+        public char getType(TypeContext ctxt) {
+            return 'j';
         }
     }
 

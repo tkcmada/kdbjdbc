@@ -20,6 +20,9 @@ public interface SqlListener extends ParseTreeListener {
 	void enterColumnExpr(SqlParser.ColumnExprContext ctx);
 	void exitColumnExpr(SqlParser.ColumnExprContext ctx);
 
+	void enterUnaryExpr(SqlParser.UnaryExprContext ctx);
+	void exitUnaryExpr(SqlParser.UnaryExprContext ctx);
+
 	void enterColumnNames(SqlParser.ColumnNamesContext ctx);
 	void exitColumnNames(SqlParser.ColumnNamesContext ctx);
 
@@ -31,6 +34,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterLimit(SqlParser.LimitContext ctx);
 	void exitLimit(SqlParser.LimitContext ctx);
+
+	void enterMulExpr(SqlParser.MulExprContext ctx);
+	void exitMulExpr(SqlParser.MulExprContext ctx);
 
 	void enterGrouparg(SqlParser.GroupargContext ctx);
 	void exitGrouparg(SqlParser.GroupargContext ctx);
@@ -46,6 +52,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterBooleanLiteral(SqlParser.BooleanLiteralContext ctx);
 	void exitBooleanLiteral(SqlParser.BooleanLiteralContext ctx);
+
+	void enterIntervalLiteral(SqlParser.IntervalLiteralContext ctx);
+	void exitIntervalLiteral(SqlParser.IntervalLiteralContext ctx);
 
 	void enterTable(SqlParser.TableContext ctx);
 	void exitTable(SqlParser.TableContext ctx);
@@ -73,6 +82,9 @@ public interface SqlListener extends ParseTreeListener {
 
 	void enterEqExpr(SqlParser.EqExprContext ctx);
 	void exitEqExpr(SqlParser.EqExprContext ctx);
+
+	void enterAddExpr(SqlParser.AddExprContext ctx);
+	void exitAddExpr(SqlParser.AddExprContext ctx);
 
 	void enterStringLiteral(SqlParser.StringLiteralContext ctx);
 	void exitStringLiteral(SqlParser.StringLiteralContext ctx);

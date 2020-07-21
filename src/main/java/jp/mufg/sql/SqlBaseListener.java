@@ -23,6 +23,9 @@ public class SqlBaseListener implements SqlListener {
 	@Override public void enterColumnExpr(SqlParser.ColumnExprContext ctx) { }
 	@Override public void exitColumnExpr(SqlParser.ColumnExprContext ctx) { }
 
+	@Override public void enterUnaryExpr(SqlParser.UnaryExprContext ctx) { }
+	@Override public void exitUnaryExpr(SqlParser.UnaryExprContext ctx) { }
+
 	@Override public void enterColumnNames(SqlParser.ColumnNamesContext ctx) { }
 	@Override public void exitColumnNames(SqlParser.ColumnNamesContext ctx) { }
 
@@ -34,6 +37,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterLimit(SqlParser.LimitContext ctx) { }
 	@Override public void exitLimit(SqlParser.LimitContext ctx) { }
+
+	@Override public void enterMulExpr(SqlParser.MulExprContext ctx) { }
+	@Override public void exitMulExpr(SqlParser.MulExprContext ctx) { }
 
 	@Override public void enterGrouparg(SqlParser.GroupargContext ctx) { }
 	@Override public void exitGrouparg(SqlParser.GroupargContext ctx) { }
@@ -49,6 +55,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterBooleanLiteral(SqlParser.BooleanLiteralContext ctx) { }
 	@Override public void exitBooleanLiteral(SqlParser.BooleanLiteralContext ctx) { }
+
+	@Override public void enterIntervalLiteral(SqlParser.IntervalLiteralContext ctx) { }
+	@Override public void exitIntervalLiteral(SqlParser.IntervalLiteralContext ctx) { }
 
 	@Override public void enterTable(SqlParser.TableContext ctx) { }
 	@Override public void exitTable(SqlParser.TableContext ctx) { }
@@ -76,6 +85,9 @@ public class SqlBaseListener implements SqlListener {
 
 	@Override public void enterEqExpr(SqlParser.EqExprContext ctx) { }
 	@Override public void exitEqExpr(SqlParser.EqExprContext ctx) { }
+
+	@Override public void enterAddExpr(SqlParser.AddExprContext ctx) { }
+	@Override public void exitAddExpr(SqlParser.AddExprContext ctx) { }
 
 	@Override public void enterStringLiteral(SqlParser.StringLiteralContext ctx) { }
 	@Override public void exitStringLiteral(SqlParser.StringLiteralContext ctx) { }

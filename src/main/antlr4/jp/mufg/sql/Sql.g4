@@ -93,19 +93,33 @@ eqExpr returns [Expr val]
     ;
 
 compExpr returns [Expr val]
-    : lhs=primaryExpr op=('>'|'<'|'<='|'>=') rhs=primaryExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
-    | lhs=primaryExpr { $val = $lhs.val; }
+    : lhs=mulExpr op=('>'|'<'|'<='|'>=') rhs=mulExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
+    | lhs=mulExpr { $val = $lhs.val; }
     ;
 
-// arithmatic operators are not supported yet.
+mulExpr returns [Expr val]
+    : lhs=addExpr op=('*'|'/') rhs=mulExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
+    | lhs=addExpr { $val = $lhs.val; }
+    ;
+
+addExpr returns [Expr val]
+    : lhs=unaryExpr op=('+'|'-') rhs=addExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
+    | lhs=unaryExpr { $val = $lhs.val; }
+    ;
+
+unaryExpr returns [Expr val]
+    : lhs=primaryExpr        { $val = $lhs.val; }
+    | op='-' rhs=primaryExpr { $val = new UnaryExpr($op.text, $rhs.val); }
+    ;
 
 primaryExpr returns [Expr val]
     : e1=columnExpr    { $val = $e1.val; }
     | functionExpr     { $val = $functionExpr.val; }
     | numberLiteral    { $val = $numberLiteral.val; }
-    | stringLiteral       { $val = $stringLiteral.val; }
+    | stringLiteral    { $val = $stringLiteral.val; }
     | booleanLiteral   { $val = $booleanLiteral.val; }
     | dateLiteral      { $val = $dateLiteral.val; }
+    | intervalLiteral  { $val = $intervalLiteral.val; }
     | caseExpr         { $val = $caseExpr.val; }
     | 'DISTINCT' expr  { $val = new DistinctExpr($expr.val); }
     | 'CAST' '(' expr 'AS' type=('INTEGER'|'DATE'|'TIMESTAMP'|'TEXT') ')' { $val = new CastExpr($expr.val, $type.text); }
@@ -141,6 +155,10 @@ stringLiteral returns [StringLiteral val]
 
 dateLiteral returns [DateLiteral val]
     : 'DATE' str { $val = new DateLiteral($str.text); }
+    ;
+
+intervalLiteral returns [IntervalLiteral val]
+    : 'INTERVAL' str { $val = new IntervalLiteral($str.text); }
     ;
 
 groupargs returns [List<GroupArg> val]
