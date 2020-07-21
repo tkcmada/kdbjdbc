@@ -98,13 +98,15 @@ compExpr returns [Expr val]
     ;
 
 mulExpr returns [Expr val]
-    : lhs=addExpr op=('*'|'/') rhs=mulExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
-    | lhs=addExpr { $val = $lhs.val; }
+    : lhs=addExpr { Expr e = $lhs.val; }
+      ( op=('*'|'/') rhs=addExpr { e = new BinaryExpr($op.text, e, $rhs.val); } )*
+      { $val = e; }
     ;
 
 addExpr returns [Expr val]
-    : lhs=unaryExpr op=('+'|'-') rhs=addExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
-    | lhs=unaryExpr { $val = $lhs.val; }
+    : lhs=unaryExpr { Expr e = $lhs.val; }
+      ( op=('+'|'-') rhs=unaryExpr { $val = new BinaryExpr($op.text, e, $rhs.val); } )*
+      { $val = e; }
     ;
 
 unaryExpr returns [Expr val]
