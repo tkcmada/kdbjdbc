@@ -1048,6 +1048,10 @@ public class SqlExprs {
         private final List<Expr> exprs;
         private boolean withCurry;
 
+    	public Arguments() {
+            this(new LinkedList<Expr>(), false);
+        }
+
     	public Arguments(List<Expr> exprs) {
             this(exprs, false);
         }
@@ -1288,6 +1292,8 @@ public class SqlExprs {
         public char getType(TypeContext ctxt) {
             if(identifiers.toLowerCase().equals("count"))
                 return 'i';
+            else if(identifiers.toLowerCase().equals("current_date"))
+                return 'd';
             else if(identifiers.toLowerCase().equals("date_trunc"))
                 return 'p';
             else
@@ -1317,12 +1323,15 @@ public class SqlExprs {
 		@Override
         public String toQscript()
 		{
-            String identifier = this.identifiers.toUpperCase();
-            if(identifiers.equals("TRUNC")) {
+            String name = this.identifiers.toUpperCase();
+            if(name.equals("TRUNC")) {
                 return arguments.exprs.get(0).toQscript(); //do nthing
             }
-            else if(identifiers.equals("VARIANCE")) {
+            else if(name.equals("VARIANCE")) {
                 return "(" + new FunctionCallExpr("STDDEV", arguments).toQscript() + ") xexp 2";
+            }
+            else if(name.equals("CURRENT_DATE")) {
+                return ".z.d";
             }
             // else if(identifiers.equals("DATE_TRUNC")) {
             //     if(arguments.exprs.get(0).toQscript().equals("`DAY")) {
@@ -1331,10 +1340,10 @@ public class SqlExprs {
             //     throw new UnsupportedOperationException("DATE_TRUNC is not supported. " + toString());
             // }
             String qfunc;
-            if(identifiers.equals("STDDEV"))
+            if(name.equals("STDDEV"))
                 qfunc = "dev";
             else
-                qfunc = identifiers.toLowerCase();
+                qfunc = name.toLowerCase();
 			StringBuilder s = new StringBuilder();
             s.append(qfunc);
             s.append(" ");

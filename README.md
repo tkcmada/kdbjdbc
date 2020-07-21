@@ -54,6 +54,12 @@ MarketBooksFunc[`USDJPY;`V1]
 MarketBooksFunc2:{ [date_;sym] select date, universal_id , version_id , bid_prices, bid_amounts from MarketBooks where date = date_, sym = sym }
 MarketBooksFunc2[2020.01.01;`USDJPY]
 
+MarketBooksDateFunc:{ [date_from;date_to;sym] select date, universal_id , version_id , bid_prices, bid_amounts from MarketBooks where date_from <= date , date <= date_to, sym = sym }
+MarketBooksDateFunc[2020.01.01;2020.01.01;`USDJPY]
+
+
+tbl1: ([] date:2020.01.01 2020.01.02; sym:`USDJPY`USDJPY; version_id:`V1`V2 )
+myfunc: { [date_from;date_to] select from tbl1 where date_from <= date }
 
 ```
 

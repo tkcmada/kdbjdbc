@@ -42,6 +42,7 @@ public class SqlParserTest {
         type_by_col_tbl.put("t3", type_by_col);
         // for (select  from MarketBooksFunc[`USDJPY;`V1])
         type_by_col = new HashMap<String,Character>();
+        type_by_col.put("date"        , 'd');
         type_by_col.put("universal_id", 'g');
         type_by_col.put("version_id"  , 's');
         type_by_col.put("bid_prices"  , 'F');
@@ -276,11 +277,11 @@ public class SqlParserTest {
         Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1])", q);
     }
 
-    // @Test
-    // public void test_select_stmt_func_subquery_where_current_date() throws IOException {
-    //     String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = CURRENT_DATE)");
-    //     Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1] where date = .z.d)", q);
-    // }
+    @Test
+    public void test_select_stmt_func_subquery_where_current_date() throws IOException {
+        String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = CURRENT_DATE)");
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = .z.d", q);
+    }
 
     // @Test
     // public void test_select_stmt_func_subquery_where_current_date_and_interval() throws IOException {

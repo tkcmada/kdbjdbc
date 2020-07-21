@@ -124,6 +124,7 @@ whenThenExpr returns [List<WhenThen> val]
 
 functionExpr returns [FunctionCallExpr val]
     : id=name '(' args ')' { $val = new FunctionCallExpr($id.text, $args.val); }
+    | tk='CURRENT_DATE'    { $val = new FunctionCallExpr($tk.text, new Arguments()); }
     ;
 
 booleanLiteral returns [BooleanLiteral val]
