@@ -266,15 +266,27 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt_func_subquery() throws IOException {
-        String q = parse("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1`]\") \"TableauSQL\" WHERE (0 = 1)");
-        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
+        String q = parse("SELECT * FROM (SELECT * FROM \"public\".\"MarketBooksFunc[`USDJPY;`V1]\") \"TableauSQL\" WHERE (0 = 1)");
+        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1])", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery2() throws IOException {
-        String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1`]\") \"カスタム SQL クエリー\" WHERE (0 = 1)");
-        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
+        String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (0 = 1)");
+        Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1])", q);
     }
+
+    // @Test
+    // public void test_select_stmt_func_subquery_where_current_date() throws IOException {
+    //     String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = CURRENT_DATE)");
+    //     Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1] where date = .z.d)", q);
+    // }
+
+    // @Test
+    // public void test_select_stmt_func_subquery_where_current_date_and_interval() throws IOException {
+    //     String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1`]\") \"カスタム SQL クエリー\" WHERE ((\"カスタム SQL クエリー\".date >= (CURRENT_DATE + -2 * INTERVAL '1 DAY')) AND (\"カスタム SQL クエリー\".date < CURRENT_DATE + 1 * INTERVAL '1 DAY'))");
+    //     Assert.assertEquals("select  from (1#select  from MarketBooksFunc[`USDJPY;`V1`])", q);
+    // }
 
     @Test
     public void test_select_stmt_func_subquery2_date_cast() throws IOException {
