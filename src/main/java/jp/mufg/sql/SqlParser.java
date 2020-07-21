@@ -41,7 +41,7 @@ public class SqlParser extends Parser {
 		RULE_selectStmtWhole = 0, RULE_selectStmt = 1, RULE_table = 2, RULE_columnNames = 3, 
 		RULE_columnName = 4, RULE_where = 5, RULE_groupBy = 6, RULE_having = 7, 
 		RULE_limit = 8, RULE_offset = 9, RULE_expr = 10, RULE_orExpr = 11, RULE_andExpr = 12, 
-		RULE_eqExpr = 13, RULE_compExpr = 14, RULE_mulExpr = 15, RULE_addExpr = 16, 
+		RULE_eqExpr = 13, RULE_compExpr = 14, RULE_addExpr = 15, RULE_mulExpr = 16, 
 		RULE_unaryExpr = 17, RULE_primaryExpr = 18, RULE_caseExpr = 19, RULE_whenThenExpr = 20, 
 		RULE_functionExpr = 21, RULE_booleanLiteral = 22, RULE_numberLiteral = 23, 
 		RULE_stringLiteral = 24, RULE_dateLiteral = 25, RULE_intervalLiteral = 26, 
@@ -50,7 +50,7 @@ public class SqlParser extends Parser {
 	public static final String[] ruleNames = {
 		"selectStmtWhole", "selectStmt", "table", "columnNames", "columnName", 
 		"where", "groupBy", "having", "limit", "offset", "expr", "orExpr", "andExpr", 
-		"eqExpr", "compExpr", "mulExpr", "addExpr", "unaryExpr", "primaryExpr", 
+		"eqExpr", "compExpr", "addExpr", "mulExpr", "unaryExpr", "primaryExpr", 
 		"caseExpr", "whenThenExpr", "functionExpr", "booleanLiteral", "numberLiteral", 
 		"stringLiteral", "dateLiteral", "intervalLiteral", "groupargs", "grouparg", 
 		"args", "columnExpr", "name", "str", "pint"
@@ -1039,14 +1039,14 @@ public class SqlParser extends Parser {
 
 	public static class CompExprContext extends ParserRuleContext {
 		public Expr val;
-		public MulExprContext lhs;
+		public AddExprContext lhs;
 		public Token op;
-		public MulExprContext rhs;
-		public List<MulExprContext> mulExpr() {
-			return getRuleContexts(MulExprContext.class);
+		public AddExprContext rhs;
+		public AddExprContext addExpr(int i) {
+			return getRuleContext(AddExprContext.class,i);
 		}
-		public MulExprContext mulExpr(int i) {
-			return getRuleContext(MulExprContext.class,i);
+		public List<AddExprContext> addExpr() {
+			return getRuleContexts(AddExprContext.class);
 		}
 		public CompExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1072,7 +1072,7 @@ public class SqlParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(237); ((CompExprContext)_localctx).lhs = mulExpr();
+				setState(237); ((CompExprContext)_localctx).lhs = addExpr();
 				setState(238);
 				((CompExprContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
@@ -1080,7 +1080,7 @@ public class SqlParser extends Parser {
 					((CompExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(239); ((CompExprContext)_localctx).rhs = mulExpr();
+				setState(239); ((CompExprContext)_localctx).rhs = addExpr();
 				 ((CompExprContext)_localctx).val =  new BinaryExpr((((CompExprContext)_localctx).op!=null?((CompExprContext)_localctx).op.getText():null), ((CompExprContext)_localctx).lhs.val, ((CompExprContext)_localctx).rhs.val); 
 				}
 				break;
@@ -1088,7 +1088,7 @@ public class SqlParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(242); ((CompExprContext)_localctx).lhs = mulExpr();
+				setState(242); ((CompExprContext)_localctx).lhs = addExpr();
 				 ((CompExprContext)_localctx).val =  ((CompExprContext)_localctx).lhs.val; 
 				}
 				break;
@@ -1105,88 +1105,16 @@ public class SqlParser extends Parser {
 		return _localctx;
 	}
 
-	public static class MulExprContext extends ParserRuleContext {
-		public Expr val;
-		public AddExprContext lhs;
-		public Token op;
-		public AddExprContext rhs;
-		public AddExprContext addExpr(int i) {
-			return getRuleContext(AddExprContext.class,i);
-		}
-		public List<AddExprContext> addExpr() {
-			return getRuleContexts(AddExprContext.class);
-		}
-		public MulExprContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_mulExpr; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterMulExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitMulExpr(this);
-		}
-	}
-
-	public final MulExprContext mulExpr() throws RecognitionException {
-		MulExprContext _localctx = new MulExprContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_mulExpr);
-		int _la;
-		try {
-			int _alt;
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(247); ((MulExprContext)_localctx).lhs = addExpr();
-			 Expr e = ((MulExprContext)_localctx).lhs.val; 
-			setState(255);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(249);
-					((MulExprContext)_localctx).op = _input.LT(1);
-					_la = _input.LA(1);
-					if ( !(_la==25 || _la==38) ) {
-						((MulExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
-					}
-					consume();
-					setState(250); ((MulExprContext)_localctx).rhs = addExpr();
-					 e = new BinaryExpr((((MulExprContext)_localctx).op!=null?((MulExprContext)_localctx).op.getText():null), e, ((MulExprContext)_localctx).rhs.val); 
-					}
-					} 
-				}
-				setState(257);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			}
-			 ((MulExprContext)_localctx).val =  e; 
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class AddExprContext extends ParserRuleContext {
 		public Expr val;
-		public UnaryExprContext lhs;
+		public MulExprContext lhs;
 		public Token op;
-		public UnaryExprContext rhs;
-		public List<UnaryExprContext> unaryExpr() {
-			return getRuleContexts(UnaryExprContext.class);
+		public MulExprContext rhs;
+		public List<MulExprContext> mulExpr() {
+			return getRuleContexts(MulExprContext.class);
 		}
-		public UnaryExprContext unaryExpr(int i) {
-			return getRuleContext(UnaryExprContext.class,i);
+		public MulExprContext mulExpr(int i) {
+			return getRuleContext(MulExprContext.class,i);
 		}
 		public AddExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1204,14 +1132,86 @@ public class SqlParser extends Parser {
 
 	public final AddExprContext addExpr() throws RecognitionException {
 		AddExprContext _localctx = new AddExprContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_addExpr);
+		enterRule(_localctx, 30, RULE_addExpr);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(260); ((AddExprContext)_localctx).lhs = unaryExpr();
+			setState(247); ((AddExprContext)_localctx).lhs = mulExpr();
 			 Expr e = ((AddExprContext)_localctx).lhs.val; 
+			setState(255);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+			while ( _alt!=2 && _alt!=-1 ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(249);
+					((AddExprContext)_localctx).op = _input.LT(1);
+					_la = _input.LA(1);
+					if ( !(_la==23 || _la==55) ) {
+						((AddExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					}
+					consume();
+					setState(250); ((AddExprContext)_localctx).rhs = mulExpr();
+					 e = new BinaryExpr((((AddExprContext)_localctx).op!=null?((AddExprContext)_localctx).op.getText():null), e, ((AddExprContext)_localctx).rhs.val); 
+					}
+					} 
+				}
+				setState(257);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+			}
+			 ((AddExprContext)_localctx).val =  e; 
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class MulExprContext extends ParserRuleContext {
+		public Expr val;
+		public UnaryExprContext lhs;
+		public Token op;
+		public UnaryExprContext rhs;
+		public List<UnaryExprContext> unaryExpr() {
+			return getRuleContexts(UnaryExprContext.class);
+		}
+		public UnaryExprContext unaryExpr(int i) {
+			return getRuleContext(UnaryExprContext.class,i);
+		}
+		public MulExprContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_mulExpr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).enterMulExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SqlListener ) ((SqlListener)listener).exitMulExpr(this);
+		}
+	}
+
+	public final MulExprContext mulExpr() throws RecognitionException {
+		MulExprContext _localctx = new MulExprContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_mulExpr);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(260); ((MulExprContext)_localctx).lhs = unaryExpr();
+			 Expr e = ((MulExprContext)_localctx).lhs.val; 
 			setState(268);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
@@ -1220,14 +1220,14 @@ public class SqlParser extends Parser {
 					{
 					{
 					setState(262);
-					((AddExprContext)_localctx).op = _input.LT(1);
+					((MulExprContext)_localctx).op = _input.LT(1);
 					_la = _input.LA(1);
-					if ( !(_la==23 || _la==55) ) {
-						((AddExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					if ( !(_la==25 || _la==38) ) {
+						((MulExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 					}
 					consume();
-					setState(263); ((AddExprContext)_localctx).rhs = unaryExpr();
-					 ((AddExprContext)_localctx).val =  new BinaryExpr((((AddExprContext)_localctx).op!=null?((AddExprContext)_localctx).op.getText():null), e, ((AddExprContext)_localctx).rhs.val); 
+					setState(263); ((MulExprContext)_localctx).rhs = unaryExpr();
+					 e = new BinaryExpr((((MulExprContext)_localctx).op!=null?((MulExprContext)_localctx).op.getText():null), e, ((MulExprContext)_localctx).rhs.val); 
 					}
 					} 
 				}
@@ -1235,7 +1235,7 @@ public class SqlParser extends Parser {
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			}
-			 ((AddExprContext)_localctx).val =  e; 
+			 ((MulExprContext)_localctx).val =  e; 
 			}
 		}
 		catch (RecognitionException re) {
@@ -2328,8 +2328,8 @@ public class SqlParser extends Parser {
 		"\16\37\u01a4\13\37\5\37\u01a6\n\37\3\37\3\37\3 \3 \3 \3 \3 \3 \3 \3 \5"+
 		" \u01b2\n \3!\3!\3!\3!\5!\u01b8\n!\3\"\3\"\3\"\3#\3#\3#\3#\2$\2\4\6\b"+
 		"\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BD\2\r\4))\61"+
-		"\61\4\5\5\'\'\3\63\64\4##88\3\65\66\5\24\25%%\62\62\4\33\33((\4\31\31"+
-		"99\5\4\4\30\30./\t\7\7\21\21\23\23\26\26&&--\60\60\4\22\22\32\32\u01ca"+
+		"\61\4\5\5\'\'\3\63\64\4##88\3\65\66\5\24\25%%\62\62\4\31\3199\4\33\33"+
+		"((\5\4\4\30\30./\t\7\7\21\21\23\23\26\26&&--\60\60\4\22\22\32\32\u01ca"+
 		"\2F\3\2\2\2\4J\3\2\2\2\6\u0085\3\2\2\2\b\u0087\3\2\2\2\n\u009c\3\2\2\2"+
 		"\f\u00a3\3\2\2\2\16\u00ab\3\2\2\2\20\u00b2\3\2\2\2\22\u00b9\3\2\2\2\24"+
 		"\u00c0\3\2\2\2\26\u00c2\3\2\2\2\30\u00cd\3\2\2\2\32\u00d7\3\2\2\2\34\u00ed"+

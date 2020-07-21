@@ -68,6 +68,7 @@ public class SqlExprs {
                 }
             }
 
+            //special treatment for WHERE 0 = 1
             if(where != null && where.toQscript().equals("0 = 1") && (table instanceof TableSelect)) {
                 this.where = null;
                 SelectStatement sel = ((TableSelect)table).select;
@@ -77,6 +78,11 @@ public class SqlExprs {
             else {
                 this.where = where;
             }
+        }
+
+        @Override
+        public String toString() {
+            return "SELECT " + columns + " FROM " + table + " WHERE " + where + " GROUP BY " + groupargs + " HAVING " + having + " LIMIT " + limit + " OFFSET " + offset;
         }
 
         public void checkType(TypeContext ctxt) {
@@ -647,13 +653,13 @@ public class SqlExprs {
             if(op.equals("<=") || op.equals(">=") || op.equals("<") || op.equals(">") || op.equals("=") || op.equals("!=") || op.equals("in") || op.equals("and") || op.equals("or"))
                 return 'b'; //boolean
             //+ - * /
-            return lhs.getType(ctxt); //TODO
+            return lhs.getType(ctxt); //TODO apply lhs type or rhs type depends on operator and type
         }
 
 		@Override
 		public String toString()
 		{
-			return lhs + " " + op + " " + rhs;
+			return "(" + lhs + " " + op + " " + rhs + ")";
 		}
 		
 		@Override
@@ -703,7 +709,7 @@ public class SqlExprs {
 		@Override
 		public String toString()
 		{
-            return toQscript();
+            return op + " " + lhs.toString();
 		}
 		
 		@Override
@@ -713,7 +719,10 @@ public class SqlExprs {
         }
     }
 
-    private static Expr uncurry(Expr e) {
+    @Nullable
+    private static Expr uncurry(@Nullable Expr e) {
+        if(e == null)
+            return null;
         if(e instanceof CurryExpr)
             return uncurry(((CurryExpr) e).expr);
         return e;
@@ -935,8 +944,8 @@ public class SqlExprs {
 		public WhenThen(Expr whenExpr, Expr thenExpr)
 		{
 			super();
-			this.whenExpr = whenExpr;
-			this.thenExpr = thenExpr;
+			this.whenExpr = uncurry(whenExpr);
+			this.thenExpr = uncurry(thenExpr);
 		}
 		
 		public Expr getWhenExpr()
@@ -973,7 +982,7 @@ public class SqlExprs {
             super();
 			this.baseExpr = baseExpr;
 			this.whenThens = whenThens;
-			this.elseExpr = elseExpr;
+			this.elseExpr = uncurry(elseExpr);
         }
         
 		@Override
@@ -1604,7 +1613,7 @@ public class SqlExprs {
 		@Override
 		public String toQscript()
 		{
-            return string.toUpperCase().replaceFirst(" *DAYS?", "");
+            return string.toUpperCase().replaceFirst(" *DAY?", "");
         }
         
         @Override

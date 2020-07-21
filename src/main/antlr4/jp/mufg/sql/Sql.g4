@@ -93,19 +93,19 @@ eqExpr returns [Expr val]
     ;
 
 compExpr returns [Expr val]
-    : lhs=mulExpr op=('>'|'<'|'<='|'>=') rhs=mulExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
-    | lhs=mulExpr { $val = $lhs.val; }
-    ;
-
-mulExpr returns [Expr val]
-    : lhs=addExpr { Expr e = $lhs.val; }
-      ( op=('*'|'/') rhs=addExpr { e = new BinaryExpr($op.text, e, $rhs.val); } )*
-      { $val = e; }
+    : lhs=addExpr op=('>'|'<'|'<='|'>=') rhs=addExpr { $val = new BinaryExpr($op.text, $lhs.val, $rhs.val); }
+    | lhs=addExpr { $val = $lhs.val; }
     ;
 
 addExpr returns [Expr val]
+    : lhs=mulExpr { Expr e = $lhs.val; }
+      ( op=('+'|'-') rhs=mulExpr { e = new BinaryExpr($op.text, e, $rhs.val); } )*
+      { $val = e; }
+    ;
+
+mulExpr returns [Expr val]
     : lhs=unaryExpr { Expr e = $lhs.val; }
-      ( op=('+'|'-') rhs=unaryExpr { $val = new BinaryExpr($op.text, e, $rhs.val); } )*
+      ( op=('*'|'/') rhs=unaryExpr { e = new BinaryExpr($op.text, e, $rhs.val); } )*
       { $val = e; }
     ;
 

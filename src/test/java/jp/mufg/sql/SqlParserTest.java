@@ -232,7 +232,7 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_group_by_where_generic_case() throws IOException {
         String q = parse2("SELECT t2.date AS date, SUM(t2.f) AS \"sum:f:ok\", SUM(t2.lg) AS \"sum:lg:ok\" FROM \"public\".\"t2\" \"t2\" WHERE (CASE WHEN (t2.date = '1970-01-04' or t2.date = '1970-01-03') THEN FALSE WHEN (t2.date = '1970-01-05') THEN FALSE ELSE TRUE END) GROUP BY 1");
-        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where $[t2.date = 1970.01.04 or t2.date = 1970.01.03;0x00;t2.date = 1970.01.05;0x00;0x01]", q);
+        Assert.assertEquals("select sum__f__ok:sum f, sum__lg__ok:sum lg by date:date from t2 where $[((t2.date = 1970.01.04) or (t2.date = 1970.01.03));0x00;(t2.date = 1970.01.05);0x00;0x01]", q);
     }    
 
     @Test
@@ -291,8 +291,8 @@ public class SqlParserTest {
 
     @Test
     public void test_select_stmt_func_subquery_where_current_date_interval() throws IOException {
-        String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = CURRENT_DATE + -2 * INTERVAL '1DAY')");
-        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = .z.d + -2 * 1", q);
+        String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE ((\"カスタム SQL クエリー\".date >= CURRENT_DATE + -2 * INTERVAL '1 DAY') AND (\"カスタム SQL クエリー\".date < CURRENT_DATE + 1 * INTERVAL '1 DAY'))");
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where (date >= .z.d + -2 * 1), (date < .z.d + 1 * 1)", q);
     }
 
     // @Test

@@ -2,6 +2,7 @@ package jp.mufg.kdbjdbc;
 
 import jp.mufg.sql.SqlLexer;
 import jp.mufg.sql.SqlParser;
+import jp.mufg.sql.SqlParser.SelectStmtContext;
 import jp.mufg.kdbjdbc.SqlExprs.*;
 
 import java.io.IOException;
@@ -28,12 +29,13 @@ public class SqlSelectToQscriptTranslator {
             SqlParser parser = new SqlParser(tokens);
             parser.removeErrorListeners();
             parser.addErrorListener(ThrowingErrorListener.INSTANCE);
-            this.stmt = parser.selectStmtWhole().selectStmt().val;
+            SelectStmtContext stmtcontext = parser.selectStmtWhole().selectStmt();
+            this.stmt = stmtcontext.val;
             int errors = parser.getNumberOfSyntaxErrors();
             if (errors > 0)
                 throw new IOException("parse error");
-            // logger.info("parsed result:>>>" + stmt.toString() + "<<<");
-            // logger.info("parsed result tree:" + stmt.toStringTree());
+            // logger.info("parsed result tree:" + stmtcontext.toStringTree());
+            logger.info("parsed result>>>" + stmt.toString() + "<<<");
         } catch(Exception ex) {
             throw new IllegalArgumentException("SQL parse error:" + sql, ex);
         }
