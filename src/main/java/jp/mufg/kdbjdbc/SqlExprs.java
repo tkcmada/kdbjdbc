@@ -135,18 +135,34 @@ public class SqlExprs {
             //to push down condition
 
             String tblname = table.getTableName();
-            this.where = uncurry(this.where);
-            if(where != null && (where instanceof SubphraseExpr)) {
-                List<Expr> subexprs = ((SubphraseExpr)where).exprs;
+            //date condition is pushdown to function arg
+            if(where != null && ((where instanceof SubphraseExpr) || (where instanceof BinaryExpr))) {
+                List<Expr> subexprs;
+                if(where instanceof SubphraseExpr) {
+                    subexprs = ((SubphraseExpr)where).exprs;
+                }
+                else {
+                    subexprs = new LinkedList<SqlExprs.Expr>();
+                    subexprs.add(where);
+                }
                 String date_from = null;
                 String date_to   = null;
                 for(Expr e : subexprs) {
                     e = uncurry(e);
-                    if(e.toQscript().matches("\\Adate >= .+") && (e instanceof BinaryExpr)) {
+                    if(e.toQscript().matches("\\Adate = .+") && (e instanceof BinaryExpr)) {
+                        date_from = date_to = uncurry(((BinaryExpr)e).rhs).toQscript();
+                    }
+                    else if(e.toQscript().matches("\\Adate >= .+") && (e instanceof BinaryExpr)) {
                         date_from = uncurry(((BinaryExpr)e).rhs).toQscript();
                     }
-                    if(e.toQscript().matches("\\Adate <= .+") && (e instanceof BinaryExpr)) {
+                    else if(e.toQscript().matches("\\Adate > .+") && (e instanceof BinaryExpr)) {
+                        date_from = "(" + uncurry(((BinaryExpr)e).rhs).toQscript() + ") + 1";
+                    }
+                    else if(e.toQscript().matches("\\Adate <= .+") && (e instanceof BinaryExpr)) {
                         date_to = uncurry(((BinaryExpr)e).rhs).toQscript();
+                    }
+                    else if(e.toQscript().matches("\\Adate < .+") && (e instanceof BinaryExpr)) {
+                        date_to = "(" + uncurry(((BinaryExpr)e).rhs).toQscript() + ") - 1";
                     }
                 }
                 if(date_from != null && date_to != null) {
