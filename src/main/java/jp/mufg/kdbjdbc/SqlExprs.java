@@ -134,6 +134,27 @@ public class SqlExprs {
             //SELECT * FROM (SELECT * FROM t LIMIT 1)
             //to push down condition
 
+            String tblname = table.getTableName();
+            this.where = uncurry(this.where);
+            if(where != null && (where instanceof SubphraseExpr)) {
+                List<Expr> subexprs = ((SubphraseExpr)where).exprs;
+                String date_from = null;
+                String date_to   = null;
+                for(Expr e : subexprs) {
+                    e = uncurry(e);
+                    if(e.toQscript().matches("\\Adate >= .+") && (e instanceof BinaryExpr)) {
+                        date_from = uncurry(((BinaryExpr)e).rhs).toQscript();
+                    }
+                    if(e.toQscript().matches("\\Adate <= .+") && (e instanceof BinaryExpr)) {
+                        date_to = uncurry(((BinaryExpr)e).rhs).toQscript();
+                    }
+                }
+                if(date_from != null && date_to != null) {
+                    tblname = tblname.replaceFirst( "\\[ *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *; *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *", "[" + date_from + ";" + date_to);
+                }
+            }
+
+
             final boolean distinct = isDistinct();
             //groupby
             Map<Column, Column> excludedColumn = new IdentityHashMap<SqlExprs.Column,SqlExprs.Column>();
@@ -182,7 +203,7 @@ public class SqlExprs {
                 s.append(gs.toString());
             }
             s.append(" from ");
-            s.append(table.getTableName());
+            s.append(tblname);
             //ignore alias name
             //HAVING is ignored
             if(where != null) {
