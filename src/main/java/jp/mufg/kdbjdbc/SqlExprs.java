@@ -1428,7 +1428,7 @@ public class SqlExprs {
                 return "(" + new FunctionCallExpr("STDDEV", arguments).toQscript() + ") xexp 2";
             }
             else if(name.equals("CURRENT_DATE")) {
-                return ".z.d";
+                return ".z.D";
             }
             // else if(identifiers.equals("DATE_TRUNC")) {
             //     if(arguments.exprs.get(0).toQscript().equals("`DAY")) {

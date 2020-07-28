@@ -288,37 +288,37 @@ public class SqlParserTest {
     @Test
     public void test_select_stmt_func_subquery_where_current_date() throws IOException {
         String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = CURRENT_DATE)");
-        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = .z.d", q);
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = .z.D", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery_where_unary() throws IOException {
         String q = parse("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE (\"カスタム SQL クエリー\".date = -CURRENT_DATE + -2 * 1)");
-        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = - .z.d + -2 * 1", q);
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where date = - .z.D + -2 * 1", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery_where_current_date_interval() throws IOException {
         String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksFunc[`USDJPY;`V1]\") \"カスタム SQL クエリー\" WHERE ((\"カスタム SQL クエリー\".date >= CURRENT_DATE + -2 * INTERVAL '1 DAY') AND (\"カスタム SQL クエリー\".date < CURRENT_DATE + 1 * INTERVAL '1 DAY'))");
-        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where (date >= .z.d + -2 * 1), (date < .z.d + 1 * 1)", q);
+        Assert.assertEquals("select  from (select  from MarketBooksFunc[`USDJPY;`V1]) where (date >= .z.D + -2 * 1), (date < .z.D + 1 * 1)", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery_where_current_date_interval_pushdown() throws IOException {
         String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksDateFunc[ 2020.01.01 ; 2020.01.01 ;`USDJPY]\") \"カスタム SQL クエリー\" WHERE ((\"カスタム SQL クエリー\".date >= (CURRENT_DATE + -2 * INTERVAL '1 DAY')) AND (\"カスタム SQL クエリー\".date <= CURRENT_DATE + 1 * INTERVAL '1 DAY'))");
-        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[.z.d + -2 * 1;.z.d + 1 * 1;`USDJPY]) where (date >= ( .z.d + -2 * 1 )), (date <= .z.d + 1 * 1)", q);
+        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[.z.D + -2 * 1;.z.D + 1 * 1;`USDJPY]) where (date >= ( .z.D + -2 * 1 )), (date <= .z.D + 1 * 1)", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery_where_current_date_interval_pushdown2() throws IOException {
         String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksDateFunc[ 2020.01.01 ; 2020.01.01 ;`USDJPY]\") \"カスタム SQL クエリー\" WHERE ((\"カスタム SQL クエリー\".date > (CURRENT_DATE + -2 * INTERVAL '1 DAY')) AND (\"カスタム SQL クエリー\".date < CURRENT_DATE + 1 * INTERVAL '1 DAY'))");
-        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[(.z.d + -2 * 1) + 1;(.z.d + 1 * 1) - 1;`USDJPY]) where (date > ( .z.d + -2 * 1 )), (date < .z.d + 1 * 1)", q);
+        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[(.z.D + -2 * 1) + 1;(.z.D + 1 * 1) - 1;`USDJPY]) where (date > ( .z.D + -2 * 1 )), (date < .z.D + 1 * 1)", q);
     }
 
     @Test
     public void test_select_stmt_func_subquery_where_current_date_equals_pushdown3() throws IOException {
         String q = parse2("SELECT * FROM (SELECT * FROM public.\"MarketBooksDateFunc[ 2020.01.01 ; 2020.01.01 ;`USDJPY]\") \"カスタム SQL クエリー\" WHERE \"カスタム SQL クエリー\".date = CURRENT_DATE + -2 * INTERVAL '1 DAY'");
-        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[.z.d + -2 * 1;.z.d + -2 * 1;`USDJPY]) where date = .z.d + -2 * 1", q);
+        Assert.assertEquals("select  from (select  from MarketBooksDateFunc[.z.D + -2 * 1;.z.D + -2 * 1;`USDJPY]) where date = .z.D + -2 * 1", q);
     }
 
     @Test
