@@ -863,7 +863,7 @@ public java.sql.ResultSet getProcedureColumns(String arg0, String arg1, String a
 }
 
 public java.sql.ResultSet getTables(String arg0, String arg1, String arg2, String[] arg3) throws java.sql.SQLException {
-	logger.info("getTables" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " + arg3 );
+	logger.info("getTables" + " , " + arg0  + " , " + arg1  + " , " + arg2  + " , " +  (arg3 == null ? "null" : Arrays.toString(arg3)));
 	java.sql.ResultSet result = new LogResultSet(target.getTables(arg0, arg1, arg2, arg3));
 	logger.info("getTables result is " + result);
 	return result;
