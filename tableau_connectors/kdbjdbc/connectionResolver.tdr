@@ -13,6 +13,7 @@
           <attr>dbname</attr><!-- this is required to run correctly -->
           <attr>username</attr>
           <attr>password</attr>
+          <attr>vendor1</attr>
         </attribute-list>
       </required-attributes>
     </connection-normalizer>
