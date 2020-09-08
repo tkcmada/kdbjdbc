@@ -936,6 +936,7 @@ public abstract class ResultSetBase implements ResultSet {
 		
 	}
 
+    // private static final boolean DEBUG_PRINT = "true".equals(System.getProperty("DEBUG_LOG"));
 	@Override
 	public final Timestamp getTimestamp(final int columnIndex, final Calendar cal) throws SQLException {
         if(cal == null)
@@ -948,7 +949,7 @@ public abstract class ResultSetBase implements ResultSet {
         final long newmills = local_ts.getTime() + diff_mills;
         final Timestamp cal_ts = new Timestamp(newmills);
         cal_ts.setNanos(local_ts.getNanos());
-        logger.info("getTimestamp(" + columnIndex + "):org ts:" + local_ts + " cal ts:" + cal_ts + " localtimezone:" + localtimezone + " caltimezone:" + cal.getTimeZone());
+        // logger.info("getTimestamp(" + columnIndex + "):org ts:" + local_ts + " cal ts:" + cal_ts + " localtimezone:" + localtimezone + " caltimezone:" + cal.getTimeZone());
         return cal_ts;
 	}
 
