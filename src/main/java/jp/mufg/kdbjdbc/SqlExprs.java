@@ -164,9 +164,20 @@ public class SqlExprs {
                     else if(e.toQscript().matches("\\Adate < .+") && (e instanceof BinaryExpr)) {
                         date_to = "(" + uncurry(((BinaryExpr)e).rhs).toQscript() + ") - 1";
                     }
-                }
+                }                
                 if(date_from != null && date_to != null) {
+                    //First two arguments of function look date type and date_from and date_to are given.
                     tblname = tblname.replaceFirst( "\\[ *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *; *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *", "[" + date_from + ";" + date_to);
+                }
+                else if(date_from != null) {
+                    //First one argument  of function look date type and date_from.
+                    if(tblname.matches(".*\\[ *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *; *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9].*")) {
+                        //if funciton has two dates arguments, we should skip it.
+                        //TESTED by test_select_stmt_func_subquery_where_pushdown5_only_from_clause
+                    }
+                    else {
+                        tblname = tblname.replaceFirst( "\\[ *[0-9][0-9][0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9] *", "[" + date_from);
+                    }
                 }
             }
 
