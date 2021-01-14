@@ -2,10 +2,10 @@
 JDBC driver for kdb+
 
 (1)How to build ?
-(offline case) If you are offline and cannot access maven repository, copy .m2 folder in this repo into your ~/.m2
+(offline case) If you are offline and cannot access maven repository, copy .m2/repository folder in this repo into your ~/.m2/ ( under ~/.m2/ )
 
 ```
-cp -rp ./.m2 ~/.m2
+cp -rp ./.m2/repository ~/.m2/
 mvn compile
 ```
 
