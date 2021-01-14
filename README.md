@@ -2,14 +2,12 @@
 JDBC driver for kdb+
 
 (1)How to build ?
-(offline case) If you are offline and cannot access maven repository, copy .m2/repository folder in this repo into your ~/.m2/ ( under ~/.m2/ )
-
+(offline case)
 ```
-cp -rp ./.m2/repository ~/.m2/
-mvn compile
+mvn --offline compile -Dmaven.repo.local=.m2/repository -Dmaven.legacyLocalRepo=true
 ```
 
-(online case) If you can access internet follow below steps.
+(online case)
 
 Get kx's jdbc driver and install into local maven repo.
 ```
