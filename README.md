@@ -1,16 +1,23 @@
 # kdbjdbc
 JDBC driver for kdb+
 
-How to install kx's jdbc driver into local maven repo.
+(1)How to build ?
+(offline case) If you are offline and cannot access maven repository, copy .m2 folder in this repo into your ~/.m2
+
+```
+cp -rp ./.m2 ~/.m2
+mvn compile
+```
+
+(online case) If you can access internet follow below steps.
+
+Get kx's jdbc driver and install into local maven repo.
 ```
 git clone https://github.com/kxSystems/kdb.git
 cd kdb/c
 mvn install:install-file -Dfile=jdbc.jar -DgroupId=com.kx -DartifactId=jdbc -Dversion=0.1 -Dpackaging=jar -DgeneratePom=true
-```
-
-How to get dependencies ?
-```
-kdbjdbc $ mvn dependency:copy-dependencies
+#mvn dependency:copy-dependencies
+mvn compile
 ```
 
 How to launch q process for test ?

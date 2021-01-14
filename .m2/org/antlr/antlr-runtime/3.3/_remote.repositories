@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Jun 30 04:38:57 UTC 2020
+antlr-runtime-3.3-sources.jar>central=
+antlr-runtime-3.3.jar>central=
+antlr-runtime-3.3.pom>central=
