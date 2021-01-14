@@ -4,8 +4,12 @@ JDBC driver for kdb+
 (1)How to build ?
 (offline case)
 ```
-mvn --offline compile -Dmaven.repo.local=.m2/repository -Dmaven.legacyLocalRepo=true
+mvn --offline --legacy-local-repository　-Dmaven.repo.local=./.m2/repository compile
+(in short)
+mvn -o -llr -Dmaven.repo.local=./.m2/repository compile
 ```
+If you see an error such a "[WARNING] The POM for org.apache.maven.plugins:maven-resources-plugin:jar:2.5 is missing, no dependency information available" ,
+your maven version would be old(probably 3.0.x). Use 3.6 or upper.
 
 (online case)
 
