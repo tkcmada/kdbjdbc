@@ -4,14 +4,10 @@ JDBC driver for kdb+
 (1)How to build ?
 (offline case)
 ```
-cp -rp ./.m2/repository ~/.m2/repository
-mvn -o -llr compile
+mvn -o -llr compile -Dmaven.repo.local=.m2/repository
 ```
 - If you see an error such a "[WARNING] The POM for org.apache.maven.plugins:maven-resources-plugin:jar:2.5 is missing, no dependency information available" ,
 your maven version would be old(probably 3.0.x). Use 3.6 or upper.
-
-- If you see an error such a "[ERROR] Plugin org.antlr:antlr4-maven-plugin:4.0 or one of its dependencies could not be resolved: Cannot access central (https://repo.maven.apache.org/maven2) in offline mode and the artifact org.antlr:antlr4-maven-plugin:jar:4.0 has not been downloaded from it before. -> [Help 1]"
-you should remove ~/.m2/repository completely and try again.
 
 
 (online case)
@@ -78,7 +74,7 @@ myfunc: { [date_from;date_to] select from tbl1 where date_from <= date }
 How to test ?
 ```
 export JAVA_TOOL_OPTIONS="-Xmx2254m -Dlog4j.configurationFile=target/classes/log4j.xml"
-mvn clean test
+mvn -o -llr clean test -Dmaven.repo.local=.m2/repository
 ```
 
 How to prepare m2 local repository for offline ?
