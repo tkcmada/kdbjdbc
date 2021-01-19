@@ -7,8 +7,12 @@ JDBC driver for kdb+
 cp -rp ./.m2/repository ~/.m2/repository
 mvn -o -llr compile
 ```
-If you see an error such a "[WARNING] The POM for org.apache.maven.plugins:maven-resources-plugin:jar:2.5 is missing, no dependency information available" ,
+- If you see an error such a "[WARNING] The POM for org.apache.maven.plugins:maven-resources-plugin:jar:2.5 is missing, no dependency information available" ,
 your maven version would be old(probably 3.0.x). Use 3.6 or upper.
+
+- If you see an error such a "[ERROR] Plugin org.antlr:antlr4-maven-plugin:4.0 or one of its dependencies could not be resolved: Cannot access central (https://repo.maven.apache.org/maven2) in offline mode and the artifact org.antlr:antlr4-maven-plugin:jar:4.0 has not been downloaded from it before. -> [Help 1]"
+you should remove ~/.m2/repository completely and try again.
+
 
 (online case)
 
